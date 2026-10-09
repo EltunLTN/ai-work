@@ -1,0 +1,200 @@
+[
+  {
+    "id": "math-1-ederslik",
+    "grade": "1",
+    "subject": "Riyaziyyat",
+    "title": "1-ci sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/index.php",
+    "topics": [
+      "1-20 arası ədədlər",
+      "Toplama və çıxma",
+      "Müqayisə (<, >, =)",
+      "Sadə söz məsələləri",
+      "Həndəsi fiqurlar",
+      "Uzunluq və ölçü",
+      "Zaman anlayışı",
+      "Pul vahidləri"
+    ]
+  },
+  {
+    "id": "math-2-ederslik",
+    "grade": "2",
+    "subject": "Riyaziyyat",
+    "title": "2-ci sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/index.php",
+    "topics": [
+      "100-ə qədər ədədlər",
+      "İki rəqəmli toplama-çıxma",
+      "Vurma və bölməyə giriş",
+      "Kəsr anlayışına giriş",
+      "Perimetrə giriş",
+      "Məkan münasibətləri",
+      "Cədvəl və qrafikə giriş",
+      "Məntiqi ardıcıllıq"
+    ]
+  },
+  {
+    "id": "math-3-ederslik",
+    "grade": "3",
+    "subject": "Riyaziyyat",
+    "title": "3-cü sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/index.php",
+    "topics": [
+      "1000-ə qədər ədədlər",
+      "Vurma cədvəli",
+      "Bölmə əməliyyatı",
+      "Sadə və mürəkkəb məsələlər",
+      "Kəsrlər və hissələr",
+      "Uzunluq, kütlə, həcm",
+      "Sahə anlayışına giriş",
+      "Verilənlərin təhlili"
+    ]
+  },
+  {
+    "id": "math-4-ederslik",
+    "grade": "4",
+    "subject": "Riyaziyyat",
+    "title": "4-cü sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/index.php",
+    "topics": [
+      "Çoxrəqəmli ədədlər",
+      "Toplama və çıxmada strategiyalar",
+      "Vurma və bölmənin tətbiqi",
+      "Kəsrlərin müqayisəsi",
+      "Bucaqlar və fiqurlar",
+      "Perimetr və sahə",
+      "Zaman və təqvim hesablamaları",
+      "Məntiqi məsələlər"
+    ]
+  },
+  {
+    "id": "math-5-ederslik",
+    "grade": "5",
+    "subject": "Riyaziyyat",
+    "title": "5-ci sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/index.php",
+    "topics": [
+      "Natural ədədlər",
+      "Əməliyyatların ardıcıllığı",
+      "Sadə və onluq kəsrlər",
+      "Faizə giriş",
+      "Nisbətə giriş",
+      "Bucaqlar və çoxbucaqlılar",
+      "Sahə və həcmə giriş",
+      "Statistik cədvəllər"
+    ]
+  },
+  {
+    "id": "math-6-ederslik",
+    "grade": "6",
+    "subject": "Riyaziyyat",
+    "title": "6-cı sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/index.php",
+    "topics": [
+      "Natural ədədlər",
+      "Kəsrlər",
+      "Onluq kəsrlər",
+      "Faiz",
+      "Sadə tənliklər",
+      "Nisbət və tənasüb",
+      "Fiqurlar və perimetr",
+      "Sahə hesablamaları"
+    ]
+  },
+  {
+    "id": "math-7-ederslik",
+    "grade": "7",
+    "subject": "Riyaziyyat",
+    "title": "7-ci sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/index.php",
+    "topics": [
+      "Rasional ədədlər",
+      "Mənfi ədədlər",
+      "Faiz və tətbiqlər",
+      "Nisbət və proporsiya",
+      "Cəbri ifadələr",
+      "Xətti tənliklər",
+      "Bərabərsizliklərə giriş",
+      "Həndəsə əsasları"
+    ]
+  },
+  {
+    "id": "math-8-ederslik",
+    "grade": "8",
+    "subject": "Riyaziyyat",
+    "title": "8-ci sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/index.php",
+    "topics": [
+      "Kvadrat kök",
+      "Cəbri ifadələrin çevrilməsi",
+      "Xətti funksiyalar",
+      "Xətti tənliklər sistemi",
+      "Proporsiya və miqyas",
+      "Ehtimalın başlanğıcı",
+      "Sahə və həcm",
+      "Statistika əsasları"
+    ]
+  },
+  {
+    "id": "math-9-ederslik",
+    "grade": "9",
+    "subject": "Riyaziyyat",
+    "title": "9-cu sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/index.php",
+    "topics": [
+      "Kvadrat tənliklər",
+      "Kvadrat funksiya",
+      "Tənliklər sistemi",
+      "İrrasional ifadələr",
+      "Triqonometriyaya giriş",
+      "Arifmetik və həndəsi silsilə",
+      "Koordinat həndəsəsi",
+      "Statistika və ehtimal"
+    ]
+  },
+  {
+    "id": "math-10-ederslik",
+    "grade": "10",
+    "subject": "Riyaziyyat",
+    "title": "10-cu sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/index.php",
+    "topics": [
+      "Funksiyalar və çevrilmələr",
+      "Triqonometrik funksiyalar",
+      "Loqarifm anlayışı",
+      "Eksponent funksiyalar",
+      "Bərabərsizliklər",
+      "Kombinatorika",
+      "Vektorlar",
+      "Stereometriyaya giriş"
+    ]
+  },
+  {
+    "id": "math-11-ederslik-817",
+    "grade": "11",
+    "subject": "Riyaziyyat",
+    "title": "11-ci sinif Riyaziyyat",
+    "sourceLabel": "e-derslik mövzu istinadı (id: 817)",
+    "sourceUrl": "https://www.e-derslik.edu.az/portal/book.php?id=817",
+    "topics": [
+      "Törəmə",
+      "Törəmənin tətbiqləri",
+      "İnteqrala giriş",
+      "Mürəkkəb funksiyalar",
+      "Loqarifmik və eksponent tənliklər",
+      "Triqonometriya",
+      "Ehtimal və statistika",
+      "Qarışıq DİM tipli mövzular"
+    ]
+  }
+]

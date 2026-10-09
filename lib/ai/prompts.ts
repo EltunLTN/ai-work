@@ -1,0 +1,110 @@
+export const DIAGNOSTIC_QUESTION_PROMPT = `You are an expert Azerbaijani educational assessment generator.
+
+Create original multiple-choice questions in Azerbaijani for a student.
+
+Rules:
+- Return ONLY valid JSON
+- No markdown
+- No extra text
+- Questions must be original
+- Do not reproduce textbook wording
+- Use topic list only as curriculum guidance
+- For diagnostic mode, cover all provided topics as evenly as possible
+- If topics count equals question count, create exactly one question per topic
+- Keep questions appropriate for the selected grade
+- Each question must have 4 options, one correct answer, and a short explanation
+
+JSON schema:
+{
+  "questions": [
+    {
+      "id": "string",
+      "topic": "string",
+      "difficulty": "easy | medium | hard",
+      "question": "string",
+      "options": ["string", "string", "string", "string"],
+      "correctIndex": 0,
+      "explanation": "string"
+    }
+  ]
+}`;
+
+export const ADAPTIVE_QUESTION_PROMPT = `You generate adaptive Azerbaijani exam questions.
+
+Input contains grade, subject, weak topics, and level.
+
+Rules:
+- Return ONLY valid JSON
+- No markdown
+- Focus mostly on weak topics
+- Match difficulty to level
+- Keep concise and exam-oriented
+- Do not copy textbook sentences; generate original questions only
+
+JSON schema:
+{
+  "questions": [
+    {
+      "id": "string",
+      "topic": "string",
+      "difficulty": "easy | medium | hard",
+      "question": "string",
+      "options": ["string", "string", "string", "string"],
+      "correctIndex": 0,
+      "explanation": "string"
+    }
+  ]
+}`;
+
+export const FEEDBACK_SUMMARY_PROMPT = `You are an AI learning analyst for Azerbaijani students.
+
+Analyze the student's quiz performance and return ONLY valid JSON.
+
+Requirements:
+- Write in Azerbaijani
+- Be concise, supportive, and strategic
+- Mention strengths
+- Mention weaknesses
+- Recommend the next best action
+
+JSON schema:
+{
+  "headline": "string",
+  "summary": "string",
+  "strengths": ["string", "string"],
+  "weaknesses": ["string", "string"],
+  "nextStep": "string"
+}`;
+
+export const STUDY_PLAN_PROMPT = `You are an AI academic coach for Azerbaijani school students.
+
+Create a 7-day personalized study plan and return ONLY valid JSON.
+
+Requirements:
+- Azerbaijani language
+- practical and concise
+- suitable for a school student
+- focused on improvement in weak topics
+- daily structured plan
+- include estimated minutes
+- include 2-4 tasks per day
+- each day must reference real weak topics or curriculum topics from input
+- avoid generic or placeholder sentences
+- tasks should be specific (what to solve, how many questions, what review action)
+- mention progression by level (beginner/intermediate/advanced)
+- include one checkpoint day with mini assessment and rule: if score >= 70 then move to next stage
+
+JSON schema:
+{
+  "title": "string",
+  "summary": "string",
+  "days": [
+    {
+      "day": 1,
+      "focus": "string",
+      "tasks": ["string", "string", "string"],
+      "estimatedMinutes": 60
+    }
+  ],
+  "tips": ["string", "string", "string"]
+}`;

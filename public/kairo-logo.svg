@@ -1,0 +1,12 @@
+<svg width="420" height="120" viewBox="0 0 420 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="420" height="120" rx="20" fill="#0B0B0E"/>
+  <g transform="translate(24,14)">
+    <path d="M28 33C24 19 28 9 35 3C38 13 47 27 54 35M62 32C58 18 60 8 68 2C72 12 79 24 85 33" stroke="#F4F4F5" stroke-width="4" stroke-linecap="round"/>
+    <path d="M7 67C7 42 26 28 51 28C78 28 96 46 96 69C96 92 77 106 53 106C26 106 7 91 7 67Z" stroke="#F4F4F5" stroke-width="4"/>
+    <circle cx="67" cy="64" r="4" fill="#F4F4F5"/>
+    <path d="M47 74C50 79 57 81 65 79" stroke="#F4F4F5" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="101" cy="80" r="6" fill="#EF4444"/>
+  </g>
+  <text x="150" y="54" fill="#F4F4F5" font-family="Segoe UI, Arial, sans-serif" font-size="36" font-weight="700">Kairo</text>
+  <text x="150" y="84" fill="#A1A1AA" font-family="Segoe UI, Arial, sans-serif" font-size="16" letter-spacing="3">FOLLOW THE RABBIT</text>
+</svg>
