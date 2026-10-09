@@ -17,6 +17,7 @@ export function Navbar() {
     { href: "/results", label: t.nav.results },
     { href: "/plan", label: t.nav.plan },
     { href: "/dashboard", label: t.nav.dashboard },
+    { href: "/wumpus_world_v2.html", label: t.nav.wumpusWorld, external: true },
   ];
 
   return (
@@ -31,11 +32,23 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-2 md:flex">
-          {links.map((link) => (
-            <Link key={link.href} href={link.href} className="rounded-xl px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/10 hover:text-white">
-              {link.label}
-            </Link>
-          ))}
+          {links.map((link) =>
+            link.external ? (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-xl px-3 py-2 text-sm text-amber-400 transition hover:bg-white/10 hover:text-amber-300"
+              >
+                {link.label} ↗
+              </a>
+            ) : (
+              <Link key={link.href} href={link.href} className="rounded-xl px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/10 hover:text-white">
+                {link.label}
+              </Link>
+            )
+          )}
         </nav>
 
         <div className="flex items-center gap-2">

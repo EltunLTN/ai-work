@@ -12,6 +12,7 @@ export const translations = {
       results: "Nəticə",
       plan: "Plan",
       dashboard: "Dashboard",
+      wumpusWorld: "Wumpus World",
       start: "Sınağa başla",
     },
     hero: {
@@ -101,6 +102,7 @@ export const translations = {
       results: "Results",
       plan: "Plan",
       dashboard: "Dashboard",
+      wumpusWorld: "Wumpus World",
       start: "Start Quiz",
     },
     hero: {

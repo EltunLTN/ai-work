@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wumpus World: mağara xəritəsi</title>
+<style>
+:root{
+  --abyss:#0c1222;--slate:#161e36;--fog:#232d4d;--line:#34416b;
+  --chalk:#e8e6dd;--dim:#8d97b8;--lantern:#ffb547;--moss:#4fd1a5;--ember:#ef5b52;--sky:#6fb4ff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 700px at 30% -10%,#1b2750 0,var(--abyss) 60%);color:var(--chalk);
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;line-height:1.45;min-height:100vh}
+.wrap{max-width:1040px;margin:0 auto;padding:22px 16px 40px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(1.8rem,5vw,2.8rem);margin:0;letter-spacing:.01em}
+h1 em{font-style:normal;color:var(--lantern)}
+header p{margin:4px 0 0;color:var(--dim);max-width:46ch;font-size:.95rem}
+.score{display:flex;gap:22px}
+.score div{text-align:right}
+.score b{display:block;font-family:Georgia,serif;font-weight:400;font-size:2rem;line-height:1}
+.score span{font-size:.78rem;color:var(--dim)}
+.layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:20px;align-items:start}
+@media(max-width:800px){.layout{grid-template-columns:1fr}}
+
+/* Board */
+.board{position:relative;width:100%;max-width:580px;aspect-ratio:1;margin:0 auto;border:1px solid var(--line);border-radius:14px;background:var(--slate);overflow:hidden}
+.cells{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr)}
+.cell{margin:4px;border-radius:9px;position:relative;border:1px solid transparent;transition:background .3s,border-color .3s;
+  background:repeating-linear-gradient(135deg,#1a2342 0 6px,#18203d 6px 12px)}
+.cell.safe{background:#123a3a;border-color:var(--moss);box-shadow:inset 0 0 18px #4fd1a533}
+.cell.vis{background:radial-gradient(circle at 50% 40%,#3a4772,#27315a);border-color:#4a5a92}
+.cell.risk{background:repeating-linear-gradient(135deg,#3a2f1d 0 6px,#2f2618 6px 12px);border:1px dashed #b98a3a}
+.cell.pit{background:#3d1519;border-color:var(--ember)}
+.xy{position:absolute;left:8px;top:6px;font-size:.7rem;color:#ffffff70}
+.tags{position:absolute;left:6px;right:6px;bottom:6px;display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-size:.66rem;padding:1px 6px;border-radius:99px;color:#0c1222;font-weight:600}
+.tag.b{background:var(--sky)}.tag.s{background:#9be15d}.tag.g{background:var(--lantern)}
+.mark{position:absolute;inset:18% 18% 22% 18%;display:flex;align-items:center;justify-content:center}
+.mark svg{width:100%;height:100%}
+.real{position:absolute;top:5px;right:6px;display:flex;gap:2px;opacity:.75}
+.real svg{width:22px;height:22px}
+.token{position:absolute;width:25%;height:25%;transition:left .38s ease,top .38s ease;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.token i{display:block;width:34%;height:34%;border-radius:50%;background:var(--lantern);
+  box-shadow:0 0 0 4px #ffb54733,0 0 28px 12px #ffb54766,0 0 70px 30px #ffb54722}
+.token.dead i{background:var(--ember);box-shadow:0 0 30px 10px #ef5b5266}
+.banner{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#0c1222ee;border:1px solid var(--lantern);
+  padding:14px 24px;border-radius:12px;font-family:Georgia,serif;font-size:1.3rem;text-align:center;display:none;z-index:3}
+.banner small{display:block;font-family:"Segoe UI",sans-serif;font-size:.82rem;color:var(--dim);margin-top:2px}
+.banner.show{display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:12px auto 0;max-width:580px;font-size:.78rem;color:var(--dim)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid}
+
+/* Side */
+.side{display:flex;flex-direction:column;gap:14px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button{font:inherit;font-size:.92rem;border-radius:8px;padding:8px 14px;cursor:pointer;border:1px solid var(--lantern);background:var(--lantern);color:#1d1503;font-weight:600}
+button.ghost{background:transparent;color:var(--chalk);border-color:var(--line)}
+button:hover{filter:brightness(1.1)}
+button:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.opts{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--dim)}
+input[type=range]{accent-color:var(--lantern)}
+section{background:var(--slate);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+h2{font-family:Georgia,serif;font-weight:400;font-size:1.05rem;margin:0 0 8px}
+.kb{list-style:none;margin:0;padding:0;font-size:.84rem;max-height:190px;overflow:auto}
+.kb li{padding:5px 0;border-top:1px solid var(--line);color:#c9cfe6}
+.kb li:first-child{border-top:0}
+.kb b{color:var(--lantern);font-weight:600}
+.log{list-style:none;margin:0;padding:0;font-size:.84rem;max-height:210px;overflow:auto}
+.log li{padding:4px 0 4px 12px;border-left:2px solid var(--line);margin-bottom:3px;color:#c9cfe6}
+.log li:first-child{border-color:var(--lantern);color:var(--chalk)}
+@media(prefers-reduced-motion:reduce){.token,.cell{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1>Wumpus <em>World</em></h1>
+    <p>Agent xəritəni görmür. Yalnız hisslərinə baxıb hansı xanaların təhlükəsiz olduğunu məntiqlə sübut edir.</p>
+  </div>
+  <div class="score">
+    <div><b id="score">0</b><span>xal</span></div>
+    <div><b id="arrow">1</b><span>ox</span></div>
+    <div><b id="gold">yox</b><span>qızıl</span></div>
+  </div>
+</header>
+
+<div class="layout">
+  <div>
+    <div class="board" id="board">
+      <div class="cells" id="cells"></div>
+      <div class="token" id="token"><i></i></div>
+      <div class="banner" id="banner"></div>
+    </div>
+    <div class="legend">
+      <span><i style="background:#18203d;border-color:#34416b"></i>naməlum</span>
+      <span><i style="background:#123a3a;border-color:var(--moss)"></i>sübut olunmuş təhlükəsiz</span>
+      <span><i style="background:#27315a;border-color:#4a5a92"></i>ziyarət olunub</span>
+      <span><i style="background:#2f2618;border-color:#b98a3a"></i>risk ola bilər</span>
+      <span><i style="background:#3d1519;border-color:var(--ember)"></i>quyu şübhəsiz</span>
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="ctrl">
+      <button id="bStep">Bir addım</button>
+      <button id="bAuto" class="ghost">Avtomatik</button>
+      <button id="bNew" class="ghost">Yeni dünya</button>
+    </div>
+    <div class="opts">
+      <label>Sürət <input type="range" id="spd" min="1" max="10" value="5"></label>
+      <label><input type="checkbox" id="reveal"> real dünyanı göstər</label>
+    </div>
+    <section>
+      <h2>Bilik bazası (KB)</h2>
+      <ul class="kb" id="kb"></ul>
+    </section>
+    <section>
+      <h2>Agentin qərarları</h2>
+      <ul class="log" id="log"></ul>
+    </section>
+  </div>
+</div>
+</div>
+
+<script>
+const N=4;
+const key=(x,y)=>x+","+y;
+const parse=k=>k.split(",").map(Number);
+const inb=(x,y)=>x>=1&&x<=N&&y>=1&&y<=N;
+const nb=(x,y)=>[[1,0],[-1,0],[0,1],[0,-1]].map(([a,b])=>[x+a,y+b]).filter(([a,b])=>inb(a,b));
+const nbk=k=>{const [x,y]=parse(k);return nb(x,y).map(([a,b])=>key(a,b))};
+const allCells=[];for(let y=1;y<=N;y++)for(let x=1;x<=N;x++)allCells.push(key(x,y));
+const lbl=k=>"("+k+")";
+
+const ICON={
+ pit:'<svg viewBox="0 0 40 40"><ellipse cx="20" cy="22" rx="16" ry="11" fill="#05070f" stroke="#ef5b52" stroke-width="2"/><ellipse cx="20" cy="20" rx="9" ry="5" fill="#000"/></svg>',
+ wumpus:'<svg viewBox="0 0 40 40"><path d="M6 8l7 6h14l7-6-2 12c0 9-6 14-12 14S8 29 8 20z" fill="#7a3fb5" stroke="#d9b8ff" stroke-width="1.5"/><circle cx="14" cy="21" r="3" fill="#fff"/><circle cx="26" cy="21" r="3" fill="#fff"/><circle cx="14" cy="21" r="1.3" fill="#000"/><circle cx="26" cy="21" r="1.3" fill="#000"/><path d="M13 29h14" stroke="#fff" stroke-width="2"/></svg>',
+ dead:'<svg viewBox="0 0 40 40"><path d="M6 8l7 6h14l7-6-2 12c0 9-6 14-12 14S8 29 8 20z" fill="#3a3a4a" stroke="#888" stroke-width="1.5"/><path d="M11 18l6 6M17 18l-6 6M23 18l6 6M29 18l-6 6" stroke="#ddd" stroke-width="2"/></svg>',
+ gold:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#ffb547" stroke="#fff1c9" stroke-width="2"/><path d="M20 10l3 7 7 .6-5.3 4.7 1.6 7.2L20 26l-6.3 3.5 1.6-7.2L10 17.6l7-.6z" fill="#fff1c9"/></svg>'
+};
+
+let W,A,timer=null;
+
+function makeWorld(){
+  for(let t=0;t<500;t++){
+    const pits=new Set();
+    allCells.forEach(c=>{if(c!=="1,1"&&Math.random()<0.2)pits.add(c)});
+    const free=allCells.filter(c=>c!=="1,1");
+    const wumpus=free[Math.floor(Math.random()*free.length)];
+    const gold=free[Math.floor(Math.random()*free.length)];
+    if(pits.has(wumpus)||pits.has(gold))continue;
+    const seen=new Set(["1,1"]),q=["1,1"];
+    while(q.length){const c=q.shift();nbk(c).forEach(n=>{if(!seen.has(n)&&!pits.has(n)&&n!==wumpus){seen.add(n);q.push(n)}})}
+    if(seen.has(gold))return{pits,wumpus,gold,wumpusAlive:true};
+  }
+  return{pits:new Set(),wumpus:"4,4",gold:"3,3",wumpusAlive:true};
+}
+function percepts(c){
+  const n=nbk(c);
+  return{breeze:n.some(k=>W.pits.has(k)),stench:W.wumpusAlive&&n.includes(W.wumpus),glitter:c===W.gold};
+}
+function newAgent(){return{pos:"1,1",visited:new Map(),hasGold:false,arrow:1,score:0,done:false,dead:false,wumpusDead:false}}
+function log(t){const li=document.createElement("li");li.textContent=t;document.getElementById("log").prepend(li)}
+
+/* Model checking ilə nəticə çıxarma */
+function infer(){
+  const U=allCells.filter(c=>!A.visited.has(c));
+  const n=U.length,idx=new Map(U.map((c,i)=>[c,i]));
+  const obs=[...A.visited.entries()].map(([c,p])=>({breeze:p.breeze,nbIdx:nbk(c).filter(k=>idx.has(k)).map(k=>idx.get(k))}));
+  const always=new Array(n).fill(true),some=new Array(n).fill(false);
+  let models=0;
+  for(let m=0;m<(1<<n);m++){
+    let ok=true;
+    for(const o of obs){
+      let b=false;
+      for(const i of o.nbIdx){if(m>>i&1){b=true;break}}
+      if(b!==o.breeze){ok=false;break}
+    }
+    if(!ok)continue;
+    models++;
+    for(let i=0;i<n;i++){if(m>>i&1)some[i]=true;else always[i]=false}
+  }
+  let cand=[];
+  if(!A.wumpusDead){
+    cand=U.filter(w=>{for(const [c,p] of A.visited){if(p.stench!==nbk(c).includes(w))return false}return true});
+  }
+  const info={};
+  U.forEach((c,i)=>{
+    const wp=cand.includes(c);
+    info[c]={pitSure:models>0&&always[i],safe:!some[i]&&!wp,risky:some[i]||wp};
+  });
+  A.visited.forEach((_,c)=>info[c]={safe:true,visited:true});
+  info._cand=cand;
+  return info;
+}
+
+function pathTo(from,isTarget,info){
+  const prev=new Map([[from,null]]),q=[from];
+  while(q.length){
+    const c=q.shift();
+    if(c!==from&&isTarget(c)){const p=[];let k=c;while(k!==from){p.unshift(k);k=prev.get(k)}return p}
+    if(c!==from&&!A.visited.has(c))continue;
+    nbk(c).forEach(n=>{if(!prev.has(n)&&(A.visited.has(n)||info[n].safe)){prev.set(n,c);q.push(n)}});
+  }
+  return null;
+}
+
+function moveTo(c){
+  A.pos=c;A.score-=1;
+  if(W.pits.has(c)){A.done=A.dead=true;A.score-=1000;log("Quyuya düşdü "+lbl(c)+". -1000");return}
+  if(c===W.wumpus&&W.wumpusAlive){A.done=A.dead=true;A.score-=1000;log("Wumpus agenti yedi. -1000");return}
+  observe();
+}
+function observe(){
+  const p=percepts(A.pos);
+  if(!A.visited.has(A.pos)){
+    A.visited.set(A.pos,p);
+    const parts=[];
+    if(p.breeze)parts.push("meh");if(p.stench)parts.push("iy");if(p.glitter)parts.push("parıltı");
+    log(lbl(A.pos)+" hiss: "+(parts.length?parts.join(", "):"heç nə"));
+  }
+}
+
+function step(){
+  if(A.done)return;
+  const info=infer(),here=A.pos;
+  if(A.visited.get(here).glitter&&!A.hasGold){A.hasGold=true;A.score-=1;log("Qızıl götürüldü. Çıxışa qayıdır.");return}
+  if(A.hasGold){
+    if(here==="1,1"){A.done=true;A.score+=1000;log("Qızılla çıxdı. +1000");return}
+    const p=pathTo(here,c=>c==="1,1",info);
+    log("Geri qayıdır: "+lbl(p[0]));moveTo(p[0]);return;
+  }
+  const p=pathTo(here,c=>!A.visited.has(c)&&info[c].safe,info);
+  if(p){log("Təhlükəsiz sübut olundu: "+lbl(p[p.length-1]));moveTo(p[0]);return}
+  const cand=info._cand;
+  if(!A.wumpusDead&&A.arrow>0&&cand.length===1){
+    const w=cand[0];
+    if(nbk(w).includes(here)){
+      A.arrow--;A.score-=10;
+      if(W.wumpus===w){W.wumpusAlive=false;A.wumpusDead=true;log("Ox "+lbl(w)+"-ə atıldı. Scream: Wumpus öldü. -10")}
+      else log("Ox boşa getdi. -10");
+      return;
+    }
+    const q=pathTo(here,c=>A.visited.has(c)&&nbk(w).includes(c),info);
+    if(q){log("Wumpus "+lbl(w)+"-dədir. Atış mövqeyinə gedir.");moveTo(q[0]);return}
+  }
+  if(here==="1,1"){A.done=true;log("Təhlükəsiz addım qalmadı. Qızılsız çıxdı.");return}
+  const back=pathTo(here,c=>c==="1,1",info);
+  log("Təhlükəsiz addım yoxdur. Çıxışa qayıdır.");moveTo(back[0]);
+}
+
+function renderKB(info){
+  const kb=document.getElementById("kb");kb.innerHTML="";
+  const items=[...A.visited.entries()].reverse().slice(0,8);
+  items.forEach(([c,p])=>{
+    const un=nbk(c).filter(k=>!A.visited.has(k));
+    const near=nbk(c).map(lbl).join(" ");
+    const li=document.createElement("li");
+    let txt="<b>"+lbl(c)+"</b> ";
+    if(!p.breeze&&!p.stench)txt+="meh yox, iy yox ⇒ qonşular təmizdir: "+near;
+    else{
+      const a=[];
+      if(p.breeze)a.push(un.length?"meh ⇒ quyu "+un.map(lbl).join(" və ya ")+" içindədir":"meh (qonşular artıq ziyarət olunub)");
+      else a.push("meh yox ⇒ qonşularda quyu yoxdur");
+      if(p.stench&&!A.wumpusDead)a.push("iy ⇒ Wumpus "+un.map(lbl).join(" və ya ")+" içindədir");
+      txt+=a.join("; ");
+    }
+    li.innerHTML=txt;kb.appendChild(li);
+  });
+}
+
+function render(){
+  const info=infer(),reveal=document.getElementById("reveal").checked;
+  const cells=document.getElementById("cells");cells.innerHTML="";
+  for(let y=N;y>=1;y--)for(let x=1;x<=N;x++){
+    const c=key(x,y),vis=A.visited.has(c),d=document.createElement("div");
+    let cls="cell",mark="";
+    if(vis)cls+=" vis";
+    else if(info[c].pitSure){cls+=" pit";mark=ICON.pit}
+    else if(info[c].safe)cls+=" safe";
+    else if(info[c].risky&&A.visited.size>1)cls+=" risk";
+    d.className=cls;
+    const p=A.visited.get(c);
+    let h='<span class="xy">'+x+','+y+'</span>';
+    if(mark)h+='<span class="mark">'+mark+'</span>';
+    if(p)h+='<span class="tags">'+(p.breeze?'<span class="tag b">meh</span>':'')+(p.stench?'<span class="tag s">iy</span>':'')+(p.glitter&&!A.hasGold?'<span class="tag g">parıltı</span>':'')+'</span>';
+    if(reveal){
+      let r="";
+      if(W.pits.has(c))r+=ICON.pit;
+      if(c===W.wumpus)r+=W.wumpusAlive?ICON.wumpus:ICON.dead;
+      if(c===W.gold&&!A.hasGold)r+=ICON.gold;
+      if(r)h+='<span class="real">'+r+'</span>';
+    }
+    d.innerHTML=h;cells.appendChild(d);
+  }
+  const [px,py]=parse(A.pos),t=document.getElementById("token");
+  t.style.left=(px-1)*25+"%";t.style.top=(N-py)*25+"%";
+  t.classList.toggle("dead",A.dead);
+  document.getElementById("score").textContent=A.score;
+  document.getElementById("arrow").textContent=A.arrow;
+  document.getElementById("gold").textContent=A.hasGold?"var":"yox";
+  renderKB(info);
+  const b=document.getElementById("banner");
+  if(A.done){
+    b.classList.add("show");
+    b.innerHTML=A.dead?"Agent həlak oldu<small>Yekun xal: "+A.score+"</small>":
+      (A.hasGold?"Qızılla çıxdı<small>Yekun xal: "+A.score+"</small>":"Qızılsız çıxdı<small>Təhlükəsiz yol tapılmadı. Xal: "+A.score+"</small>");
+    stopAuto();
+  }else b.classList.remove("show");
+}
+
+function tick(){step();render()}
+function stopAuto(){if(timer){clearInterval(timer);timer=null}document.getElementById("bAuto").textContent="Avtomatik"}
+function startAuto(){stopAuto();timer=setInterval(tick,1100-document.getElementById("spd").value*100);document.getElementById("bAuto").textContent="Dayandır"}
+function reset(){
+  stopAuto();W=makeWorld();A=newAgent();
+  document.getElementById("log").innerHTML="";
+  log("Yeni dünya. Agent (1,1)-dədir.");
+  observe();render();
+}
+document.getElementById("bStep").onclick=()=>{stopAuto();tick()};
+document.getElementById("bAuto").onclick=()=>{timer?stopAuto():(A.done||startAuto())};
+document.getElementById("bNew").onclick=reset;
+document.getElementById("reveal").onchange=render;
+document.getElementById("spd").oninput=()=>{if(timer)startAuto()};
+reset();
+</script>
+</body>
+</html>

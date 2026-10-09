@@ -22,6 +22,9 @@ export function Footer() {
             <Link href="/quiz" className="hover:text-white">{t.nav.quiz}</Link>
             <Link href="/results" className="hover:text-white">{t.nav.results}</Link>
             <Link href="/plan" className="hover:text-white">{t.nav.plan}</Link>
+            <a href="/wumpus_world_v2.html" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300">
+              Wumpus World ↗
+            </a>
           </div>
         </div>
 
