@@ -40,7 +40,7 @@ export function getLearningPath(result: DiagnosticResult) {
 export function getNextLearningAction(result: DiagnosticResult) {
   const current = getLearningPath(result).find((stage) => stage.unlocked && !stage.completed);
   if (!current) {
-    return "Bütün mərhələlər açılıb. İndi tam DİM simulyasiyasına keç.";
+    return "Son sınaqda yüksək nəticə göstərmisən. Əhatə edilməmiş mövzuları seç və yeni diaqnostik sınaqla yoxla.";
   }
   return `${current.title}: ${current.description}`;
 }

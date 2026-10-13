@@ -2,12 +2,13 @@ import type { AnalysisResult } from "@/lib/types";
 
 interface AIInsightCardProps {
   analysis: AnalysisResult;
+  isAi?: boolean;
 }
 
-export function AIInsightCard({ analysis }: AIInsightCardProps) {
+export function AIInsightCard({ analysis, isAi = false }: AIInsightCardProps) {
   return (
     <section className="rounded-2xl border border-red-500/40 bg-zinc-950 p-5 shadow-[0_0_30px_rgba(255,45,45,0.16)]">
-      <p className="text-xs uppercase tracking-[0.2em] text-red-400">AI Insight</p>
+      <p className="text-xs uppercase tracking-[0.2em] text-red-400">{isAi ? "AI nəticə analizi" : "Sınaq statistikası"}</p>
       <p className="mt-3 text-sm text-zinc-200">{analysis.feedback}</p>
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">

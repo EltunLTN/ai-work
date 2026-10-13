@@ -10,14 +10,15 @@ export function DashboardPreview() {
   const { locale, t } = useLocale();
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 py-16 md:px-6">
+    <section id="product-preview" className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 py-16 md:px-6">
       <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">{t.landing.preview}</p>
       <div className="mt-6 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-zinc-900 to-black p-6 md:p-10">
         <div className="grid gap-6 md:grid-cols-3">
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
             <p className="text-sm text-zinc-400">{t.landing.currentPrediction}</p>
-            <p className="mt-2 text-4xl font-black text-white">480</p>
-            <p className="text-sm text-red-400">{t.landing.potential}: 560</p>
+            <p className="mt-2 text-4xl font-black text-white">— / 100</p>
+            <p className="text-sm text-red-400">{locale === "az" ? "Sınaqdan sonra hesablanır" : "Calculated after your quiz"}</p>
+            <p className="kairo-muted mt-2 text-xs">{locale === "az" ? "Aşağıdakı qrafik interfeys nümunəsidir, şəxsi nəticən deyil." : "The chart below is an interface example, not your result."}</p>
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 md:col-span-2">

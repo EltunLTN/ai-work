@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useBrowserReady } from "@/hooks/use-browser-ready";
+import Loading from "@/app/loading";
+
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
@@ -11,10 +14,10 @@ import { Button } from "@/components/ui/button";
 import { useLocale } from "@/hooks/use-locale";
 import { analyzeResults } from "@/lib/ai-learning";
 import { evaluateDiagnostic } from "@/lib/analytics";
-import { demoQuestions } from "@/lib/mock-data";
 import { getTextbookById, getTopicsForProfile } from "@/lib/textbook-reference";
 import {
   appendQuestionHistory,
+  consumePendingQuiz,
   getQuestionHistory,
   getStudentProfile,
   saveAnalysis,
@@ -25,6 +28,11 @@ import {
 import type { Question, QuizAnswers, StudentProfile } from "@/lib/types";
 
 export default function QuizPage() {
+  const ready = useBrowserReady();
+  return ready ? <QuizContent /> : <Loading />;
+}
+
+function QuizContent() {
   const { t } = useLocale();
   const router = useRouter();
   const [profile] = useState<StudentProfile | null>(() =>
@@ -35,6 +43,7 @@ export default function QuizPage() {
   const [index, setIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const started = useRef(false);
 
   async function loadDiagnosticQuestions() {
     if (!profile) {
@@ -49,6 +58,14 @@ export default function QuizPage() {
     const textbook = getTextbookById(profile.textbookId);
 
     try {
+      const pending = consumePendingQuiz();
+      if (pending?.length && pending.every((question) => question.grade === profile.grade && question.subject === profile.subject)) {
+        setQuestions(pending);
+        saveQuizQuestions(pending);
+        setAnswers({});
+        setIndex(0);
+        return;
+      }
       const response = await fetch("/api/ai/diagnostic", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -72,10 +89,8 @@ export default function QuizPage() {
       setIndex(0);
     } catch (error) {
       const message = error instanceof Error ? error.message : "AI sual generasiyası alınmadı.";
-      setLoadError(`${message} Demo sualları aktiv edildi.`);
-      setQuestions(demoQuestions);
-      saveQuizQuestions(demoQuestions);
-      appendQuestionHistory(demoQuestions.map((q) => q.question));
+      setLoadError(message);
+      setQuestions([]);
       setIndex(0);
     } finally {
       setIsLoading(false);
@@ -83,6 +98,8 @@ export default function QuizPage() {
   }
 
   useEffect(() => {
+    if (started.current) return;
+    started.current = true;
     loadDiagnosticQuestions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, router]);

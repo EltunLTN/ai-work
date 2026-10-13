@@ -1,6 +1,10 @@
 "use client";
 
+import { useBrowserReady } from "@/hooks/use-browser-ready";
+import Loading from "@/app/loading";
+
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { AIQuestionGeneratorPanel } from "@/components/ai/ai-question-generator-panel";
@@ -10,12 +14,25 @@ import { LearningPathCard } from "@/components/dashboard/learning-path-card";
 import { RecommendationCard } from "@/components/results/insight-components";
 import { useLocale } from "@/hooks/use-locale";
 import { getNextLearningAction } from "@/lib/learning-system";
-import { getFeedback, getQuizQuestions, getQuizResult, getStudyPlan } from "@/lib/storage";
+import { getActivity, getFeedback, getPlanProgress, getQuizQuestions, getQuizResult, getStudyPlan, savePendingQuiz } from "@/lib/storage";
+import { getPlanCompletion, isCurrentStudyPlan } from "@/lib/study-plan";
+import { ScorePredictionCard } from "@/components/results/summary-cards";
 
 export default function DashboardPage() {
+  const ready = useBrowserReady();
+  return ready ? <DashboardContent /> : <Loading />;
+}
+
+function DashboardContent() {
   const { t } = useLocale();
+  const router = useRouter();
   const [result] = useState(() => (typeof window === "undefined" ? null : getQuizResult()));
-  const [plan] = useState(() => (typeof window === "undefined" ? null : getStudyPlan()));
+  const [plan] = useState(() => {
+    const saved = typeof window === "undefined" ? null : getStudyPlan();
+    return result && isCurrentStudyPlan(saved, result.submittedAt) ? saved : null;
+  });
+  const [events] = useState(() => typeof window === "undefined" ? [] : getActivity());
+  const [progress] = useState(() => plan ? getPlanProgress(plan) : {});
   const [feedback] = useState(() => (typeof window === "undefined" ? null : getFeedback()));
   const [existingQuestions] = useState(() =>
     typeof window === "undefined" ? [] : (getQuizQuestions() ?? []).map((q) => q.question),
@@ -38,7 +55,8 @@ export default function DashboardPage() {
       <main className="mx-auto w-full max-w-6xl space-y-6 px-4 py-10 md:px-6">
         <h1 className="text-3xl font-black md:text-4xl">{t.dashboard.title}</h1>
 
-        <DashboardCards result={result} />
+        <DashboardCards result={result} completion={getPlanCompletion(plan, progress)} />
+        <ScorePredictionCard result={result} />
 
         <div className="grid gap-5 md:grid-cols-2">
           <TopicPerformanceChart data={result.topicScores} />
@@ -48,13 +66,16 @@ export default function DashboardPage() {
               payload={{
                 grade: result.grade,
                 subject: result.subject,
-                weakTopics,
+                weakTopics: weakTopics.length ? weakTopics : result.topicScores.map((item) => item.topic),
                 level: result.level,
                 count: 4,
                 existingQuestions,
               }}
               title={t.dashboard.adaptiveWidget}
-              onGenerated={() => {}}
+              onGenerated={(questions) => {
+                savePendingQuiz(questions);
+                router.push("/quiz");
+              }}
             />
             <RecommendedNextStep text={feedback?.nextStep ?? result.recommendedNextQuiz} />
           </div>
@@ -73,7 +94,7 @@ export default function DashboardPage() {
 
         <RecommendedNextStep text={getNextLearningAction(result)} />
 
-        <RecentActivity />
+        <RecentActivity events={events} />
       </main>
       <Footer />
     </div>

@@ -37,9 +37,9 @@ export function HeroSection() {
             <Link href="/onboarding">
               <Button size="lg">{t.nav.start}</Button>
             </Link>
-            <Button variant="secondary" size="lg">
+            <a href="#product-preview"><Button variant="secondary" size="lg">
               <PlayCircle className="mr-2 h-4 w-4" /> {t.hero.demo}
-            </Button>
+            </Button></a>
           </div>
         </motion.div>
 

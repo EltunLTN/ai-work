@@ -9,6 +9,7 @@ export function LearningPathCard({ result }: { result: DiagnosticResult }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-zinc-900/70 p-5">
       <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">{t.dashboard.labels.learningSystem}</p>
+      <p className="kairo-muted mt-2 text-xs">Mərhələ tövsiyəsi son sınağın dəqiqliyinə əsaslanır; bütün proqramın mənimsənilməsi demək deyil.</p>
       <div className="mt-4 space-y-3">
         {stages.map((stage) => (
           <div

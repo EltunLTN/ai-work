@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { generateStudyPlan } from "@/lib/ai/client";
 import type { QuizResult } from "@/lib/types";
 
+export const maxDuration = 120;
+
 interface PlanBody {
   result?: QuizResult;
 }
@@ -21,6 +23,11 @@ export async function POST(request: Request) {
       level: body.result.level,
       targetImprovement: "+15% accuracy",
       curriculumTopics: body.result.topicScores.map((item) => item.topic),
+      topicScores: body.result.topicScores,
+      errorPatterns: body.result.errorPatterns,
+      recommendedNextQuiz: body.result.recommendedNextQuiz,
+      resultSubmittedAt: body.result.submittedAt,
+      dailyMinutes: 60,
     });
 
     return NextResponse.json({ plan });

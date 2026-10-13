@@ -1,16 +1,25 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useBrowserReady } from "@/hooks/use-browser-ready";
+import Loading from "@/app/loading";
+
+import { Suspense, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { QuizCard } from "@/components/quiz/quiz-card";
 import { QuizProgress } from "@/components/quiz/quiz-progress";
 import { Button } from "@/components/ui/button";
-import { getStudentProfile } from "@/lib/storage";
+import { appendQuestionHistory, getQuestionHistory, getStudentProfile, saveMiniQuizAttempt } from "@/lib/storage";
 import type { Question, QuizAnswers } from "@/lib/types";
 
 export default function MiniQuizPage() {
+  const ready = useBrowserReady();
+  if (!ready) return <Loading />;
+  return <Suspense fallback={<p className="p-10">Mini test hazırlanır...</p>}><MiniQuizContent /></Suspense>;
+}
+
+function MiniQuizContent() {
   const router = useRouter();
   const params = useSearchParams();
   const topic = params.get("topic") ?? "Ümumi mövzu";
@@ -22,6 +31,8 @@ export default function MiniQuizPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const attemptId = useRef("");
+  const generating = useRef(false);
 
   const score = useMemo(() => {
     if (!questions.length) return 0;
@@ -30,12 +41,14 @@ export default function MiniQuizPage() {
   }, [questions, answers]);
 
   async function startMiniQuiz() {
+    if (generating.current) return;
     if (!profile) {
       router.push("/onboarding");
       return;
     }
 
     setIsLoading(true);
+    generating.current = true;
     setError(null);
     setSubmitted(false);
 
@@ -49,6 +62,7 @@ export default function MiniQuizPage() {
           topics: [topic],
           level: "intermediate",
           count: 8,
+          excludedQuestionStems: getQuestionHistory(),
         }),
       });
 
@@ -58,6 +72,8 @@ export default function MiniQuizPage() {
       }
 
       setQuestions(data.questions);
+      appendQuestionHistory(data.questions.map((question) => question.question));
+      attemptId.current = crypto.randomUUID();
       setAnswers({});
       setIndex(0);
     } catch (err) {
@@ -66,6 +82,7 @@ export default function MiniQuizPage() {
       setQuestions([]);
     } finally {
       setIsLoading(false);
+      generating.current = false;
     }
   }
 
@@ -98,6 +115,7 @@ export default function MiniQuizPage() {
               questionNumber={index + 1}
               total={questions.length}
               selectedIndex={answers[current.id]}
+              disabled={submitted || isLoading}
               onSelect={(selected) => setAnswers((prev) => ({ ...prev, [current.id]: selected }))}
             />
 
@@ -108,7 +126,13 @@ export default function MiniQuizPage() {
               {index < questions.length - 1 ? (
                 <Button onClick={() => setIndex((v) => Math.min(questions.length - 1, v + 1))}>Növbəti</Button>
               ) : (
-                <Button onClick={() => setSubmitted(true)}>Nəticəni göstər</Button>
+                <Button disabled={submitted || answered < questions.length || isLoading} onClick={() => {
+                  if (!profile) return;
+                  saveMiniQuizAttempt({ id: attemptId.current, grade: profile.grade, topic,
+                    correct: questions.filter((question) => answers[question.id] === question.correctIndex).length,
+                    total: questions.length, submittedAt: new Date().toISOString() });
+                  setSubmitted(true);
+                }}>Nəticəni göstər</Button>
               )}
               <Button variant="ghost" onClick={startMiniQuiz} disabled={isLoading}>
                 Yeni mini quiz
@@ -123,6 +147,14 @@ export default function MiniQuizPage() {
                     ? "Əla! Bu mövzuda sabitlik var, daha çətin suallara keçə bilərsən."
                     : "Bu mövzuya aid konspekt və videonu izləyib mini quiz-i yenidən et."}
                 </p>
+                <div className="mt-5 space-y-4">
+                  {questions.map((question, index) => <article key={question.id} className="border-t border-[var(--card-border)] pt-3 text-sm">
+                    <p className="font-semibold">{index + 1}. {question.question}</p>
+                    <p className="kairo-muted mt-2">Sənin cavabın: {question.options[answers[question.id]] ?? "Cavabsız"}</p>
+                    <p className="mt-1 text-emerald-500">Düzgün cavab: {question.options[question.correctIndex]}</p>
+                    <p className="kairo-muted mt-2">{question.explanation}</p>
+                  </article>)}
+                </div>
               </div>
             ) : null}
           </>

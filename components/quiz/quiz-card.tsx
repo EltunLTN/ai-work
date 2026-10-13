@@ -11,9 +11,10 @@ interface QuizCardProps {
   total: number;
   selectedIndex?: number;
   onSelect: (index: number) => void;
+  disabled?: boolean;
 }
 
-export function QuizCard({ question, questionNumber, total, selectedIndex, onSelect }: QuizCardProps) {
+export function QuizCard({ question, questionNumber, total, selectedIndex, onSelect, disabled = false }: QuizCardProps) {
   const { t } = useLocale();
 
   return (
@@ -37,6 +38,8 @@ export function QuizCard({ question, questionNumber, total, selectedIndex, onSel
           <button
             key={option}
             onClick={() => onSelect(idx)}
+            disabled={disabled}
+            aria-pressed={selectedIndex === idx}
             className={cn(
               "rounded-2xl border px-4 py-3 text-left text-sm transition",
               selectedIndex === idx

@@ -80,9 +80,21 @@ export type QuizResult = DiagnosticResult;
 
 export interface StudyPlanDay {
   day: number;
+  topic?: Topic;
   focus: string;
   tasks: string[];
   estimatedMinutes: number;
+  checkpoint?: boolean;
+  resources?: LearningResource[];
+}
+
+export interface LearningResource {
+  title: string;
+  description: string;
+  href: string;
+  provider: string;
+  language: "az" | "en";
+  kind: "material" | "video" | "test";
 }
 
 export interface StudyPlan {
@@ -90,6 +102,10 @@ export interface StudyPlan {
   summary: string;
   days: StudyPlanDay[];
   tips: string[];
+  generatedAt?: string;
+  resultSubmittedAt?: string;
+  version?: number;
+  dailyMinutes?: number;
 }
 
 export interface FeedbackSummary {
@@ -112,6 +128,20 @@ export interface GamificationState {
   streak: number;
   level: number;
   dailyProgress: number;
+  lastActivityDate?: string;
+  processedResultIds?: string[];
+}
+
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface TutorContext {
+  grade?: Grade;
+  topics: string[];
+  result?: Pick<DiagnosticResult, "totalQuestions" | "totalCorrect" | "topicScores" | "submittedAt">;
+  plan?: Pick<StudyPlan, "title" | "days">;
 }
 
 export type GeneratedFeedback = FeedbackSummary;

@@ -31,7 +31,9 @@ function summarizeErrorPatterns(questions: Question[], answers: QuizAnswers): st
   }
 
   if (patterns.length === 0) {
-    patterns.push("Səhvlər fərqli mövzulara yayılıb, prioritet plan ilə sürətli bərpa mümkündür.");
+    patterns.push(wrongByTopic.size
+      ? "Bu sınaqda eyni mövzuda təkrarlanan səhv müşahidə edilmədi."
+      : "Bu sınaqda səhv cavab qeydə alınmadı.");
   }
 
   return patterns;
@@ -62,10 +64,11 @@ export function evaluateDiagnostic(
   const ranked = [...topicScores].sort((a, b) => b.accuracy - a.accuracy);
   const strongestTopic = ranked[0]?.topic ?? "-";
   const weakestTopic = ranked[ranked.length - 1]?.topic ?? "-";
-  const weakTopics = ranked.filter((item) => item.accuracy < 60).map((item) => item.topic);
+  const weakTopics = [...ranked].reverse().filter((item) => item.accuracy < 60).map((item) => item.topic);
   const level = detectLevel(overallAccuracy);
-  const predictedScore = Math.round(280 + overallAccuracy * 3.1 - weakTopics.length * 8);
-  const potentialScore = Math.min(700, predictedScore + 60 + Math.max(0, 70 - overallAccuracy));
+  // Compatibility fields use the observed 0–100 practice scale; no invented improvement.
+  const predictedScore = overallAccuracy;
+  const potentialScore = overallAccuracy;
 
   return {
     grade: profile.grade,
@@ -91,5 +94,5 @@ export function evaluateDiagnostic(
 }
 
 export function buildResultSummaryAz(result: DiagnosticResult): string {
-  return `Ümumi dəqiqlik ${result.overallAccuracy}% oldu və səviyyən ${result.level} kimi qiymətləndirildi. Ən güclü mövzu ${result.strongestTopic}, əsas inkişaf sahəsi isə ${result.weakestTopic}-dur.`;
+  return `Bu sınaqda dəqiqlik ${result.overallAccuracy}% oldu və səviyyən ${result.level} kimi qiymətləndirildi. ${result.weakTopics.length ? `Əsas təkrar mövzusu: ${result.weakTopics[0]}.` : "Bu sınaqda zəif mövzu aşkar olunmadı; əhatə edilməmiş mövzuları da yoxla."}`;
 }

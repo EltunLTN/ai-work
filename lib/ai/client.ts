@@ -4,8 +4,13 @@ import {
   DIAGNOSTIC_QUESTION_PROMPT,
   FEEDBACK_SUMMARY_PROMPT,
   STUDY_PLAN_PROMPT,
+  TUTOR_PROMPT,
 } from "@/lib/ai/prompts";
-import { FALLBACK_FEEDBACK } from "@/lib/constants";
+import { estimatePerformance } from "@/lib/score-estimate";
+import { validateStudyPlan } from "@/lib/study-plan";
+import { getTextbooksBySelection } from "@/lib/textbook-reference";
+import { getLearningResources } from "@/lib/learning-resources";
+import type { parseChatInput } from "@/lib/ai/chat-input";
 import { parseJsonSafe } from "@/lib/utils";
 import type {
   DiagnosticResult,
@@ -418,7 +423,35 @@ function client() {
   if (!key) {
     throw new Error("OPENAI_API_KEY təyin edilməyib.");
   }
-  return new OpenAI({ apiKey: key });
+  return new OpenAI({ apiKey: key, timeout: 60000, maxRetries: 1 });
+}
+
+export async function generateTutorReply(input: NonNullable<ReturnType<typeof parseChatInput>>) {
+  const lastMessage = input.messages.at(-1)!.content.toLocaleLowerCase("az");
+  const topics = input.context.grade
+    ? getTextbooksBySelection(input.context.grade, "Riyaziyyat").flatMap((book) => book.topics)
+    : input.context.topics;
+  const topic = topics.find((item) => item.toLocaleLowerCase("az").split(/[^\p{L}]+/u)
+    .some((word) => word.length >= 4 && lastMessage.includes(word.slice(0, 6))));
+  const resources = topic ? getLearningResources(topic, input.context.grade) : [];
+  const response = await client().responses.create({
+    model: MODEL,
+    temperature: 0.4,
+    max_output_tokens: 2200,
+    store: false,
+    input: [
+      { role: "system", content: TUTOR_PROMPT },
+      { role: "developer", content: JSON.stringify({
+        language: input.locale === "en" ? "English" : "Azerbaijani",
+        learningContext: input.context,
+        scoreEstimate: input.context.result ? estimatePerformance(input.context.result) : null,
+        resources,
+      }) },
+      ...input.messages,
+    ],
+  });
+  if (response.status !== "completed" || !response.output_text?.trim()) throw new Error("AI tam cavab qaytarmadı. Yenidən cəhd edin.");
+  return { answer: response.output_text.trim(), resources };
 }
 
 function normalizeQuestions(
@@ -563,6 +596,7 @@ export async function generateAdaptiveQuestions(input: {
 
 export async function generateFeedbackSummary(input: {
   result: DiagnosticResult;
+  review?: Array<{ topic: string; question: string; selectedAnswer: string; correctAnswer: string }>;
 }): Promise<FeedbackSummary> {
   const openai = client();
 
@@ -572,21 +606,32 @@ export async function generateFeedbackSummary(input: {
       temperature: 0.45,
       input: [
         { role: "system", content: FEEDBACK_SUMMARY_PROMPT },
-        { role: "user", content: JSON.stringify(input.result) },
+        { role: "user", content: JSON.stringify({
+          result: {
+            grade: input.result.grade, subject: input.result.subject,
+            totalQuestions: input.result.totalQuestions, totalCorrect: input.result.totalCorrect,
+            topicScores: input.result.topicScores,
+            submittedAt: input.result.submittedAt,
+          },
+          scoreEstimate: estimatePerformance(input.result),
+          review: input.review?.slice(0, 30),
+        }) },
       ],
     });
 
     const parsed = parseJsonSafe<FeedbackSummary>(response.output_text);
-    if (!parsed?.headline || !parsed?.summary) {
+    if (!parsed || ![parsed.headline, parsed.summary, parsed.nextStep].every((item) => typeof item === "string" && item.trim()) ||
+        !Array.isArray(parsed.strengths) || !Array.isArray(parsed.weaknesses) ||
+        ![...parsed.strengths, ...parsed.weaknesses].every((item) => typeof item === "string")) {
       throw new Error("AI feedback JSON-u düzgün deyil.");
     }
 
     return {
       headline: parsed.headline,
       summary: parsed.summary,
-      strengths: parsed.strengths?.slice(0, 3) ?? FALLBACK_FEEDBACK.strengths,
-      weaknesses: parsed.weaknesses?.slice(0, 3) ?? FALLBACK_FEEDBACK.weaknesses,
-      nextStep: parsed.nextStep ?? FALLBACK_FEEDBACK.nextStep,
+      strengths: parsed.strengths.slice(0, 3),
+      weaknesses: parsed.weaknesses.slice(0, 3),
+      nextStep: parsed.nextStep,
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : "AI feedback alınmadı.";
@@ -604,32 +649,47 @@ export async function generateStudyPlan(input: {
   topicScores?: Array<{ topic: string; accuracy: number }>;
   errorPatterns?: string[];
   recommendedNextQuiz?: string;
+  resultSubmittedAt?: string;
+  dailyMinutes?: number;
 }): Promise<StudyPlan> {
   const openai = client();
+  const gradeTopics = getTextbooksBySelection(input.grade, input.subject).flatMap((book) => book.topics);
+  const curriculumTopics = input.curriculumTopics.length
+    ? input.curriculumTopics.filter((topic) => gradeTopics.includes(topic))
+    : gradeTopics;
+  if (!curriculumTopics.length) throw new Error("Seçilmiş sinif üçün uyğun mövzu tapılmadı.");
 
   try {
-    const response = await openai.responses.create({
-      model: MODEL,
-      temperature: 0.5,
-      input: [
-        { role: "system", content: STUDY_PLAN_PROMPT },
-        {
-          role: "user",
-          content: JSON.stringify({
-            ...input,
-            nonce: Date.now(),
-            personalizationRule:
-              "Plan şagirdin zəif mövzularına və mövzu göstəricilərinə uyğun konkret tapşırıqlar verməlidir.",
-          }),
-        },
-      ],
-    });
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const response = await openai.responses.create({
+        model: MODEL,
+        temperature: 0.5,
+        max_output_tokens: 5000,
+        input: [
+          { role: "system", content: STUDY_PLAN_PROMPT },
+          {
+            role: "user",
+            content: JSON.stringify({
+              ...input,
+              curriculumTopics,
+              weakTopics: input.weakTopics.filter((topic) => curriculumTopics.includes(topic)),
+              retryInstruction: attempt ? "Əvvəlki plan tələb olunan sxemə uyğun deyildi. Dəqiq 7 gün, düzgün topic və checkpoint qaytar." : undefined,
+              nonce: Date.now(),
+              personalizationRule:
+                "Plan şagirdin zəif mövzularına və mövzu göstəricilərinə uyğun konkret tapşırıqlar verməlidir.",
+            }),
+          },
+        ],
+      });
 
-    const parsed = parseJsonSafe<StudyPlan>(response.output_text);
-    if (!parsed?.days?.length) {
-      throw new Error("AI study plan JSON-u düzgün deyil.");
+      const parsed = validateStudyPlan(parseJsonSafe<unknown>(response.output_text), curriculumTopics, input.grade);
+      const weakTopics = input.weakTopics.filter((topic) => curriculumTopics.includes(topic));
+      const prioritizesWeakTopics = !weakTopics.length || (parsed?.days.filter((day) => weakTopics.includes(day.topic ?? "")).length ?? 0) >= 4;
+      if (parsed && prioritizesWeakTopics && parsed.days.every((day) => day.estimatedMinutes <= (input.dailyMinutes ?? 60))) {
+        return { ...parsed, resultSubmittedAt: input.resultSubmittedAt, dailyMinutes: input.dailyMinutes ?? 60 };
+      }
     }
-    return parsed;
+    throw new Error("AI uyğun 7 günlük plan qaytarmadı. Yenidən cəhd edin.");
   } catch (error) {
     const message = error instanceof Error ? error.message : "AI study plan alınmadı.";
     throw new Error(message);

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { AITutor } from "@/components/ai/ai-tutor";
 
 const display = Space_Grotesk({
   variable: "--font-display",
@@ -37,6 +38,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <AITutor />
       </body>
     </html>
   );

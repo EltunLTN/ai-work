@@ -1,5 +1,8 @@
 "use client";
 
+import { useBrowserReady } from "@/hooks/use-browser-ready";
+import Loading from "@/app/loading";
+
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Footer } from "@/components/layout/footer";
@@ -17,71 +20,68 @@ import {
 import { ScorePredictionCard } from "@/components/results/summary-cards";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/hooks/use-locale";
-import { generateStudyPlan } from "@/lib/ai-learning";
+import { analyzeResults } from "@/lib/ai-learning";
 import { buildResultSummaryAz } from "@/lib/analytics";
-import { updateGamificationFromResult } from "@/lib/gamification";
-import { demoAnalysis, demoAnswers, demoQuestions, demoResult } from "@/lib/mock-data";
 import {
   getAnalysis,
   getFeedback,
   getGamification,
-  getQuizAnswers,
-  getQuizQuestions,
+  getResultReview,
   getQuizResult,
   saveFeedback,
-  saveGamification,
-  saveStudyPlan,
+  clearStudyPlan,
 } from "@/lib/storage";
 import type { AnalysisResult, FeedbackSummary, Question, QuizAnswers, QuizResult } from "@/lib/types";
 
 export default function ResultsPage() {
+  const ready = useBrowserReady();
+  return ready ? <ResultsContent /> : <Loading />;
+}
+
+function ResultsContent() {
   const { t } = useLocale();
-  const [result] = useState<QuizResult | null>(() => (typeof window === "undefined" ? null : (getQuizResult() ?? demoResult)));
+  const [result] = useState<QuizResult | null>(() => (typeof window === "undefined" ? null : getQuizResult()));
   const [feedback, setFeedback] = useState<FeedbackSummary | null>(() =>
     typeof window === "undefined" ? null : getFeedback(),
   );
   const [analysis] = useState<AnalysisResult>(() =>
-    typeof window === "undefined" ? demoAnalysis : (getAnalysis() ?? demoAnalysis),
+    typeof window === "undefined" ? analyzeResults({}, []) : (getAnalysis() ?? analyzeResults(getResultReview().answers, getResultReview().questions)),
   );
   const [reviewQuestions] = useState<Question[]>(() =>
-    typeof window === "undefined" ? demoQuestions : (getQuizQuestions() ?? demoQuestions),
+    typeof window === "undefined" ? [] : getResultReview().questions,
   );
   const [reviewAnswers] = useState<QuizAnswers>(() =>
-    typeof window === "undefined" ? demoAnswers : (getQuizAnswers() ?? demoAnswers),
+    typeof window === "undefined" ? {} : getResultReview().answers,
   );
-  const [gamification, setGamification] = useState(() =>
+  const [gamification] = useState(() =>
     typeof window === "undefined" ? null : getGamification(),
   );
   const [feedbackError, setFeedbackError] = useState<string | null>(null);
 
-  useEffect(() => {
+  async function loadFeedback() {
     if (!result) return;
-    (async () => {
-      try {
-        const response = await fetch("/api/ai/feedback-summary", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ result }),
-        });
-        const data = (await response.json()) as { feedback?: FeedbackSummary; error?: string };
-        if (!response.ok || !data.feedback) {
-          throw new Error(data.error ?? "AI feedback hazır deyil.");
-        }
-        setFeedback(data.feedback);
-        saveFeedback(data.feedback);
-        setFeedbackError(null);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : "AI feedback alınmadı.";
-        setFeedbackError(message);
-      }
-    })();
-  }, [result]);
+    setFeedbackError(null);
+    try {
+      const response = await fetch("/api/ai/feedback-summary", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ result, review: reviewQuestions.map((question) => ({
+          topic: question.topic,
+          question: question.question,
+          selectedAnswer: question.options[reviewAnswers[question.id]] ?? "Cavab verilməyib",
+          correctAnswer: question.options[question.correctIndex],
+        })) }),
+      });
+      const data = await response.json() as { feedback?: FeedbackSummary; error?: string };
+      if (!response.ok || !data.feedback) throw new Error(data.error ?? "AI analizi alınmadı.");
+      setFeedback(data.feedback);
+      saveFeedback(data.feedback, result.submittedAt);
+    } catch (error) {
+      setFeedbackError(error instanceof Error ? error.message : "AI analizi alınmadı.");
+    }
+  }
 
   useEffect(() => {
-    if (!result) return;
-    const nextState = updateGamificationFromResult(result, gamification);
-    setGamification(nextState);
-    saveGamification(nextState);
+    if (result && !feedback) loadFeedback();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
 
@@ -128,7 +128,12 @@ export default function ResultsPage() {
 
         <ResultsSummary result={result} />
 
-        <AIInsightCard analysis={analysis} />
+        <AIInsightCard analysis={feedback ? {
+          weakTopics: result.weakTopics,
+          strongTopics: result.topicScores.filter((item) => item.accuracy >= 75).map((item) => item.topic),
+          feedback: feedback.summary,
+          nextStep: feedback.nextStep,
+        } : analysis} isAi={Boolean(feedback)} />
 
         {gamification ? <GamificationCard state={gamification} /> : null}
 
@@ -145,6 +150,7 @@ export default function ResultsPage() {
         {feedbackError ? (
           <div className="rounded-2xl border border-red-400/30 bg-red-500/10 p-4 text-sm text-red-200">
             {feedbackError}
+            <Button variant="ghost" onClick={loadFeedback}>AI analizini yenidən yoxla</Button>
           </div>
         ) : null}
 
@@ -179,12 +185,9 @@ export default function ResultsPage() {
         <div className="flex gap-3">
           <Link href="/plan">
             <Button
-              onClick={() => {
-                const freshPlan = generateStudyPlan(analysis);
-                saveStudyPlan(freshPlan);
-              }}
+              onClick={clearStudyPlan}
             >
-              Generate new plan
+              Yeni AI plan yarat
             </Button>
           </Link>
           <Link href="/plan">

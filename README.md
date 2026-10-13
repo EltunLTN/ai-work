@@ -23,6 +23,7 @@ It provides:
 - Skill-level detection and weakness analysis
 - Mistake review with explanations
 - Personalized 7-day AI plan
+- Floating AI math tutor with multi-turn conversation and student context
 - Dashboard insights and progress tracking
 
 The platform is designed for startup demo quality and practical daily use by students.
@@ -103,6 +104,7 @@ The platform is designed for startup demo quality and practical daily use by stu
 - POST /api/ai/adaptive
 - POST /api/ai/feedback-summary
 - POST /api/ai/study-plan
+- POST /api/ai/chat
 
 Compatibility endpoints:
 
@@ -152,6 +154,7 @@ Open:
 
 ```bash
 npm run lint
+npm test
 npm run build
 ```
 
@@ -159,7 +162,12 @@ npm run build
 
 - Local storage is used for profile, question set, answers, result, feedback, and plan state.
 - AI responses are validated and repaired before being served to the UI.
-- If AI output is invalid, robust fallback generation protects core flows.
+- Invalid questions are regenerated within the same grade and topic. Failed AI requests show errors; demo data and template plans are not substituted for AI output.
+- Plans validate seven days, grade-specific topics, a checkpoint, and the selected daily time budget. Direct resource URLs come from a curated catalog, not model-generated links or search pages. External resources are labelled by provider and language.
+- The tutor uses the existing server-side `OPENAI_API_KEY` and `gpt-4.1-mini` Responses API. No additional API key is required. Chat history is kept in session storage and the last 20 messages (within a size limit) are sent for follow-up context. OpenAI response storage is disabled for tutor requests.
+- Score cards show observed practice accuracy on a 0–100 scale with a Wilson 95% uncertainty interval and sample size. These uncalibrated, topic-selected quizzes cannot support an official 700-point DİM prediction; no future score gains are invented.
+- Activity, mini-quiz attempts, plan completion and XP are based on recorded actions. XP is granted once per result. Result reviews are saved with the completed attempt so a new quiz cannot overwrite an earlier review.
+- Profile and learning data remain browser-local. There is no account synchronization or cross-device persistence.
 
 ## Security Recommendation
 
