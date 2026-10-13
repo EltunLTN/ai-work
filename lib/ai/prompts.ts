@@ -8,10 +8,14 @@ Rules:
 - No extra text
 - Questions must be original
 - Do not reproduce textbook wording
-- Use topic list only as curriculum guidance
+- Use only the requested topics; copy each question's topic exactly from the input list
+- The question itself must test that topic, not merely mention its name before an unrelated exercise
 - For diagnostic mode, cover all provided topics as evenly as possible
 - If topics count equals question count, create exactly one question per topic
 - Keep questions appropriate for the selected grade
+- Beginner/easy means an easier question within the selected grade and topic, never a lower-grade substitute
+- For example, grade 11 integration questions must test integrals or antiderivatives, never basic addition
+- Return exactly count questions; check that each has exactly one mathematically correct option and a consistent explanation
 - Each question must have 4 options, one correct answer, and a short explanation
 
 JSON schema:
@@ -36,7 +40,12 @@ Input contains grade, subject, weak topics, and level.
 Rules:
 - Return ONLY valid JSON
 - No markdown
-- Focus mostly on weak topics
+- Use only the supplied weak topics; copy each question's topic exactly from that list
+- The question itself must test that topic, not merely mention its name before an unrelated exercise
+- Keep every question within the selected grade's curriculum
+- Beginner/easy means an easier question within the selected grade and topic, never a lower-grade substitute
+- For example, grade 11 integration questions must test integrals or antiderivatives, never basic addition
+- Return exactly count questions; check that each has exactly one mathematically correct option and a consistent explanation
 - Match difficulty to level
 - Keep concise and exam-oriented
 - Do not copy textbook sentences; generate original questions only

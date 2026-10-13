@@ -5,10 +5,7 @@ import {
   FEEDBACK_SUMMARY_PROMPT,
   STUDY_PLAN_PROMPT,
 } from "@/lib/ai/prompts";
-import {
-  FALLBACK_FEEDBACK,
-  getFallbackQuestions,
-} from "@/lib/constants";
+import { FALLBACK_FEEDBACK } from "@/lib/constants";
 import { parseJsonSafe } from "@/lib/utils";
 import type {
   DiagnosticResult,
@@ -354,23 +351,18 @@ function inferExpectedFromExplanation(explanation: string): number | null {
   return parseNumericToken(equalityPart);
 }
 
-function validateAndRepairQuestions(grade: Grade, subject: Subject, questions: Question[]): Question[] {
-  return questions.map((question, index) => {
+function validateAndRepairQuestions(grade: Grade, questions: Question[]): Question[] {
+  return questions.flatMap((question) => {
     const hasValidShape =
       Array.isArray(question.options) &&
       question.options.length === 4 &&
       typeof question.correctIndex === "number" &&
+      Number.isInteger(question.correctIndex) &&
       question.correctIndex >= 0 &&
       question.correctIndex <= 3;
 
     if (!hasValidShape) {
-      const fallback = getFallbackQuestions({
-        grade,
-        subject,
-        topics: [question.topic || "Ümumi mövzu"],
-        count: 1,
-      })[0];
-      return { ...fallback, id: question.id || fallback.id || `fb-${index + 1}` };
+      return [];
     }
 
     const repairedDerivativeIndex = detectCorrectOptionForDerivative(question);
@@ -386,7 +378,11 @@ function validateAndRepairQuestions(grade: Grade, subject: Subject, questions: Q
       return repairedDerivativeQuestion;
     }
 
-    const expectedFromQuestion = inferExpectedFromArithmeticQuestion(question.question);
+    // Word-based arithmetic inference is only safe for elementary exercises.
+    // In calculus, words such as "cəmi" and numbers can refer to bounds or powers.
+    const expectedFromQuestion = Number(grade) <= 4
+      ? inferExpectedFromArithmeticQuestion(question.question)
+      : null;
     if (expectedFromQuestion !== null) {
       const indexFromQuestion = findOptionIndexByNumericValue(question.options, expectedFromQuestion);
       if (indexFromQuestion !== null) {
@@ -397,16 +393,12 @@ function validateAndRepairQuestions(grade: Grade, subject: Subject, questions: Q
         };
       }
 
-      const fallback = getFallbackQuestions({
-        grade,
-        subject,
-        topics: [question.topic || "Ümumi mövzu"],
-        count: 1,
-      })[0];
-      return { ...fallback, id: question.id || fallback.id || `fb-${index + 1}` };
+      return [];
     }
 
-    const expectedFromExplanation = inferExpectedFromExplanation(question.explanation);
+    const expectedFromExplanation = Number(grade) <= 4
+      ? inferExpectedFromExplanation(question.explanation)
+      : null;
     if (expectedFromExplanation !== null) {
       const indexFromExplanation = findOptionIndexByNumericValue(question.options, expectedFromExplanation);
       if (indexFromExplanation !== null) {
@@ -443,7 +435,15 @@ function normalizeQuestions(
   if (!rawQuestions.length) return [];
 
   return rawQuestions
-    .filter((q) => Array.isArray(q?.options) && q.options.length === 4 && typeof q?.question === "string")
+    .filter((q) =>
+      Array.isArray(q?.options) && q.options.length === 4 &&
+      q.options.every((option) => typeof option === "string" && option.trim().length > 0) &&
+      new Set(q.options.map((option) => option.trim().toLowerCase())).size === 4 &&
+      typeof q?.question === "string" && q.question.trim().length > 0 &&
+      typeof q.topic === "string" && q.topic.trim().length > 0 &&
+      typeof q.explanation === "string" && q.explanation.trim().length > 0 &&
+      Number.isInteger(q.correctIndex) && q.correctIndex >= 0 && q.correctIndex <= 3,
+    )
     .map((q, index) => ({
       ...q,
       id: q.id || `ai-${subject}-${Date.now()}-${index + 1}`,
@@ -452,13 +452,83 @@ function normalizeQuestions(
       topic: q.topic || "Ümumi mövzu",
       difficulty: q.difficulty || "medium",
       explanation: q.explanation || "Bu sual mövzu üzrə əsas qaydanı yoxlayır.",
-      correctIndex:
-        typeof q.correctIndex === "number" && q.correctIndex >= 0 && q.correctIndex <= 3
-          ? q.correctIndex
-          : Number(q.correctIndex) >= 0 && Number(q.correctIndex) <= 3
-            ? Number(q.correctIndex)
-            : 0,
+      correctIndex: q.correctIndex,
     }));
+}
+
+async function generateTopicQuestions(input: {
+  grade: Grade;
+  subject: Subject;
+  topics: Topic[];
+  level: StudentLevel;
+  count: number;
+  excludedQuestionStems?: string[];
+}, prompt: string): Promise<Question[]> {
+  const topics = [...new Set(input.topics.map((topic) => topic.trim()).filter(Boolean))];
+  if (!topics.length || !Number.isInteger(input.count) || input.count < 1) {
+    throw new Error("Sual yaratmaq üçün mövzular və düzgün sual sayı tələb olunur.");
+  }
+
+  const openai = client();
+  const questions: Question[] = [];
+  const quotas = new Map(topics.map((topic, index) => [
+    topic,
+    Math.floor(input.count / topics.length) + (index < input.count % topics.length ? 1 : 0),
+  ]));
+
+  // Retry missing/invalid questions with the same curriculum, never arithmetic placeholders.
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const topicCounts = topics.map((topic) => ({
+      topic,
+      count: (quotas.get(topic) ?? 0) - questions.filter((q) => q.topic === topic).length,
+    })).filter((item) => item.count > 0);
+    const excludedQuestionStems = [
+      ...(input.excludedQuestionStems ?? []),
+      ...questions.map((q) => q.question),
+    ];
+    const response = await openai.responses.create({
+      model: MODEL,
+      temperature: 0.6,
+      input: [
+        { role: "system", content: prompt },
+        {
+          role: "user",
+          content: JSON.stringify({
+            grade: input.grade,
+            subject: input.subject,
+            topics: topicCounts.map((item) => item.topic),
+            weakTopics: topicCounts.map((item) => item.topic),
+            level: input.level,
+            count: topicCounts.reduce((sum, item) => sum + item.count, 0),
+            topicCounts,
+            nonce: Date.now(),
+            instruction: "topicCounts bölgüsünə dəqiq əməl et. Hər sual seçilmiş sinif və mövzunun biliklərini yoxlamalıdır.",
+            excludedQuestionStems: excludedQuestionStems.slice(-250),
+            noveltyRule: "excludedQuestionStems daxilində olan sualları və eyni kökdə sualları təkrarlama.",
+          }),
+        },
+      ],
+    });
+
+    const parsed = parseJsonSafe<{ questions?: Question[] } | Question[]>(response.output_text);
+    const candidates = validateAndRepairQuestions(
+      input.grade,
+      normalizeQuestions(input.grade, input.subject, parsed),
+    ).filter((q) => quotas.has(q.topic));
+
+    for (const question of uniqueByStem(candidates, excludedQuestionStems)) {
+      const topicCount = questions.filter((q) => q.topic === question.topic).length;
+      if (topicCount < (quotas.get(question.topic) ?? 0)) {
+        questions.push({
+          ...question,
+          id: `ai-${input.subject}-${Date.now()}-${questions.length + 1}`,
+        });
+      }
+    }
+    if (questions.length === input.count) return questions;
+  }
+
+  throw new Error("Seçilmiş sinif və mövzular üzrə kifayət qədər düzgün sual yaradıla bilmədi. Yenidən cəhd edin.");
 }
 
 export async function generateDiagnosticQuestions(input: {
@@ -469,58 +539,11 @@ export async function generateDiagnosticQuestions(input: {
   count?: number;
   excludedQuestionStems?: string[];
 }): Promise<Question[]> {
-  const desiredCount = input.count ?? Math.max(6, input.topics.length);
-  const openai = client();
-
-  try {
-    const response = await openai.responses.create({
-      model: MODEL,
-      temperature: 0.85,
-      input: [
-        { role: "system", content: DIAGNOSTIC_QUESTION_PROMPT },
-        {
-          role: "user",
-          content: JSON.stringify({
-            grade: input.grade,
-            subject: input.subject,
-            topics: input.topics,
-            level: input.level ?? "intermediate",
-            count: desiredCount,
-            nonce: Date.now(),
-            instruction: "Mövzu sayı qədər sual ver və mövzuları balanslı payla.",
-            excludedQuestionStems: input.excludedQuestionStems?.slice(-80) ?? [],
-            noveltyRule: "excludedQuestionStems daxilində olan sualları və eyni kökdə sualları təkrarlama.",
-          }),
-        },
-      ],
-    });
-
-    const parsed = parseJsonSafe<{ questions?: Question[] } | Question[]>(response.output_text);
-    const questions = validateAndRepairQuestions(
-      input.grade,
-      input.subject,
-      normalizeQuestions(input.grade, input.subject, parsed),
-    );
-    const uniqueQuestions = uniqueByStem(questions, input.excludedQuestionStems ?? []);
-    if (!uniqueQuestions.length) {
-      throw new Error("AI valid sual JSON-u qaytarmadı.");
-    }
-    if (uniqueQuestions.length >= desiredCount) {
-      return uniqueQuestions.slice(0, desiredCount);
-    }
-
-    const fallback = getFallbackQuestions({
-      grade: input.grade,
-      subject: input.subject,
-      topics: input.topics,
-      count: desiredCount * 2,
-    });
-    const toppedUp = uniqueByStem([...uniqueQuestions, ...fallback], input.excludedQuestionStems ?? []);
-    return toppedUp.slice(0, desiredCount);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Diagnostic sual generasiyası alınmadı.";
-    throw new Error(message);
-  }
+  return generateTopicQuestions({
+    ...input,
+    level: input.level ?? "intermediate",
+    count: input.count ?? Math.max(6, input.topics.length),
+  }, DIAGNOSTIC_QUESTION_PROMPT);
 }
 
 export async function generateAdaptiveQuestions(input: {
@@ -531,53 +554,11 @@ export async function generateAdaptiveQuestions(input: {
   count?: number;
   excludedQuestionStems?: string[];
 }): Promise<Question[]> {
-  const desiredCount = input.count ?? 4;
-  const openai = client();
-
-  try {
-    const response = await openai.responses.create({
-      model: MODEL,
-      temperature: 0.8,
-      input: [
-        { role: "system", content: ADAPTIVE_QUESTION_PROMPT },
-        {
-          role: "user",
-          content: JSON.stringify({
-            ...input,
-            nonce: Date.now(),
-            excludedQuestionStems: input.excludedQuestionStems?.slice(-80) ?? [],
-            noveltyRule: "excludedQuestionStems daxilində olan sualları və eyni kökdə sualları təkrarlama.",
-          }),
-        },
-      ],
-    });
-
-    const parsed = parseJsonSafe<{ questions?: Question[] } | Question[]>(response.output_text);
-    const questions = validateAndRepairQuestions(
-      input.grade,
-      input.subject,
-      normalizeQuestions(input.grade, input.subject, parsed),
-    );
-    const uniqueQuestions = uniqueByStem(questions, input.excludedQuestionStems ?? []);
-    if (!uniqueQuestions.length) {
-      throw new Error("AI adaptiv sual JSON-u düzgün deyil.");
-    }
-    if (uniqueQuestions.length >= desiredCount) {
-      return uniqueQuestions.slice(0, desiredCount);
-    }
-
-    const fallback = getFallbackQuestions({
-      grade: input.grade,
-      subject: input.subject,
-      topics: input.weakTopics,
-      count: desiredCount * 2,
-    });
-    const toppedUp = uniqueByStem([...uniqueQuestions, ...fallback], input.excludedQuestionStems ?? []);
-    return toppedUp.slice(0, desiredCount);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Adaptiv sual generasiyası alınmadı.";
-    throw new Error(message);
-  }
+  return generateTopicQuestions({
+    ...input,
+    topics: input.weakTopics,
+    count: input.count ?? 4,
+  }, ADAPTIVE_QUESTION_PROMPT);
 }
 
 export async function generateFeedbackSummary(input: {
