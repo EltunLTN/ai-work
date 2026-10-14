@@ -1,4 +1,4 @@
-import { getGrades, getTextbooksBySelection } from "@/lib/textbook-reference";
+import { getGrades, getTextbooksBySelection, isSubject } from "@/lib/textbook-reference";
 import { estimatePerformance } from "@/lib/score-estimate";
 import type { ChatMessage, Grade, TutorContext } from "@/lib/types";
 
@@ -15,10 +15,13 @@ export function parseChatInput(value: unknown): { messages: ChatMessage[]; conte
   if (messages.at(-1)?.role !== "user" || messages.reduce((sum, m) => sum + m.content.length, 0) > 40000) return null;
 
   const raw = body.context;
-  const grade = raw && getGrades().includes(raw.grade as Grade) ? raw.grade : undefined;
-  const curriculum = grade ? getTextbooksBySelection(grade, "Riyaziyyat").flatMap((book) => book.topics) : [];
+  if (raw?.subject !== undefined && !isSubject(raw.subject)) return null;
+  const subject = isSubject(raw?.subject) ? raw.subject : "Riyaziyyat";
+  const grade = raw && getGrades(subject).includes(raw.grade as Grade) ? raw.grade : undefined;
+  const curriculum = grade ? getTextbooksBySelection(grade, subject).flatMap((book) => book.topics) : [];
   const context: TutorContext = {
     grade,
+    subject,
     topics: Array.isArray(raw?.topics) ? raw.topics.filter((topic) => curriculum.includes(topic)).slice(0, 20) : [],
   };
   if (raw?.result && Array.isArray(raw.result.topicScores) && estimatePerformance(raw.result) &&

@@ -7,9 +7,12 @@ import type {
   QuizResult,
   StudentProfile,
   StudyPlan,
+  Subject,
 } from "@/lib/types";
 import { getTextbookById } from "@/lib/textbook-reference";
 import { updateGamificationFromResult } from "@/lib/gamification";
+
+export const STUDENT_PROFILE_EVENT = "kairo:student-profile-changed";
 
 const KEYS = {
   profile: "kairo.profile",
@@ -58,6 +61,7 @@ export function saveStudentProfile(profile: StudentProfile) {
     }
   }
   write(KEYS.profile, profile);
+  if (JSON.stringify(previous) !== JSON.stringify(profile)) window.dispatchEvent?.(new Event(STUDENT_PROFILE_EVENT));
 }
 
 export function getStudentProfile() {
@@ -175,6 +179,7 @@ export function getActivity(): Array<{ title: string; date: string }> {
 export interface MiniQuizAttempt {
   id: string;
   grade: string;
+  subject?: Subject;
   topic: string;
   correct: number;
   total: number;

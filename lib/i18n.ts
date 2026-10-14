@@ -18,7 +18,7 @@ export const translations = {
     hero: {
       tag: "AI Exam Coach",
       title: "Daha ağıllı öyrən. Daha düzgün hazırlaş.",
-      desc: "Kairo sinfinə və mövzularına uyğun suallar yaradır, səviyyəni ölçür və AI ilə sənə uyğun öyrənmə planı qurur.",
+      desc: "Riyaziyyat, fizika, biologiya, coğrafiya və kimya üzrə sinfinə uyğun suallar həll et, nəticələrini gör və AI ilə fərdi öyrənmə planı qur.",
       demo: "Demo bax",
     },
     landing: {
@@ -108,7 +108,7 @@ export const translations = {
     hero: {
       tag: "AI Exam Coach",
       title: "Learn smarter. Prepare better.",
-      desc: "Kairo generates questions based on your grade and topics, measures your level, and builds an AI-powered personalized learning plan.",
+      desc: "Practice Mathematics, Physics, Biology, Geography and Chemistry at your grade level, review your results, and build a personalized AI study plan.",
       demo: "Watch demo",
     },
     landing: {

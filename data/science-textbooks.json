@@ -1,0 +1,560 @@
+[
+  {
+    "id": "science-biologiya-6-538",
+    "grade": "6",
+    "subject": "Biologiya",
+    "title": "Biologiya - 6",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=538",
+    "topics": [
+      "Canlıların təsnifatı",
+      "Hüceyrənin ümumi quruluşu",
+      "Bitki və heyvan toxumaları",
+      "Bitkilərin vegetativ orqanları",
+      "Çiçək, toxum və meyvə",
+      "Fotosintez və tənəffüs",
+      "Orqanizmlərin çoxalması",
+      "Təbii birliklər və ekosistemlər"
+    ]
+  },
+  {
+    "id": "science-biologiya-7-863",
+    "grade": "7",
+    "subject": "Biologiya",
+    "title": "Biologiya 7 (1-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=863",
+    "topics": [
+      "Biologiya nəyi öyrənir",
+      "İşıq mikroskopunun quruluşu",
+      "Bitki və heyvan hüceyrələrinin quruluşu",
+      "Orqanizmin təşkili səviyyələri",
+      "Çiçəkli bitkilərin orqanları. Yarpaq",
+      "Çiçəkli bitkilərdə cinsiyyətli çoxalma. Mayalanma",
+      "Meyvə",
+      "Bitkilərin həyat dövrü"
+    ]
+  },
+  {
+    "id": "science-biologiya-7-864",
+    "grade": "7",
+    "subject": "Biologiya",
+    "title": "Biologiya 7 (2-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=864",
+    "topics": [
+      "Onurğalı heyvanların xarici bədən örtükləri",
+      "Onurğasız heyvanlarda bədənin əsas hissələri. Həlqəvi qurdlar və bağırsaqboşluqlular",
+      "Onurğasız heyvanlarda bədənin əsas hissələri.Molyusklar",
+      "Təbii yaşayış mühitləri",
+      "Ekosistemlərdə qida münasibətləri. Qida şəbəkəsi",
+      "Ekoloji piramidalar",
+      "Bədən kütlə indeksi və sağlamlıq",
+      "Zərərli vərdişlər və sağlamlıq"
+    ]
+  },
+  {
+    "id": "science-biologiya-8-927",
+    "grade": "8",
+    "subject": "Biologiya",
+    "title": "Biologiya 8 (1-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=927",
+    "topics": [
+      "Hüceyrənin kimyəvi tərkibi. Su",
+      "Fermentlər",
+      "Bitki orqanizmi və qazlar mübadiləsi",
+      "Bitki orqanizmində maddələrin daşınması",
+      "İnsan ürəyinin quruluşu və işi",
+      "Qanın tərkibi və funksiyaları",
+      "Heyvanlarda tənəffüs",
+      "Tənəffüs hərəkətləri və qazlar mübadiləsi"
+    ]
+  },
+  {
+    "id": "science-biologiya-8-928",
+    "grade": "8",
+    "subject": "Biologiya",
+    "title": "Biologiya 8 (2-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=928",
+    "topics": [
+      "Orqanizmdə maddələr mübadiləsi",
+      "İnsan orqanizmində həzm prosesi",
+      "Heyvanlarda cinsi çoxalma",
+      "İnsanın cinsiyyət sistemi",
+      "Canlı orqanizmlərin təsnifatı",
+      "Bitkilər aləminin təsnifatı",
+      "Sağlam qidalanma",
+      "İnsan fəaliyyətinin karbon və azot dövriyyəsinə təsiri"
+    ]
+  },
+  {
+    "id": "science-biologiya-9-144",
+    "grade": "9",
+    "subject": "Biologiya",
+    "title": "Biologiya - 9",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/player/index3.php?book_id=144",
+    "topics": [
+      "Hüceyrənin kimyəvi tərkibi",
+      "Nuklein turşuları",
+      "Hüceyrə nəzəriyyəsi",
+      "Viruslar",
+      "Genetik kod",
+      "Zülalların biosintezi",
+      "Mitoz və meyoz",
+      "Orqanizmlərin çoxalma formaları"
+    ]
+  },
+  {
+    "id": "science-biologiya-10-727",
+    "grade": "10",
+    "subject": "Biologiya",
+    "title": "Biologiya - 10",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=727",
+    "topics": [
+      "Canlılarda qidalanma",
+      "Zülal biosintezinin mexanizmi",
+      "Modifikasiya dəyişkənliyi",
+      "Canlılara təsir edən abiotik amillər",
+      "İnfeksiya mənbələri və yoluxma mexanizmi",
+      "Buğumayaqlıların törətdiyi və yaydığı xəstəliklər",
+      "Təkamülün istiqamətləri və yolları",
+      "Qədim və ilk müasir insanlar"
+    ]
+  },
+  {
+    "id": "science-biologiya-11-276",
+    "grade": "11",
+    "subject": "Biologiya",
+    "title": "Biologiya - 11",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=276",
+    "topics": [
+      "Təbii seçmə və uyğunlaşmalar",
+      "Mikrobiologiya",
+      "Seleksiyanın metodları",
+      "Biotexnologiya",
+      "Canlılarda klonlaşdırma",
+      "Biosfer",
+      "Qlobal ekoloji problemlər",
+      "İnsanın embrional inkişafı"
+    ]
+  },
+  {
+    "id": "science-coğrafiya-6-859",
+    "grade": "6",
+    "subject": "Coğrafiya",
+    "title": "Coğrafiya 6 (1-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=859",
+    "topics": [
+      "Coğrafi məkan",
+      "Məkanın miqyası",
+      "Plan və şərti işarələr",
+      "Dərəcə toru",
+      "Coğrafi informasiya sistemləri",
+      "Günəş sistemi",
+      "Yerin öz oxu ətrafında hərəkəti",
+      "Yerin Günəş ətrafında hərəkəti"
+    ]
+  },
+  {
+    "id": "science-coğrafiya-6-860",
+    "grade": "6",
+    "subject": "Coğrafiya",
+    "title": "Coğrafiya 6 (2-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=860",
+    "topics": [
+      "Təbiətdə müxtəliflik",
+      "Təbii sistemlər",
+      "Manqr meşələri",
+      "Azərbaycan təbiətinin formalaşması",
+      "Cəmiyyət və sosial həyat",
+      "Cəmiyyətin inkişafında qurumların rolu",
+      "Vətəndaşın vəzifələri",
+      "Azərbaycanın dünya dövlətləri ilə münasibətləri"
+    ]
+  },
+  {
+    "id": "science-coğrafiya-7-922",
+    "grade": "7",
+    "subject": "Coğrafiya",
+    "title": "Coğrafiya 7 (1-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=922",
+    "topics": [
+      "Coğrafi mövqeyin təyini",
+      "Azərbaycanın coğrafi mövqeyi",
+      "Coğrafi informasiya sistemləri",
+      "Yerin daxili quruluşu",
+      "Vulkanizm",
+      "Litosfer tavalarının hərəkəti",
+      "Zəlzələlər",
+      "Qitələrin və okeanların relyefi"
+    ]
+  },
+  {
+    "id": "science-coğrafiya-7-923",
+    "grade": "7",
+    "subject": "Coğrafiya",
+    "title": "Coğrafiya 7 (2-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=923",
+    "topics": [
+      "Dəyişkən hava",
+      "Havada su",
+      "Əhali artımı və yaşayış məntəqələri",
+      "Şəhərləşən dünya",
+      "Azərbaycanda rural və urban",
+      "Məkanın iqtisadi mənzərəsi",
+      "Azərbaycanda iqtisadi sektorlar",
+      "Fərqli rayonlar – fərqli iqtisadiyyat"
+    ]
+  },
+  {
+    "id": "science-coğrafiya-8-799",
+    "grade": "8",
+    "subject": "Coğrafiya",
+    "title": "Coğrafiya - 8",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=799",
+    "topics": [
+      "Coğrafi kəşflərin yeni mərhələsi",
+      "Kartoqrafik təsvirlərin əhəmiyyəti",
+      "Yerin illik hərəkəti",
+      "Litosfer tavaları",
+      "Siklon və antisiklonlar",
+      "Okean suyunun temperaturu",
+      "Təbii zonalar",
+      "İnsan İnkişafı İndeksi"
+    ]
+  },
+  {
+    "id": "science-coğrafiya-9-881",
+    "grade": "9",
+    "subject": "Coğrafiya",
+    "title": "Coğrafiya 9",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=881",
+    "topics": [
+      "Topoqrafik xəritələri necə oxumalı",
+      "Afrikanın relyefi",
+      "Günəş radiasiyası",
+      "Afrikanın iqlimi",
+      "Cənubi Amerikanın daxili suları",
+      "Şimal materiklərinin bioehtiyatları",
+      "Təbiətə ekskursiya",
+      "Yer kürəsinin mənimsənilməsi"
+    ]
+  },
+  {
+    "id": "science-coğrafiya-10-729",
+    "grade": "10",
+    "subject": "Coğrafiya",
+    "title": "Coğrafiya - 10",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=729",
+    "topics": [
+      "Coğrafiya təbiət elmləri sistemində",
+      "Yerin maqnetizmi",
+      "Qırışıqlıq vilayətləri və platformalar",
+      "Yer səthində istilik və buxarlanma",
+      "Azərbaycanın iqlim tipləri",
+      "Buzlaqlar və bataqlıqlar",
+      "Coğrafi təbəqənin qanunauyğunluqları",
+      "Lənkəran və Orta Araz (Naxçıvan) vilayətləri"
+    ]
+  },
+  {
+    "id": "science-coğrafiya-11-814",
+    "grade": "11",
+    "subject": "Coğrafiya",
+    "title": "Coğrafiya - 11",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=814",
+    "topics": [
+      "Xəritə və coğrafi informasiya",
+      "Təsərrüfat sahələrinin yerləşməsinin xəritələrə əsasən təhlili",
+      "Mineral ehtiyatlardan istifadə",
+      "Quru sularından istifadə",
+      "Dünyanın demoqrafik mənzərəsi",
+      "Əhalinin həyat səviyyəsi",
+      "Dayanıqlı inkişaf",
+      "Sənaye və kənd təsərrüfatının müasir vəziyyəti"
+    ]
+  },
+  {
+    "id": "science-fizika-6-546",
+    "grade": "6",
+    "subject": "Fizika",
+    "title": "Fizika - 6",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=546",
+    "topics": [
+      "Fizikada öyrənmə metodları",
+      "Ölçmələrdə dəqiqlik",
+      "Molekul",
+      "Diffuziya",
+      "Kütlə və onun ölçülməsi",
+      "Qarşılıqlı təsirlər və hərəkət",
+      "Maqnit qarşılıqlı təsiri",
+      "Enerji"
+    ]
+  },
+  {
+    "id": "science-fizika-7-867",
+    "grade": "7",
+    "subject": "Fizika",
+    "title": "Fizika 7 (1-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=867",
+    "topics": [
+      "Fizikanın əhəmiyyəti",
+      "Fiziki kəmiyyətlərin ölçülməsi",
+      "Trayektoriya, yol və yerdəyişmə",
+      "Düzxətli bərabərsürətli hərəkət",
+      "Düzxətli dəyişənsürətli hərəkət",
+      "Orta sürət",
+      "Periodik rəqsi hərəkət",
+      "Atomun ölçüsü"
+    ]
+  },
+  {
+    "id": "science-fizika-7-868",
+    "grade": "7",
+    "subject": "Fizika",
+    "title": "Fizika 7 (2-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=868",
+    "topics": [
+      "Cisimlərin elektrik yükü",
+      "Elektroskop",
+      "Keçiricilər və dielektriklər",
+      "İnduksiya ilə elektriklənmə",
+      "Elektrik cərəyanı",
+      "Om qanunu",
+      "Lampaların ardıcıl və paralel birləşdirilməsi",
+      "Maqnit sahəsi"
+    ]
+  },
+  {
+    "id": "science-fizika-8-931",
+    "grade": "8",
+    "subject": "Fizika",
+    "title": "Fizika 8 (1-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=931",
+    "topics": [
+      "Qüvvə və onun növləri",
+      "Nyutonun birinci qanunu",
+      "Nyutonun üçüncü qanunu",
+      "Sürtünmə qüvvəsi",
+      "Ağırlıq mərkəzi və tarazlıq",
+      "Güc",
+      "Bərk cisimlərin təzyiqi",
+      "Arximed qüvvəsi"
+    ]
+  },
+  {
+    "id": "science-fizika-8-932",
+    "grade": "8",
+    "subject": "Fizika",
+    "title": "Fizika 8 (2-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=932",
+    "topics": [
+      "Mexaniki dalğalar və onların növləri",
+      "Səsin xarakteristikaları",
+      "Molekulların istilik hərəkəti. Temperatur",
+      "Daxili enerji. Daxili enerjinin dəyişmə üsulları",
+      "İstilik miqdarı. Xüsusi istilik tutumu",
+      "Maddənin aqreqat halının dəyişməsi: buxarlanma və kondensasiya",
+      "Buxar mühərriki",
+      "İstilik mühərrikləri və ekoloji problemlər"
+    ]
+  },
+  {
+    "id": "science-fizika-9-472",
+    "grade": "9",
+    "subject": "Fizika",
+    "title": "Fizika - 9",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=472",
+    "topics": [
+      "Metalların elektrik keçiriciliyinin klassik elektron nəzəriyyəsi",
+      "Vakuumda elektrik cərəyanı",
+      "Yarımkeçiricilərin aşqar keçiriciliyi",
+      "Maqnit hadisələri. Sabit maqnitlər",
+      "Cərəyanlı düz naqilin maqnit induksiyası",
+      "Cərəyanların maqnit qarşılıqlı təsiri",
+      "Maqnit sahəsinin hərəkətdə olan yüklü zərrəciklərə təsiri. Lorens qüvvəsi",
+      "Maddənin maqnit nüfuzluğu"
+    ]
+  },
+  {
+    "id": "science-fizika-10-734",
+    "grade": "10",
+    "subject": "Fizika",
+    "title": "Fizika - 10",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=734",
+    "topics": [
+      "Mexaniki hərəkət və onun təsviri",
+      "Düzxətli bərabərtəcilli hərəkətdə sürət və yerdəyişmə",
+      "Dinamikanın əsas məsələsi. Qüvvə. Əvəzləyici qüvvə. Kütlə",
+      "Ümumdünya cazibə qanunu",
+      "Cismin tarazlıq şərtləri",
+      "Potensial enerji",
+      "Riyazi rəqqasda harmonik rəqslər",
+      "Molekulyar-kinetik nəzəriyyə və onun əsas müddəaları"
+    ]
+  },
+  {
+    "id": "science-fizika-11-282",
+    "grade": "11",
+    "subject": "Fizika",
+    "title": "Fizika - 11",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=282",
+    "topics": [
+      "Elektrik yükü. Elektromaqnit sahəsi",
+      "Kondensatorların birləşdirilməsi",
+      "Öz-özünə induksiya EHQ. Maqnit sahəsinin enerjisi",
+      "Vakuumda elektrik cərəyanı",
+      "Sərbəst elektromaqnit rəqsləri",
+      "Elektrik enerjisinin ötürülməsi. Transformator",
+      "Dalğaların difraksiyası. İşığın difraksiyası",
+      "Atomun quruluşu haqqında Borun kvant postulatları. Atomun enerji səviyyələri"
+    ]
+  },
+  {
+    "id": "science-kimya-7-871",
+    "grade": "7",
+    "subject": "Kimya",
+    "title": "Kimya 7 (1-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=871",
+    "topics": [
+      "Kimya laboratoriyasının avadanlıqları və laboratoriyada təhlükəsizlik qaydaları",
+      "Bioelementlər",
+      "Metallar və onların xassələri",
+      "Atomun quruluşu",
+      "İzotoplar və ionlar",
+      "Məişətdə istifadə edilən mühüm kimyəvi birləşmələr",
+      "Qarışıqların növləri",
+      "Həllolma. Həllolmaya təsir edən amillər"
+    ]
+  },
+  {
+    "id": "science-kimya-7-872",
+    "grade": "7",
+    "subject": "Kimya",
+    "title": "Kimya 7 (2-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=872",
+    "topics": [
+      "Kristallaşdırma üsulu",
+      "Sadə distillə və fraksiyalı distillə üsulları",
+      "Kağız xromatoqrafiyası",
+      "Fiziki və kimyəvi hadisələr",
+      "Ekzotermik və endotermik reaksiyalar",
+      "Turşular və turş mühit",
+      "İndikatorlar və pH şkalası",
+      "Neytrallaşma reaksiyaları"
+    ]
+  },
+  {
+    "id": "science-kimya-8-935",
+    "grade": "8",
+    "subject": "Kimya",
+    "title": "Kimya 8 (1-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=935",
+    "topics": [
+      "Atomun elektron örtüyü",
+      "Dövri cədvəlin tarixi",
+      "Elementlərin xassələrinin dövriliyi",
+      "İon rabitəsi",
+      "Kovalent rabitə",
+      "Kimyəvi tənliklər",
+      "Kimyəvi tənliklərin əmsallaşdırılması",
+      "Homogen və heterogen reaksiyalar"
+    ]
+  },
+  {
+    "id": "science-kimya-8-936",
+    "grade": "8",
+    "subject": "Kimya",
+    "title": "Kimya 8 (2-ci hissə)",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=936",
+    "topics": [
+      "Kimyəvi reaksiyaların sürəti",
+      "Reaksiya sürətinin dəyişdirilməsi: qatılığın təsiri",
+      "Reaksiya sürətinin dəyişdirilməsi: reaksiyaya daxil olan maddənin səthinin sahəsinin təsiri",
+      "Yanma reaksiyaları",
+      "Turşular",
+      "Turşular və əsasların ümumi alınma reaksiyaları",
+      "Duzların alınması",
+      "İonların təyini"
+    ]
+  },
+  {
+    "id": "science-kimya-9-505",
+    "grade": "9",
+    "subject": "Kimya",
+    "title": "Kimya - 9",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=505",
+    "topics": [
+      "Metalların icmalı, təbiətdə tapılması və alınmasının ümumi üsulları. Metalların ərintiləri",
+      "Kalsiumun sənayedə alınan mühüm birləşmələri. Suyun codluğu və onun aradan qaldırılması üsulları",
+      "Mis, sink və xrom",
+      "Halogenlərin müqayisəli xarakteristikası",
+      "Kükürd-dioksid. Sulfit turşusu. Kükürd-trioksid",
+      "Nitrat turşusu",
+      "Mineral gübrələr və onların təsnifatı. Azotlu gübrələr",
+      "Silisium"
+    ]
+  },
+  {
+    "id": "science-kimya-10-739",
+    "grade": "10",
+    "subject": "Kimya",
+    "title": "Kimya - 10",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=739",
+    "topics": [
+      "Alkanların quruluşu və homoloji sırası",
+      "Alkanların fiziki və kimyəvi xassələri",
+      "Alkenlərin izomerliyi",
+      "Alkadienlərin alınması və fiziki xassələri",
+      "Alkinlərin alınması, fiziki xassələri və yanma reaksiyaları",
+      "Tsikloalkanların kimyəvi xassələri",
+      "Stirol",
+      "Daş kömürün emalı"
+    ]
+  },
+  {
+    "id": "science-kimya-11-349",
+    "grade": "11",
+    "subject": "Kimya",
+    "title": "Kimya - 11",
+    "sourceLabel": "e-Dərslik mövzu istinadı",
+    "sourceUrl": "https://e-derslik.edu.az/all/book.php?id=349",
+    "topics": [
+      "Doymuş biratomlu spirtlər",
+      "Etilenqlikol və qliserin",
+      "Fenollar",
+      "Aldehidlər",
+      "Karbon turşuları",
+      "Mürəkkəb efirlər və yağlar",
+      "Monosaxaridlər",
+      "Disaxaridlər və polisaxaridlər"
+    ]
+  }
+]

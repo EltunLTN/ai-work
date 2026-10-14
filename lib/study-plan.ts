@@ -1,9 +1,9 @@
 import { getLearningResources } from "@/lib/learning-resources";
-import type { Grade, StudyPlan } from "@/lib/types";
+import type { Grade, StudyPlan, Subject } from "@/lib/types";
 
 export const STUDY_PLAN_VERSION = 2;
 
-export function validateStudyPlan(value: unknown, topics: string[], grade: Grade): StudyPlan | null {
+export function validateStudyPlan(value: unknown, topics: string[], grade: Grade, subject: Subject = "Riyaziyyat"): StudyPlan | null {
   if (!value || typeof value !== "object") return null;
   const plan = value as StudyPlan;
   const text = (item: unknown): item is string => typeof item === "string" && item.trim().length > 0;
@@ -30,7 +30,7 @@ export function validateStudyPlan(value: unknown, topics: string[], grade: Grade
       tasks: day.tasks.map((task) => task.trim()),
       estimatedMinutes: day.estimatedMinutes,
       checkpoint: day.checkpoint,
-      resources: getLearningResources(day.topic!, grade),
+      resources: getLearningResources(day.topic!, grade, subject),
     })),
   };
 }

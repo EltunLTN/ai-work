@@ -141,7 +141,8 @@ function PlanContent() {
   const activeDay = plan?.days.find((day) => day.day === selectedDay) ?? plan?.days[0] ?? null;
   const activeResources = activeDay?.resources ?? [];
   const checkpointAttempt = activeDay && plan ? miniAttempts.filter((attempt) => attempt.topic === activeDay.topic &&
-    attempt.grade === getQuizResult()?.grade && attempt.submittedAt >= (plan.generatedAt ?? "")).at(-1) : undefined;
+    attempt.grade === getQuizResult()?.grade && (attempt.subject ?? "Riyaziyyat") === getQuizResult()?.subject &&
+    attempt.submittedAt >= (plan.generatedAt ?? "")).at(-1) : undefined;
 
   return (
     <div className="kairo-page">

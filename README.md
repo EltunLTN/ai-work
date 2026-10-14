@@ -4,7 +4,7 @@
 
 <h1 align="center">Kairo</h1>
 <p align="center">
-  AI-powered Math Exam Coach for grades 1-11, aligned with e-derslik topic structures.
+  AI-powered Exam Coach for Mathematics, Physics, Biology, Geography and Chemistry, aligned with e-derslik topic structures.
 </p>
 
 <p align="center">
@@ -16,22 +16,22 @@
 
 ## Overview
 
-Kairo is a modern AI learning platform focused on Mathematics only.
+Kairo is a modern AI learning platform for Mathematics, Physics, Biology, Geography and Chemistry.
 It provides:
 
 - Diagnostic and adaptive quiz generation
 - Skill-level detection and weakness analysis
 - Mistake review with explanations
 - Personalized 7-day AI plan
-- Floating AI math tutor with multi-turn conversation and student context
+- Floating AI subject tutor with multi-turn conversation and student context
 - Dashboard insights and progress tracking
 
 The platform is designed for startup demo quality and practical daily use by students.
 
 ## Core Product Direction
 
-- Subject scope: Mathematics only
-- Grade coverage: 1 to 11
+- Subject scope: Mathematics, Physics, Biology, Geography and Chemistry
+- Grade coverage: Mathematics 1–11; Physics, Biology and Geography 6–11; Chemistry 7–11
 - Curriculum source: e-derslik references and topic structures
 - Output language: Azerbaijani and English UI support
 - Learning model: diagnostic first, adaptive next, plan-driven progression
@@ -119,6 +119,8 @@ Kairo uses e-derslik as a curriculum reference source, not as a raw content mirr
 - Source references are kept as metadata and topic guidance
 - Full textbook content is not copied into the app
 - Questions are generated as original outputs
+- Science references include both parts where available, with direct e-Dərslik links and topic selections reviewed on 2026-10-14
+- Grade choices follow the selected subject. Math answer-repair heuristics never modify science answers. Tutor history is separated by subject and grade.
 
 Example source reference:
 

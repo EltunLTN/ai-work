@@ -1,4 +1,5 @@
-import type { Grade, LearningResource } from "@/lib/types";
+import type { Grade, LearningResource, Subject } from "@/lib/types";
+import { getTextbooksBySelection } from "@/lib/textbook-reference";
 
 export interface LearningResourceBundle {
   material: LearningResource;
@@ -73,7 +74,36 @@ const catalog = [
   },
 ];
 
-export function getResourcesForFocus(topic: string, grade?: Grade): LearningResourceBundle {
+export function getResourcesForFocus(topic: string, grade?: Grade, subject: Subject = "Riyaziyyat"): LearningResourceBundle {
+  if (subject !== "Riyaziyyat") {
+    const books = grade ? getTextbooksBySelection(grade, subject) : [];
+    const book = books.find((item) => item.topics.includes(topic)) ?? books[0];
+    const courses: Record<Exclude<Subject, "Riyaziyyat">, string> = {
+      Fizika: "https://www.khanacademy.org/science/physics",
+      Biologiya: "https://www.khanacademy.org/science/biology",
+      Kimya: "https://www.khanacademy.org/science/chemistry",
+      Coğrafiya: "https://www.openstreetmap.org/",
+    };
+    return {
+      material: {
+        kind: "material", title: book?.title ?? `${subject} dərsləri`,
+        description: "Dərsliyin mövzu siyahısını aç və uyğun bölməni oxu.",
+        href: book?.sourceUrl ?? courses[subject], provider: book ? "e-Dərslik" : "Əlavə mənbə", language: book ? "az" : "en",
+      },
+      video: {
+        kind: subject === "Coğrafiya" ? "material" : "video",
+        title: subject === "Coğrafiya" ? "Dünya xəritəsi" : `${subject}: video dərslər toplusu`,
+        description: subject === "Coğrafiya" ? "Məkanları, sərhədləri və coğrafi obyektləri xəritədə araşdır." : "Fənn üzrə əlavə video dərslər; mövzuya aid bölməni seç.",
+        href: courses[subject], provider: subject === "Coğrafiya" ? "OpenStreetMap" : "Khan Academy", language: "en",
+      },
+      test: {
+        kind: "test", title: `${topic}: 8 suallıq AI mini test`,
+        description: `${grade ?? ""}-ci sinif ${subject} mövzusu üzrə suallar və həll izahları.`,
+        href: `/mini-quiz?topic=${encodeURIComponent(topic)}&subject=${encodeURIComponent(subject)}${grade ? `&grade=${grade}` : ""}`,
+        provider: "Kairo AI", language: "az",
+      },
+    };
+  }
   const entry = catalog.find((item) => item.matches.test(topic.toLocaleLowerCase("az")));
   const fallbackHref = Number(grade ?? 1) <= 5
     ? "https://www.khanacademy.org/math/arithmetic"
@@ -107,6 +137,6 @@ export function getResourcesForFocus(topic: string, grade?: Grade): LearningReso
   };
 }
 
-export function getLearningResources(topic: string, grade?: Grade): LearningResource[] {
-  return Object.values(getResourcesForFocus(topic, grade));
+export function getLearningResources(topic: string, grade?: Grade, subject: Subject = "Riyaziyyat"): LearningResource[] {
+  return Object.values(getResourcesForFocus(topic, grade, subject));
 }

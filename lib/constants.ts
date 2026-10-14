@@ -8,7 +8,7 @@ import type {
   Topic,
 } from "@/lib/types";
 
-export const SUBJECTS: Subject[] = ["Riyaziyyat"];
+export { SUBJECTS } from "@/lib/textbook-reference";
 
 const FALLBACK_BANK: Array<Omit<Question, "grade" | "subject"> & { subject: Subject }> = [
   {

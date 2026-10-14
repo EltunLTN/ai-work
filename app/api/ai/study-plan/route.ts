@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateStudyPlan } from "@/lib/ai/client";
 import type { Grade, StudentLevel, Subject, Topic } from "@/lib/types";
+import { isSupportedSelection } from "@/lib/textbook-reference";
 
 export const maxDuration = 120;
 
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
       dailyMinutes?: number;
     };
 
-    if (!body.grade || !body.level || !/^(?:[1-9]|10|11)$/.test(body.grade) || body.subject !== "Riyaziyyat" ||
+    if (!body.grade || !body.subject || !body.level || !isSupportedSelection(body.grade, body.subject) ||
         !["beginner", "intermediate", "advanced"].includes(body.level ?? "") ||
         (body.dailyMinutes !== undefined && ![30, 45, 60, 90].includes(body.dailyMinutes)) ||
         !Array.isArray(body.curriculumTopics) || !body.curriculumTopics.every((topic) => typeof topic === "string") ||

@@ -12,7 +12,7 @@ interface GradeSubjectSelectorProps {
 
 export function GradeSubjectSelector({ grade, subject, onChange }: GradeSubjectSelectorProps) {
   const { t } = useLocale();
-  const grades = getGrades();
+  const grades = getGrades(subject);
   const subjects = getSubjects();
 
   return (

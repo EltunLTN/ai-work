@@ -8,7 +8,7 @@ import {
 } from "@/lib/ai/prompts";
 import { estimatePerformance } from "@/lib/score-estimate";
 import { validateStudyPlan } from "@/lib/study-plan";
-import { getTextbooksBySelection } from "@/lib/textbook-reference";
+import { getTextbooksBySelection, isSupportedSelection } from "@/lib/textbook-reference";
 import { getLearningResources } from "@/lib/learning-resources";
 import type { parseChatInput } from "@/lib/ai/chat-input";
 import { parseJsonSafe } from "@/lib/utils";
@@ -356,7 +356,7 @@ function inferExpectedFromExplanation(explanation: string): number | null {
   return parseNumericToken(equalityPart);
 }
 
-function validateAndRepairQuestions(grade: Grade, questions: Question[]): Question[] {
+function validateAndRepairQuestions(grade: Grade, subject: Subject, questions: Question[]): Question[] {
   return questions.flatMap((question) => {
     const hasValidShape =
       Array.isArray(question.options) &&
@@ -369,6 +369,9 @@ function validateAndRepairQuestions(grade: Grade, questions: Question[]): Questi
     if (!hasValidShape) {
       return [];
     }
+
+    // Math-only heuristics must never rewrite science answers or interpret units/formulas as numbers.
+    if (subject !== "Riyaziyyat") return question;
 
     const repairedDerivativeIndex = detectCorrectOptionForDerivative(question);
     if (repairedDerivativeIndex !== null) {
@@ -429,11 +432,11 @@ function client() {
 export async function generateTutorReply(input: NonNullable<ReturnType<typeof parseChatInput>>) {
   const lastMessage = input.messages.at(-1)!.content.toLocaleLowerCase("az");
   const topics = input.context.grade
-    ? getTextbooksBySelection(input.context.grade, "Riyaziyyat").flatMap((book) => book.topics)
+    ? getTextbooksBySelection(input.context.grade, input.context.subject ?? "Riyaziyyat").flatMap((book) => book.topics)
     : input.context.topics;
   const topic = topics.find((item) => item.toLocaleLowerCase("az").split(/[^\p{L}]+/u)
     .some((word) => word.length >= 4 && lastMessage.includes(word.slice(0, 6))));
-  const resources = topic ? getLearningResources(topic, input.context.grade) : [];
+  const resources = topic ? getLearningResources(topic, input.context.grade, input.context.subject) : [];
   const response = await client().responses.create({
     model: MODEL,
     temperature: 0.4,
@@ -498,6 +501,13 @@ async function generateTopicQuestions(input: {
   excludedQuestionStems?: string[];
 }, prompt: string): Promise<Question[]> {
   const topics = [...new Set(input.topics.map((topic) => topic.trim()).filter(Boolean))];
+  if (!isSupportedSelection(input.grade, input.subject)) {
+    throw new Error("Seçilmiş fənn və sinif üçün mövzu istinadı yoxdur.");
+  }
+  const curriculumTopics = getTextbooksBySelection(input.grade, input.subject).flatMap((book) => book.topics);
+  if (topics.some((topic) => !curriculumTopics.includes(topic))) {
+    throw new Error("Mövzu seçilmiş fənn və sinfin mövzu siyahısına uyğun deyil.");
+  }
   if (!topics.length || !Number.isInteger(input.count) || input.count < 1) {
     throw new Error("Sual yaratmaq üçün mövzular və düzgün sual sayı tələb olunur.");
   }
@@ -546,6 +556,7 @@ async function generateTopicQuestions(input: {
     const parsed = parseJsonSafe<{ questions?: Question[] } | Question[]>(response.output_text);
     const candidates = validateAndRepairQuestions(
       input.grade,
+      input.subject,
       normalizeQuestions(input.grade, input.subject, parsed),
     ).filter((q) => quotas.has(q.topic));
 
@@ -682,7 +693,7 @@ export async function generateStudyPlan(input: {
         ],
       });
 
-      const parsed = validateStudyPlan(parseJsonSafe<unknown>(response.output_text), curriculumTopics, input.grade);
+      const parsed = validateStudyPlan(parseJsonSafe<unknown>(response.output_text), curriculumTopics, input.grade, input.subject);
       const weakTopics = input.weakTopics.filter((topic) => curriculumTopics.includes(topic));
       const prioritizesWeakTopics = !weakTopics.length || (parsed?.days.filter((day) => weakTopics.includes(day.topic ?? "")).length ?? 0) >= 4;
       if (parsed && prioritizesWeakTopics && parsed.days.every((day) => day.estimatedMinutes <= (input.dailyMinutes ?? 60))) {

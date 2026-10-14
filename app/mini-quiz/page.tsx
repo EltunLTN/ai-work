@@ -22,9 +22,11 @@ export default function MiniQuizPage() {
 function MiniQuizContent() {
   const router = useRouter();
   const params = useSearchParams();
-  const topic = params.get("topic") ?? "Ümumi mövzu";
 
   const [profile] = useState(() => (typeof window === "undefined" ? null : getStudentProfile()));
+  const topic = params.get("topic") ?? profile?.selectedTopics[0] ?? "Ümumi mövzu";
+  const selectionMatches = (!params.get("subject") || params.get("subject") === profile?.subject) &&
+    (!params.get("grade") || params.get("grade") === profile?.grade);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<QuizAnswers>({});
   const [index, setIndex] = useState(0);
@@ -46,6 +48,7 @@ function MiniQuizContent() {
       router.push("/onboarding");
       return;
     }
+    if (!selectionMatches) { setError("Bu testin fənni və ya sinfi cari seçiminə uyğun deyil. Seçim səhifəsində uyğun fənn və sinfi seç."); return; }
 
     setIsLoading(true);
     generating.current = true;
@@ -128,7 +131,7 @@ function MiniQuizContent() {
               ) : (
                 <Button disabled={submitted || answered < questions.length || isLoading} onClick={() => {
                   if (!profile) return;
-                  saveMiniQuizAttempt({ id: attemptId.current, grade: profile.grade, topic,
+                  saveMiniQuizAttempt({ id: attemptId.current, grade: profile.grade, subject: profile.subject, topic,
                     correct: questions.filter((question) => answers[question.id] === question.correctIndex).length,
                     total: questions.length, submittedAt: new Date().toISOString() });
                   setSubmitted(true);

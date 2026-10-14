@@ -1,18 +1,37 @@
 import textbooks from "@/data/textbooks.json";
+import scienceTextbooks from "@/data/science-textbooks.json";
 import type { Grade, Subject, StudentProfile, TextbookReference } from "@/lib/types";
 
-const references = textbooks as TextbookReference[];
+const references = [...textbooks, ...scienceTextbooks] as TextbookReference[];
+
+export const SUBJECTS: Subject[] = ["Riyaziyyat", "Fizika", "Biologiya", "Coğrafiya", "Kimya"];
 
 export function getAllTextbookReferences(): TextbookReference[] {
   return references;
 }
 
-export function getGrades(): Grade[] {
-  return ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+export function getGrades(subject?: Subject): Grade[] {
+  return [...new Set(references.filter((book) => !subject || book.subject === subject).map((book) => book.grade))]
+    .sort((a, b) => Number(a) - Number(b));
 }
 
 export function getSubjects(): Subject[] {
-  return ["Riyaziyyat"];
+  return [...SUBJECTS];
+}
+
+export function isSubject(value: unknown): value is Subject {
+  return SUBJECTS.includes(value as Subject);
+}
+
+export function isSupportedSelection(grade: unknown, subject: unknown): boolean {
+  return isSubject(subject) && getGrades(subject).includes(grade as Grade);
+}
+
+export function getProfileForSelection(grade: Grade, subject: Subject): StudentProfile {
+  const grades = getGrades(subject);
+  const selectedGrade = grades.includes(grade) ? grade : grades.find((item) => Number(item) >= Number(grade)) ?? grades[grades.length - 1];
+  const book = getTextbooksBySelection(selectedGrade, subject)[0];
+  return { grade: selectedGrade, subject, textbookId: book.id, selectedTopics: book.topics.slice(0, 4) };
 }
 
 export function getTextbooksBySelection(grade: Grade, subject: Subject): TextbookReference[] {

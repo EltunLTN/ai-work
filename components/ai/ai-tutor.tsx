@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { LoaderCircle, MessageCircle, Send, Sparkles, Trash2, X } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
-import { getQuizResult, getStudentProfile, getStudyPlan } from "@/lib/storage";
+import { getQuizResult, getStudentProfile, getStudyPlan, STUDENT_PROFILE_EVENT } from "@/lib/storage";
+import { getTutorSessionKey } from "@/lib/tutor-session";
 import type { ChatMessage, LearningResource } from "@/lib/types";
 import { LearningResourceCards } from "@/components/ai/learning-resource-cards";
 
 type DisplayMessage = ChatMessage & { resources?: LearningResource[] };
-const HISTORY_KEY = "kairo.tutor.chat";
 
 export function AITutor() {
   const { locale } = useLocale();
@@ -22,6 +22,18 @@ export function AITutor() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
   const sending = useRef(false);
+  const sessionKey = useRef<string | null>(null);
+
+  useEffect(() => {
+    const onProfileChange = () => {
+      sessionKey.current = getTutorSessionKey(getStudentProfile());
+      setMessages([]);
+      setDraft("");
+      setError(null);
+    };
+    window.addEventListener(STUDENT_PROFILE_EVENT, onProfileChange);
+    return () => window.removeEventListener(STUDENT_PROFILE_EVENT, onProfileChange);
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -37,9 +49,12 @@ export function AITutor() {
 
   function toggleOpen() {
     if (open) { close(); return; }
-    if (!messages.length) {
+    const key = getTutorSessionKey(getStudentProfile());
+    if (!messages.length || sessionKey.current !== key) {
+      sessionKey.current = key;
+      setMessages([]);
       try {
-        const saved: unknown = JSON.parse(sessionStorage.getItem(HISTORY_KEY) ?? "[]");
+        const saved: unknown = JSON.parse(sessionStorage.getItem(key) ?? "[]");
         if (Array.isArray(saved) && saved.every((item) => item &&
           (item.role === "user" || item.role === "assistant") && typeof item.content === "string")) {
           setMessages(saved.slice(-20).map((item) => ({ role: item.role, content: item.content })));
@@ -52,12 +67,15 @@ export function AITutor() {
   async function send(text: string, retry = false) {
     if (sending.current || (!retry && !text.trim())) return;
     sending.current = true;
-    const next: DisplayMessage[] = retry ? messages : [...messages, { role: "user", content: text.trim() }];
+    const profile = getStudentProfile();
+    const key = getTutorSessionKey(profile);
+    const previous = sessionKey.current === key ? messages : [];
+    sessionKey.current = key;
+    const next: DisplayMessage[] = retry ? previous : [...previous, { role: "user", content: text.trim() }];
     setMessages(next);
     setDraft("");
     setError(null);
     setLoading(true);
-    const profile = getStudentProfile();
     const result = getQuizResult();
     const plan = getStudyPlan();
     const history = next.slice(-20).map(({ role, content }) => ({ role, content: content.slice(0, 6000) }));
@@ -69,8 +87,9 @@ export function AITutor() {
           messages: history, locale,
           context: {
             grade: profile?.grade,
+            subject: profile?.subject,
             topics: profile?.selectedTopics ?? [],
-            result: result && profile?.grade === result.grade ? {
+            result: result && profile?.grade === result.grade && profile?.subject === result.subject ? {
               totalQuestions: result.totalQuestions, totalCorrect: result.totalCorrect,
               topicScores: result.topicScores, submittedAt: result.submittedAt,
             } : undefined,
@@ -79,12 +98,13 @@ export function AITutor() {
         }),
       });
       const data = await response.json() as { answer?: string; resources?: LearningResource[]; error?: string };
+      if (getTutorSessionKey(getStudentProfile()) !== key) return;
       if (!response.ok || !data.answer) throw new Error(data.error ?? (en ? "AI could not reply." : "AI cavabı alınmadı."));
       const updated: DisplayMessage[] = [...next, { role: "assistant", content: data.answer, resources: data.resources }];
       setMessages(updated);
-      try { sessionStorage.setItem(HISTORY_KEY, JSON.stringify(updated.slice(-20).map(({ role, content }) => ({ role, content })))); } catch { /* Optional persistence. */ }
+      try { sessionStorage.setItem(key, JSON.stringify(updated.slice(-20).map(({ role, content }) => ({ role, content })))); } catch { /* Optional persistence. */ }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "AI cavabı alınmadı.");
+      if (getTutorSessionKey(getStudentProfile()) === key) setError(err instanceof Error ? err.message : "AI cavabı alınmadı.");
     } finally {
       setLoading(false);
       sending.current = false;
@@ -101,10 +121,10 @@ export function AITutor() {
             <span className="rounded-2xl bg-red-500/15 p-2.5"><Sparkles className="h-5 w-5 text-red-400" /></span>
             <div className="flex-1">
               <h2 id="tutor-title" className="font-bold">Kairo AI</h2>
-              <p className="kairo-muted text-xs">{en ? "Your mathematics tutor" : "Sənin riyaziyyat köməkçin"}</p>
+              <p className="kairo-muted text-xs">{en ? "Your study tutor" : "Sənin dərs köməkçin"}</p>
             </div>
             <button type="button" disabled={loading} aria-label={en ? "Clear conversation" : "Söhbəti təmizlə"}
-              onClick={() => { setMessages([]); setError(null); try { sessionStorage.removeItem(HISTORY_KEY); } catch {} }}
+              onClick={() => { setMessages([]); setError(null); try { sessionStorage.removeItem(getTutorSessionKey(getStudentProfile())); } catch {} }}
               className="kairo-muted rounded-lg p-2 hover:bg-red-500/10 disabled:opacity-40"><Trash2 className="h-4 w-4" /></button>
             <button type="button" onClick={close} aria-label={en ? "Close chat" : "Söhbəti bağla"} className="rounded-lg p-2 hover:bg-red-500/10"><X className="h-4 w-4" /></button>
           </header>
@@ -112,9 +132,9 @@ export function AITutor() {
             {!messages.length ? (
               <div className="py-5">
                 <p className="text-lg font-semibold">{en ? "What shall we learn today?" : "Bu gün nəyi öyrənək?"}</p>
-                <p className="kairo-muted mt-2 text-sm">{en ? "Ask a math question, discuss your mistakes, or work through your plan." : "Riyaziyyatdan sual ver, səhvlərini müzakirə et və ya planındakı mövzunu birlikdə öyrənək."}</p>
+                <p className="kairo-muted mt-2 text-sm">{en ? "Ask about your selected subject, discuss your mistakes, or work through your plan." : "Seçdiyin fəndən sual ver, səhvlərini müzakirə et və ya planındakı mövzunu birlikdə öyrənək."}</p>
                 <div className="mt-5 space-y-2">
-                  {(en ? ["Explain my weak topics", "How should I follow my plan?", "Explain a math topic step by step"] : ["Zəif mövzularımı izah et", "Planımla necə işləyim?", "Seçdiyim mövzudan nümunə həll et"]).map((text) => (
+                  {(en ? ["Explain my weak topics", "How should I follow my plan?", "Explain a topic from my selected subject"] : ["Zəif mövzularımı izah et", "Planımla necə işləyim?", "Seçdiyim fənnin mövzusunu nümunə ilə izah et"]).map((text) => (
                     <button key={text} type="button" onClick={() => send(text)} className="kairo-card w-full rounded-xl p-3 text-left text-sm hover:border-red-400/40">{text}</button>
                   ))}
                 </div>

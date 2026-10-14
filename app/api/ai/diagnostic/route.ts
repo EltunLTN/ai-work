@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateDiagnosticQuestions } from "@/lib/ai/client";
 import type { Grade, StudentLevel, Subject, Topic } from "@/lib/types";
+import { isSupportedSelection } from "@/lib/textbook-reference";
 
 export async function POST(request: Request) {
   try {
@@ -13,7 +14,8 @@ export async function POST(request: Request) {
       excludedQuestionStems?: string[];
     };
 
-    if (!body.grade || !body.subject || !body.topics?.length) {
+    if (!body.grade || !body.subject || !isSupportedSelection(body.grade, body.subject) ||
+        !Array.isArray(body.topics) || !body.topics.length || !body.topics.every((topic) => typeof topic === "string" && topic.trim())) {
       return NextResponse.json({ error: "Grade, subject və topics tələb olunur." }, { status: 400 });
     }
 

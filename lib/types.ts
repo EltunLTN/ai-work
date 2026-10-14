@@ -1,6 +1,6 @@
 export type Grade = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11";
 
-export type Subject = "Riyaziyyat";
+export type Subject = "Riyaziyyat" | "Fizika" | "Biologiya" | "Coğrafiya" | "Kimya";
 
 export type Topic = string;
 
@@ -139,6 +139,7 @@ export interface ChatMessage {
 
 export interface TutorContext {
   grade?: Grade;
+  subject?: Subject;
   topics: string[];
   result?: Pick<DiagnosticResult, "totalQuestions" | "totalCorrect" | "topicScores" | "submittedAt">;
   plan?: Pick<StudyPlan, "title" | "days">;

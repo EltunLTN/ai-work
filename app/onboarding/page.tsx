@@ -7,7 +7,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { GradeSubjectSelector, TextbookSelector } from "@/components/onboarding/selectors";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/hooks/use-locale";
-import { getDefaultProfile, getTextbooksBySelection } from "@/lib/textbook-reference";
+import { getDefaultProfile, getProfileForSelection, getTextbooksBySelection } from "@/lib/textbook-reference";
 import { saveStudentProfile } from "@/lib/storage";
 import type { Grade, StudentProfile, Subject } from "@/lib/types";
 
@@ -22,14 +22,7 @@ export default function OnboardingPage() {
   );
 
   function updateGradeSubject(payload: { grade: Grade; subject: Subject }) {
-    const list = getTextbooksBySelection(payload.grade, payload.subject);
-    const firstBook = list[0];
-    setProfile({
-      grade: payload.grade,
-      subject: payload.subject,
-      textbookId: firstBook?.id ?? profile.textbookId,
-      selectedTopics: firstBook?.topics.slice(0, 4) ?? profile.selectedTopics,
-    });
+    setProfile(getProfileForSelection(payload.grade, payload.subject));
   }
 
   function toggleTopic(topic: string) {
