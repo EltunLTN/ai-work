@@ -17,7 +17,8 @@ export function Navbar() {
     { href: "/results", label: t.nav.results },
     { href: "/plan", label: t.nav.plan },
     { href: "/dashboard", label: t.nav.dashboard },
-    { href: "/wumpus_world_v2.html", label: t.nav.wumpusWorld, external: true },
+    { href: "https://wumpus-echoes-of-the-deep.vercel.app/", label: t.nav.wumpusWorld, external: true },
+    { href: "/account", label: "Hesab" },
   ];
 
   return (
@@ -31,7 +32,7 @@ export function Navbar() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-2 md:flex">
+        <nav aria-label="Əsas naviqasiya" className="hidden items-center gap-1 xl:flex">
           {links.map((link) =>
             link.external ? (
               <a
@@ -52,6 +53,7 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <Link href="/account" className="rounded-xl px-3 py-2 text-sm xl:hidden">Hesab</Link>
           <LanguageToggle />
           <ThemeToggle />
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
@@ -61,6 +63,12 @@ export function Navbar() {
           </motion.div>
         </div>
       </div>
+      <details className="border-t border-white/10 px-4 py-2 xl:hidden">
+        <summary className="cursor-pointer py-2 text-sm text-zinc-300">Menyu</summary>
+        <nav aria-label="Mobil naviqasiya" className="grid grid-cols-2 gap-2 py-3">
+          {links.map(link => link.external ? <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-amber-400/10 px-3 py-3 text-sm text-amber-400">{link.label} ↗</a> : <Link key={link.href} href={link.href} className="rounded-xl px-3 py-3 text-sm text-zinc-300 hover:bg-white/10">{link.label}</Link>)}
+        </nav>
+      </details>
     </header>
   );
 }

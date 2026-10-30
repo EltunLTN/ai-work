@@ -1,5 +1,7 @@
 "use client";
 
+import { aiFetch } from "@/lib/supabase/client";
+
 import { useBrowserReady } from "@/hooks/use-browser-ready";
 import Loading from "@/app/loading";
 
@@ -66,7 +68,7 @@ function QuizContent() {
         setIndex(0);
         return;
       }
-      const response = await fetch("/api/ai/diagnostic", {
+      const response = await aiFetch("/api/ai/diagnostic", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -1,5 +1,7 @@
 "use client";
 
+import { aiFetch } from "@/lib/supabase/client";
+
 import { useBrowserReady } from "@/hooks/use-browser-ready";
 import Loading from "@/app/loading";
 
@@ -62,7 +64,7 @@ function ResultsContent() {
     if (!result) return;
     setFeedbackError(null);
     try {
-      const response = await fetch("/api/ai/feedback-summary", {
+      const response = await aiFetch("/api/ai/feedback-summary", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ result, review: reviewQuestions.map((question) => ({
           topic: question.topic,
@@ -81,7 +83,9 @@ function ResultsContent() {
   }
 
   useEffect(() => {
-    if (result && !feedback) loadFeedback();
+    let active = true;
+    queueMicrotask(() => { if (active && result && !feedback) void loadFeedback(); });
+    return () => { active = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
 

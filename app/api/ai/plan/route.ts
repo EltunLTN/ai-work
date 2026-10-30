@@ -1,3 +1,4 @@
+import { requireAIAccess } from "@/lib/ai-access";
 import { NextResponse } from "next/server";
 import { generateStudyPlan } from "@/lib/ai/client";
 import type { QuizResult } from "@/lib/types";
@@ -9,6 +10,8 @@ interface PlanBody {
 }
 
 export async function POST(request: Request) {
+  const denied = await requireAIAccess(request);
+  if (denied) return denied;
   try {
     const body = (await request.json()) as PlanBody;
 

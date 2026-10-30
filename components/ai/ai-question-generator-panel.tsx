@@ -1,5 +1,7 @@
 "use client";
 
+import { aiFetch } from "@/lib/supabase/client";
+
 import { useState } from "react";
 import type { Question } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -47,7 +49,7 @@ export function AIQuestionGeneratorPanel({
         .filter(Boolean)
         .slice(-250);
 
-      const response = await fetch(endpoint, {
+      const response = await aiFetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -74,7 +76,7 @@ export function AIQuestionGeneratorPanel({
             excludedQuestionStems,
           };
 
-          const fallbackResponse = await fetch("/api/ai/diagnostic", {
+          const fallbackResponse = await aiFetch("/api/ai/diagnostic", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(fallbackPayload),

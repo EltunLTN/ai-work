@@ -1,3 +1,4 @@
+import { requireAIAccess } from "@/lib/ai-access";
 import { NextResponse } from "next/server";
 import { parseChatInput } from "@/lib/ai/chat-input";
 import { generateTutorReply } from "@/lib/ai/client";
@@ -5,6 +6,8 @@ import { generateTutorReply } from "@/lib/ai/client";
 export const maxDuration = 120;
 
 export async function POST(request: Request) {
+  const denied = await requireAIAccess(request);
+  if (denied) return denied;
   try {
     const text = await request.text();
     if (text.length > 100000) return NextResponse.json({ error: "Mesaj həddən artıq uzundur." }, { status: 413 });

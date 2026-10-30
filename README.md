@@ -97,6 +97,8 @@ The platform is designed for startup demo quality and practical daily use by stu
 - /plan : Interactive 7-day AI study plan
 - /mini-quiz : Topic-focused quick quiz mode
 - /dashboard : Persistent summary and progression view
+- /account : Verified email login, password recovery, cloud save and restore
+- /admin : Administrator-only student snapshot overview and homepage announcement editor
 
 ## AI Endpoints
 
@@ -140,6 +142,8 @@ Create a .env.local file and set:
 
 ```bash
 OPENAI_API_KEY=your_openai_api_key
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
 ```
 
 ### 3) Run the app
@@ -169,7 +173,20 @@ npm run build
 - The tutor uses the existing server-side `OPENAI_API_KEY` and `gpt-4.1-mini` Responses API. No additional API key is required. Chat history is kept in session storage and the last 20 messages (within a size limit) are sent for follow-up context. OpenAI response storage is disabled for tutor requests.
 - Score cards show observed practice accuracy on a 0–100 scale with a Wilson 95% uncertainty interval and sample size. These uncalibrated, topic-selected quizzes cannot support an official 700-point DİM prediction; no future score gains are invented.
 - Activity, mini-quiz attempts, plan completion and XP are based on recorded actions. XP is granted once per result. Result reviews are saved with the completed attempt so a new quiz cannot overwrite an earlier review.
-- Profile and learning data remain browser-local. There is no account synchronization or cross-device persistence.
+- Learning flows keep a browser-local working copy. Signed-in users can save and restore their profile, quiz history, answers and plan from `/account`. Saving is explicit; it does not silently overwrite a backup when signing in on a new device. Signing out clears the device's learning records.
+- Supabase PostgreSQL stores account-owned snapshots. RLS limits students to their own data; verified administrators can read snapshots and edit the homepage announcement. Admin authorization uses a private allowlist and checks the current verified Auth user, rather than user-editable metadata.
+- All AI endpoints verify the bearer token with Supabase Auth and consume an atomic database quota of 100 requests per account per UTC day. Quota failures deny the request before calling OpenAI.
+- Wumpus links on desktop, mobile and the footer open the external Wumpus application. The previous HTML route redirects there too.
+
+## Database and administrator setup
+
+The deployed Kairo database is a separate Supabase project. For a new environment, apply `database/schema.sql` once using the Supabase SQL editor, then add the owner's lowercase email to `private.admin_emails`. No service-role key is needed in the application. Only the public project URL and publishable key go into `NEXT_PUBLIC_` variables.
+
+The owner registers at `/account`, chooses a password and confirms their email before opening `/admin`. A browser cannot grant itself admin access. The label `KairoLTN1` is the panel name, not a shared password.
+
+Set Supabase Auth's Site URL to your production `/account` URL. Password-reset links return there. For public registration, configure a custom SMTP provider: Supabase's default mail service is rate-limited and restricts recipients to organization members. Keep email confirmation enabled. Configure backups and monitoring appropriate to your traffic before a wider launch.
+
+`database/verify-access.sql` tests student isolation, administrator access, unauthorized writes and the exact quota boundary in a rolled-back transaction. It leaves no test accounts or records behind.
 
 ## Security Recommendation
 

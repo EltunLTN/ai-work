@@ -1,8 +1,11 @@
+import { requireAIAccess } from "@/lib/ai-access";
 import { NextResponse } from "next/server";
 import { generateFeedbackSummary } from "@/lib/ai/client";
 import type { DiagnosticResult } from "@/lib/types";
 
 export async function POST(request: Request) {
+  const denied = await requireAIAccess(request);
+  if (denied) return denied;
   try {
     const body = (await request.json()) as {
       result?: DiagnosticResult;

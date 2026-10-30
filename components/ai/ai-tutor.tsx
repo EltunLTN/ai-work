@@ -1,5 +1,7 @@
 "use client";
 
+import { aiFetch } from "@/lib/supabase/client";
+
 import { useEffect, useRef, useState } from "react";
 import { LoaderCircle, MessageCircle, Send, Sparkles, Trash2, X } from "lucide-react";
 import { useLocale } from "@/hooks/use-locale";
@@ -81,7 +83,7 @@ export function AITutor() {
     const history = next.slice(-20).map(({ role, content }) => ({ role, content: content.slice(0, 6000) }));
     while (history.length > 1 && history.reduce((sum, item) => sum + item.content.length, 0) > 40000) history.shift();
     try {
-      const response = await fetch("/api/ai/chat", {
+      const response = await aiFetch("/api/ai/chat", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: history, locale,

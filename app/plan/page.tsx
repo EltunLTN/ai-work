@@ -1,5 +1,7 @@
 "use client";
 
+import { aiFetch } from "@/lib/supabase/client";
+
 import { useBrowserReady } from "@/hooks/use-browser-ready";
 import Loading from "@/app/loading";
 
@@ -84,7 +86,7 @@ function PlanContent() {
     setPlanError(null);
 
     try {
-      const response = await fetch("/api/ai/study-plan", {
+      const response = await aiFetch("/api/ai/study-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -123,18 +125,21 @@ function PlanContent() {
   }
 
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-    const result = getQuizResult();
-    setResultLoaded(Boolean(result));
-
-    if (!result) return;
-    if (!isCurrentStudyPlan(plan, result.submittedAt)) {
-      generateAiPlan();
-    } else {
-      setTaskProgress(getPlanProgress(plan));
-      setSelectedDay(plan.days[0]?.day ?? 1);
-    }
+    let active = true;
+    queueMicrotask(() => {
+      if (!active || initialized.current) return;
+      initialized.current = true;
+      const result = getQuizResult();
+      setResultLoaded(Boolean(result));
+      if (!result) return;
+      if (!isCurrentStudyPlan(plan, result.submittedAt)) {
+        void generateAiPlan();
+      } else {
+        setTaskProgress(getPlanProgress(plan));
+        setSelectedDay(plan.days[0]?.day ?? 1);
+      }
+    });
+    return () => { active = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
