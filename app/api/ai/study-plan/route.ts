@@ -4,7 +4,7 @@ import { generateStudyPlan } from "@/lib/ai/client";
 import type { Grade, StudentLevel, Subject, Topic } from "@/lib/types";
 import { isSupportedSelection } from "@/lib/textbook-reference";
 
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 export async function POST(request: Request) {
   const denied = await requireAIAccess(request);

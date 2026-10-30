@@ -5,7 +5,7 @@ const vm = require("node:vm");
 const ts = require("typescript");
 
 // Exercise the production generator with controlled model responses, without API calls.
-function generator(batches = []) {
+function generator(batches = [], environment = {}) {
   const requests = [];
   const rawRequests = [];
   const cache = new Map();
@@ -22,6 +22,7 @@ function generator(batches = []) {
           rawRequests.push(request);
           requests.push(JSON.parse(request.input[1].content));
           const batch = batches.shift() ?? [];
+          if (batch && typeof batch === "object" && batch.__response) return batch.__response;
           return { status: "completed", output_text: typeof batch === "string" ? batch : JSON.stringify(Array.isArray(batch) ? { questions: batch } : batch) };
         } };
       };
@@ -32,7 +33,7 @@ function generator(batches = []) {
       return require(name);
     };
     vm.runInThisContext(`(function(require,module,exports,process){${code}\n})`, { filename: file })(
-      localRequire, loadedModule, loadedModule.exports, { env: { OPENAI_API_KEY: "test-only" } },
+      localRequire, loadedModule, loadedModule.exports, { env: { OPENAI_API_KEY: "test-only", ...environment } },
     );
     return loadedModule.exports;
   }

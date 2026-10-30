@@ -36,6 +36,7 @@ function MiniQuizContent() {
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const attemptId = useRef("");
+  const practiceStarted = useRef(0);
   const generating = useRef(false);
 
   const score = useMemo(() => {
@@ -79,6 +80,7 @@ function MiniQuizContent() {
       setQuestions(data.questions);
       appendQuestionHistory(data.questions.map((question) => question.question));
       attemptId.current = crypto.randomUUID();
+      practiceStarted.current = Date.now();
       setAnswers({});
       setIndex(0);
     } catch (err) {
@@ -135,7 +137,7 @@ function MiniQuizContent() {
                   if (!profile) return;
                   saveMiniQuizAttempt({ id: attemptId.current, grade: profile.grade, subject: profile.subject, topic,
                     correct: questions.filter((question) => answers[question.id] === question.correctIndex).length,
-                    total: questions.length, submittedAt: new Date().toISOString() });
+                    total: questions.length, durationSeconds: Math.round((Date.now() - practiceStarted.current) / 1000), submittedAt: new Date().toISOString() });
                   setSubmitted(true);
                 }}>Nəticəni göstər</Button>
               )}

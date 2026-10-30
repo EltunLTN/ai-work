@@ -46,6 +46,7 @@ function QuizContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const started = useRef(false);
+  const practiceStarted = useRef(0);
 
   async function loadDiagnosticQuestions() {
     if (!profile) {
@@ -62,6 +63,7 @@ function QuizContent() {
     try {
       const pending = consumePendingQuiz();
       if (pending?.length && pending.every((question) => question.grade === profile.grade && question.subject === profile.subject)) {
+        practiceStarted.current = Date.now();
         setQuestions(pending);
         saveQuizQuestions(pending);
         setAnswers({});
@@ -84,6 +86,7 @@ function QuizContent() {
       if (!response.ok || !data.questions?.length) {
         throw new Error(data.error ?? "AI sualları hazır deyil.");
       }
+      practiceStarted.current = Date.now();
       setQuestions(data.questions);
       saveQuizQuestions(data.questions);
       appendQuestionHistory(data.questions.map((q) => q.question));
@@ -160,6 +163,7 @@ function QuizContent() {
   function submit() {
     if (!profile) return;
     const result = evaluateDiagnostic(questions, answers, profile);
+    result.durationSeconds = Math.round((Date.now() - practiceStarted.current) / 1000);
     const analysis = analyzeResults(answers, questions);
     saveQuizAnswers(answers);
     saveQuizResult(result);

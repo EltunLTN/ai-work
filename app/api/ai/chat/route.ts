@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { parseChatInput } from "@/lib/ai/chat-input";
 import { generateTutorReply } from "@/lib/ai/client";
 
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 export async function POST(request: Request) {
   const denied = await requireAIAccess(request);

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { generateStudyPlan } from "@/lib/ai/client";
 import type { QuizResult } from "@/lib/types";
 
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 interface PlanBody {
   result?: QuizResult;

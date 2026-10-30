@@ -67,8 +67,8 @@ for (const subject of sciences) {
       weakTopics: [topic], level: "intermediate", dailyMinutes: 45, targetImprovement: "Mövzunu möhkəmləndirmək" });
     assert.equal(api.requests[0].subject, subject);
     for (const day of plan.days) {
-      assert.equal(day.resources[0].href, book.sourceUrl);
-      assert.equal(day.resources[0].language, "az");
+      assert.ok(day.resources.some(resource => resource.kind === "test"));
+      assert.ok(day.resources.every(resource => resource.kind === "test" || resource.href !== "https://www.openstreetmap.org/"));
       assert.ok(day.resources.every((resource) => !resource.href.includes("/math/")));
       const quiz = new URL(day.resources.find((resource) => resource.kind === "test").href, "https://example.test");
       assert.equal(quiz.searchParams.get("subject"), subject);

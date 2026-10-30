@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { verifiedTopicResources } from "@/lib/ai/resource-search";
 import {
   ADAPTIVE_QUESTION_PROMPT,
   DIAGNOSTIC_QUESTION_PROMPT,
@@ -23,7 +24,7 @@ import type {
   Topic,
 } from "@/lib/types";
 
-const MODEL = "gpt-4.1-mini";
+const MODEL = process.env.OPENAI_MODEL ?? "gpt-6.1-sol";
 
 function normalizeQuestionStem(text: string): string {
   return text.toLowerCase().replace(/\s+/g, " ").replace(/[^\p{L}\p{N} ]/gu, "").trim();
@@ -426,7 +427,7 @@ function client() {
   if (!key) {
     throw new Error("OPENAI_API_KEY təyin edilməyib.");
   }
-  return new OpenAI({ apiKey: key, timeout: 60000, maxRetries: 1 });
+  return new OpenAI({ apiKey: key, timeout: 80000, maxRetries: 0 });
 }
 
 export async function generateTutorReply(input: NonNullable<ReturnType<typeof parseChatInput>>) {
@@ -439,8 +440,8 @@ export async function generateTutorReply(input: NonNullable<ReturnType<typeof pa
   const resources = topic ? getLearningResources(topic, input.context.grade, input.context.subject) : [];
   const response = await client().responses.create({
     model: MODEL,
-    temperature: 0.4,
-    max_output_tokens: 2200,
+    reasoning: { effort: "low" },
+    max_output_tokens: 5000,
     store: false,
     input: [
       { role: "system", content: TUTOR_PROMPT },
@@ -505,6 +506,7 @@ async function generateTopicQuestions(input: {
     throw new Error("Seçilmiş fənn və sinif üçün mövzu istinadı yoxdur.");
   }
   const curriculumTopics = getTextbooksBySelection(input.grade, input.subject).flatMap((book) => book.topics);
+  if (input.count > 20 || topics.length > 20) throw new Error("Bir sorğuda maksimum 20 sual və 20 mövzu seçin.");
   if (topics.some((topic) => !curriculumTopics.includes(topic))) {
     throw new Error("Mövzu seçilmiş fənn və sinfin mövzu siyahısına uyğun deyil.");
   }
@@ -531,7 +533,10 @@ async function generateTopicQuestions(input: {
     ];
     const response = await openai.responses.create({
       model: MODEL,
-      temperature: 0.6,
+      reasoning: { effort: "medium" },
+      max_output_tokens: 12000,
+      store: false,
+      text: { format: { type: "json_object" } },
       input: [
         { role: "system", content: prompt },
         {
@@ -545,6 +550,8 @@ async function generateTopicQuestions(input: {
             count: topicCounts.reduce((sum, item) => sum + item.count, 0),
             topicCounts,
             nonce: Date.now(),
+            curriculumTopics,
+            gradeExpectations: Number(input.grade) <= 4 ? "İbtidai sinif: qısa cümlələr, yaşa uyğun ədədlər, yalnız bu sinfin anlayışları." : Number(input.grade) <= 8 ? "Orta sinif: anlayış, bir-iki addımlı tətbiq, sinif proqramından kənar formalizm yoxdur." : "Yuxarı sinif: mövzuya uyğun çoxaddımlı tətbiq, elmi dəqiqlik, ölçü vahidləri və əsaslandırma.",
             instruction: "topicCounts bölgüsünə dəqiq əməl et. Hər sual seçilmiş sinif və mövzunun biliklərini yoxlamalıdır.",
             excludedQuestionStems: excludedQuestionStems.slice(-250),
             noveltyRule: "excludedQuestionStems daxilində olan sualları və eyni kökdə sualları təkrarlama.",
@@ -614,7 +621,10 @@ export async function generateFeedbackSummary(input: {
   try {
     const response = await openai.responses.create({
       model: MODEL,
-      temperature: 0.45,
+      reasoning: { effort: "low" },
+      max_output_tokens: 5000,
+      store: false,
+      text: { format: { type: "json_object" } },
       input: [
         { role: "system", content: FEEDBACK_SUMMARY_PROMPT },
         { role: "user", content: JSON.stringify({
@@ -674,8 +684,10 @@ export async function generateStudyPlan(input: {
     for (let attempt = 0; attempt < 2; attempt += 1) {
       const response = await openai.responses.create({
         model: MODEL,
-        temperature: 0.5,
-        max_output_tokens: 5000,
+        reasoning: { effort: "medium" },
+        store: false,
+        text: { format: { type: "json_object" } },
+        max_output_tokens: 10000,
         input: [
           { role: "system", content: STUDY_PLAN_PROMPT },
           {
@@ -697,7 +709,8 @@ export async function generateStudyPlan(input: {
       const weakTopics = input.weakTopics.filter((topic) => curriculumTopics.includes(topic));
       const prioritizesWeakTopics = !weakTopics.length || (parsed?.days.filter((day) => weakTopics.includes(day.topic ?? "")).length ?? 0) >= 4;
       if (parsed && prioritizesWeakTopics && parsed.days.every((day) => day.estimatedMinutes <= (input.dailyMinutes ?? 60))) {
-        return { ...parsed, resultSubmittedAt: input.resultSubmittedAt, dailyMinutes: input.dailyMinutes ?? 60 };
+        const resources = await verifiedTopicResources([...new Set(parsed.days.map(day => day.topic!))], input.grade, input.subject);
+        return { ...parsed, days: parsed.days.map(day => ({ ...day, resources: resources.get(day.topic!) ?? day.resources })), resultSubmittedAt: input.resultSubmittedAt, dailyMinutes: input.dailyMinutes ?? 60 };
       }
     }
     throw new Error("AI uyğun 7 günlük plan qaytarmadı. Yenidən cəhd edin.");

@@ -1,7 +1,7 @@
 import { getLearningResources } from "@/lib/learning-resources";
 import type { Grade, StudyPlan, Subject } from "@/lib/types";
 
-export const STUDY_PLAN_VERSION = 2;
+export const STUDY_PLAN_VERSION = 3;
 
 export function validateStudyPlan(value: unknown, topics: string[], grade: Grade, subject: Subject = "Riyaziyyat"): StudyPlan | null {
   if (!value || typeof value !== "object") return null;

@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { getSupabase } from "@/lib/supabase/client";
+import { AccountManager } from "@/components/admin/account-manager";
 
 type Snapshot = { user_id: string; updated_at: string; data: Record<string, unknown> };
 type Profile = { grade?: string; subject?: string; name?: string };
@@ -56,7 +57,8 @@ export default function AdminPage() {
         } catch { setMessage("Elan saxlanmadı. İcazəni və bağlantını yoxlayın."); }
         finally { setBusy(false); }
       }}>Elanı saxla</Button></div></section>
-      <section className="overflow-hidden rounded-3xl border border-white/10"><div className="p-6"><h2 className="text-xl font-semibold">Şagirdlərin saxlanmış məlumatları</h2><p className="mt-2 text-sm text-zinc-400">Yalnız məlumatını bazaya saxlayan hesablar göstərilir. Nəticələr şagird cihazından yüklənib.</p></div><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead className="border-y border-white/10 bg-white/5 text-zinc-400"><tr>{["Hesab ID", "Sinif", "Fənn", "Sınaq sayı", "Son saxlama"].map(label => <th key={label} className="px-6 py-4 font-medium" scope="col">{label}</th>)}</tr></thead><tbody>{rows.map(row => {
+      <AccountManager />
+      <section className="overflow-hidden rounded-3xl border border-white/10"><div className="p-6"><h2 className="text-xl font-semibold">Son saxlanan iş nüsxələri</h2><p className="mt-2 text-sm text-zinc-400">Tam irəliləyiş yuxarıdakı hesab analitikasında göstərilir.</p></div><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead className="border-y border-white/10 bg-white/5 text-zinc-400"><tr>{["Hesab ID", "Sinif", "Fənn", "Son sınaqlar", "Son saxlama"].map(label => <th key={label} className="px-6 py-4 font-medium" scope="col">{label}</th>)}</tr></thead><tbody>{rows.map(row => {
         const profile = (row.data["kairo.profile"] ?? {}) as Profile;
         const attempts = row.data["kairo.attempts"];
         return <tr key={row.user_id} className="border-b border-white/5"><td className="px-6 py-4 font-mono text-xs" title={row.user_id}>{row.user_id.slice(0, 8)}…</td><td className="px-6 py-4">{String(profile.grade ?? "—")}</td><td className="px-6 py-4">{String(profile.subject ?? "—")}</td><td className="px-6 py-4">{Array.isArray(attempts) ? attempts.length : 0}</td><td className="whitespace-nowrap px-6 py-4">{new Date(row.updated_at).toLocaleString("az-AZ", { timeZone: "Asia/Baku" })}</td></tr>;

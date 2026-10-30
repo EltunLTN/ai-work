@@ -13,6 +13,11 @@ import { getTextbookById } from "@/lib/textbook-reference";
 import { updateGamificationFromResult } from "@/lib/gamification";
 
 export const STUDENT_PROFILE_EVENT = "kairo:student-profile-changed";
+export const STORAGE_CHANGE_EVENT = "kairo:learning-changed";
+
+export function notifyLearningChange() {
+  if (typeof window !== "undefined") window.dispatchEvent?.(new Event(STORAGE_CHANGE_EVENT));
+}
 
 const KEYS = {
   profile: "kairo.profile",
@@ -50,6 +55,7 @@ function read<T>(key: string): T | null {
 function write<T>(key: string, value: T) {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(key, JSON.stringify(value));
+  notifyLearningChange();
 }
 
 export function saveStudentProfile(profile: StudentProfile) {
@@ -141,6 +147,7 @@ export function saveStudyPlan(plan: StudyPlan) {
 
 export function clearStudyPlan() {
   if (typeof window !== "undefined") window.localStorage.removeItem(KEYS.plan);
+  notifyLearningChange();
 }
 
 export function getPlanProgress(plan: StudyPlan): Record<string, boolean> {
@@ -177,6 +184,7 @@ export function getActivity(): Array<{ title: string; date: string }> {
 }
 
 export interface MiniQuizAttempt {
+  durationSeconds?: number;
   id: string;
   grade: string;
   subject?: Subject;

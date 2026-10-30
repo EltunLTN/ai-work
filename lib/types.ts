@@ -57,6 +57,7 @@ export interface TopicScore {
 }
 
 export interface DiagnosticResult {
+  durationSeconds?: number;
   grade: Grade;
   subject: Subject;
   textbookId: string;

@@ -24,7 +24,7 @@ test("AI plan is seven validated days, uses direct curated links and preserves a
   const api = generator([plan()]);
   const result = await api.generateStudyPlan(planInput);
   assert.equal(result.days.length, 7);
-  assert.equal(result.version, 2);
+  assert.equal(result.version, 3);
   assert.equal(result.resultSubmittedAt, planInput.resultSubmittedAt);
   assert.equal(api.requests[0].dailyMinutes, 45);
   assert.equal(api.requests[0].topicScores[0].accuracy, 25);
@@ -32,7 +32,7 @@ test("AI plan is seven validated days, uses direct curated links and preserves a
     assert.equal(day.topic, "İnteqrala giriş");
     assert.equal(day.resources.length, 3);
     assert.ok(day.resources.some((resource) => resource.href.includes("IndefiniteIntegrals.aspx")));
-    assert.ok(day.resources.some((resource) => resource.href === "/mini-quiz?topic=%C4%B0nteqrala%20giri%C5%9F"));
+    assert.ok(day.resources.some((resource) => resource.href === "/mini-quiz?topic=%C4%B0nteqrala%20giri%C5%9F&subject=Riyaziyyat&grade=11"));
     assert.ok(day.resources.every((resource) => !/fake|google.com\/search|youtube.com\/results/.test(resource.href)));
   }
 });
@@ -94,7 +94,7 @@ test("tutor sends real conversation history and score evidence to the existing m
   });
   assert.ok(reply.answer.includes("x²"));
   assert.ok(reply.resources.length);
-  assert.equal(api.rawRequests[0].model, "gpt-4.1-mini");
+  assert.equal(api.rawRequests[0].model, "gpt-6.1-sol");
   assert.equal(api.rawRequests[0].store, false);
   assert.equal(api.rawRequests[0].input.length, 5);
   assert.equal(api.requests[0].scoreEstimate.score, 25);
@@ -144,7 +144,7 @@ test("stored attempts, feedback, plan progress and generated quiz handoff use re
     store.saveQuizResult(result);
     assert.equal(store.getGamification().xp, xp);
     assert.equal(store.getAttemptHistory().length, 1);
-    const currentPlan = { ...plan(), generatedAt: "2026-10-13T11:00:00Z", resultSubmittedAt: result.submittedAt, version: 2 };
+    const currentPlan = { ...plan(), generatedAt: "2026-10-13T11:00:00Z", resultSubmittedAt: result.submittedAt, version: 3 };
     store.saveStudyPlan(currentPlan);
     store.savePlanProgress(currentPlan, { task: true });
     assert.deepEqual(store.getPlanProgress(currentPlan), { task: true });

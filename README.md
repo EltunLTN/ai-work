@@ -170,10 +170,10 @@ npm run build
 - AI responses are validated and repaired before being served to the UI.
 - Invalid questions are regenerated within the same grade and topic. Failed AI requests show errors; demo data and template plans are not substituted for AI output.
 - Plans validate seven days, grade-specific topics, a checkpoint, and the selected daily time budget. Direct resource URLs come from a curated catalog, not model-generated links or search pages. External resources are labelled by provider and language.
-- The tutor uses the existing server-side `OPENAI_API_KEY` and `gpt-4.1-mini` Responses API. No additional API key is required. Chat history is kept in session storage and the last 20 messages (within a size limit) are sent for follow-up context. OpenAI response storage is disabled for tutor requests.
+- The tutor uses the existing server-side `OPENAI_API_KEY` and `gpt-6.1-sol` Responses API (configurable with `OPENAI_MODEL`). The existing server-side key is reused. Model access and billing depend on the OpenAI account; the admin panel includes a live connectivity test. Chat history is kept in session storage and the last 20 messages (within a size limit) are sent for follow-up context. OpenAI response storage is disabled for tutor requests.
 - Score cards show observed practice accuracy on a 0–100 scale with a Wilson 95% uncertainty interval and sample size. These uncalibrated, topic-selected quizzes cannot support an official 700-point DİM prediction; no future score gains are invented.
 - Activity, mini-quiz attempts, plan completion and XP are based on recorded actions. XP is granted once per result. Result reviews are saved with the completed attempt so a new quiz cannot overwrite an earlier review.
-- Learning flows keep a browser-local working copy. Signed-in users can save and restore their profile, quiz history, answers and plan from `/account`. Saving is explicit; it does not silently overwrite a backup when signing in on a new device. Signing out clears the device's learning records.
+- Learning flows keep a browser-local working copy. Signed-in users automatically save their learning state and can also manually save or restore from `/account`. Learning changes automatically synchronize after a short debounce. On a new device, the account snapshot loads before learning pages render. Unsynced local work survives offline sessions and is retried on reconnection. Signing out clears the device's learning records.
 - Supabase PostgreSQL stores account-owned snapshots. RLS limits students to their own data; verified administrators can read snapshots and edit the homepage announcement. Admin authorization uses a private allowlist and checks the current verified Auth user, rather than user-editable metadata.
 - All AI endpoints verify the bearer token with Supabase Auth and consume an atomic database quota of 100 requests per account per UTC day. Quota failures deny the request before calling OpenAI.
 - Wumpus links on desktop, mobile and the footer open the external Wumpus application. The previous HTML route redirects there too.
@@ -207,3 +207,17 @@ Do not commit real API keys to version control.
 ## License
 
 For hackathon and educational demo use. Add a formal license file if you plan public distribution.
+
+
+## Learning platform v2
+
+Apply database files in this order for an existing v1 installation: `learning-platform-v2.sql`, `learning-analytics.sql`, `learning-platform-permissions.sql`. The permissions migration explicitly revokes Supabase default grants and exposes admin-only invoker wrappers around guarded functions in the private schema. Run `verify-platform-v2.sql` afterward; its transaction rolls back all test data.
+
+- `practice_attempts` retains append-only quiz/mini-quiz results across devices, with an idempotent account/attempt key, per-topic correct/total counts and measured session duration when available. Historical duration stays unknown. These are self-reported practice records, not proctored assessments.
+- `/dashboard` aggregates daily activity in Asia/Baku, totals, subject and topic weaknesses from PostgreSQL. Empty histories stay empty; no demo percentages or invented exam scores are substituted.
+- Account profiles support first/last name, grade and private 256px WebP avatars. Uploads are decoded and re-encoded before storage. Only the owner and verified admins can read them.
+- Admins search accounts, inspect each student's analytics, edit profile names/grade, suspend new AI requests, add notes and review an audit trail. Credential and admin-role editing is intentionally absent.
+- AI uses explicit low/medium reasoning, bounded output budgets, no unsupported sampling parameters, no response storage and validated JSON contracts. Plans select topics only from the curated grade/subject curriculum; old plans regenerate with version 3.
+- `ENABLE_RESOURCE_SEARCH=true` enables topic-specific web discovery restricted to educational publishers. A discovered URL must appear in the API's URL citations and pass a provider/path allowlist. Generic courses, search results and unverified links are omitted. Existing hand-verified lesson mappings remain available without search. External supplements are labelled by language and do not claim alignment with the full local curriculum.
+- The landing page has no subscription pricing or sample statistics. The optional first-visit scene uses an original AI-generated mentor, a levitating red entry button and an evasive blue pill. Keyboard users and reduced-motion preferences are supported.
+- Public email registration still requires custom SMTP. The Supabase advisor also notes that leaked-password protection is disabled; enable it in Auth settings if supported by your plan before a broader launch.

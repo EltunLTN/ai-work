@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { getSupabase } from "@/lib/supabase/client";
 import { clearLearningData, restoreFromCloud, saveToCloud } from "@/lib/cloud-storage";
+import { ProfileEditor } from "@/components/account/profile-editor";
 
 export default function AccountPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -74,20 +75,22 @@ export default function AccountPage() {
         localStorage.setItem("kairo.cloud.owner", data.user.id);
         const { data: isAdmin } = await db.rpc("is_admin");
         setAdmin(isAdmin === true); setUser(data.user); setPassword("");
-        setMessage("Daxil oldunuz. Bu cihazdakı məlumatı bazaya saxlaya və ya əvvəlki nüsxəni bərpa edə bilərsiniz.");
+        setMessage("Daxil oldunuz. Təhsil məlumatlarınız avtomatik yüklənir və saxlanır.");
       }
     });
   }
 
   return <div className="kairo-page"><Navbar /><main className="mx-auto w-full max-w-4xl flex-1 px-4 py-12 md:py-20">
     <div className="mb-10"><p className="text-sm uppercase tracking-[0.22em] text-red-400">Kairo hesabı</p><h1 className="mt-3 text-4xl font-bold">Təhsil yolun, bir yerdə.</h1><p className="mt-4 max-w-xl text-zinc-400">Nəticələrini və fərdi planını təhlükəsiz saxla. Başqa cihazda hesabına daxil olub davam et.</p></div>
+    {user && <ProfileEditor userId={user.id} />}
     {loading ? <p role="status">Hesab yoxlanılır…</p> : <div className="grid gap-6 md:grid-cols-2">
       <section className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8">
         <UserRound className="mb-5 size-8 text-red-400" /><h2 className="text-xl font-semibold">{recovery ? "Yeni şifrə" : user ? "Hesabın" : signup ? "Hesab yarat" : "Xoş gəldin"}</h2>
         {user && !recovery ? <div className="mt-5 space-y-5"><p className="break-all text-zinc-300">{user.email}</p><p className="text-sm text-zinc-400">E-poçt təsdiqlənib · {admin ? "Administrator" : "Şagird"}</p>{admin && <Link className="inline-flex items-center gap-2 rounded-xl bg-red-500 px-5 py-3 font-semibold text-white" href="/admin"><ShieldCheck className="size-4" />Admin paneli</Link>}<div><Button disabled={busy} variant="secondary" onClick={() => void run(async () => {
+          await saveToCloud();
           const { error } = await getSupabase().auth.signOut(); if (error) throw error;
           clearLearningData(); localStorage.removeItem("kairo.cloud.owner"); setUser(null); setAdmin(false); setMessage("Hesabdan çıxıldı. Bu cihazdakı təhsil məlumatları təmizləndi.");
-        })}><LogOut className="mr-2 size-4" />Çıxış</Button></div><p className="text-xs text-zinc-500">Çıxışdan əvvəl məlumatlarını bazaya saxla. Çıxış cihazdakı təhsil məlumatlarını təmizləyir.</p></div> : <form onSubmit={submit} className="mt-6 space-y-4">
+        })}><LogOut className="mr-2 size-4" />Çıxış</Button></div><p className="text-xs text-zinc-500">Çıxışdan əvvəl məlumatların bazaya saxlanır. Çıxış cihazdakı təhsil məlumatlarını təmizləyir.</p></div> : <form onSubmit={submit} className="mt-6 space-y-4">
           {!recovery && <label className="block text-sm">E-poçt<input type="email" required autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-xl border border-white/15 bg-black/20 px-4 py-3" /></label>}
           <label className="block text-sm">Şifrə<input type="password" required minLength={signup || recovery ? 10 : 1} maxLength={128} autoComplete={signup || recovery ? "new-password" : "current-password"} value={password} onChange={e => setPassword(e.target.value)} className="mt-2 w-full rounded-xl border border-white/15 bg-black/20 px-4 py-3" /></label>
           <Button type="submit" className="w-full" disabled={busy}>{busy ? "Gözləyin…" : recovery ? "Şifrəni yenilə" : signup ? "Qeydiyyatdan keç" : "Daxil ol"}</Button>
@@ -99,7 +102,7 @@ export default function AccountPage() {
           })}>Şifrəni unutmusunuz?</button></>}
         </form>}
       </section>
-      <section className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8"><Cloud className="mb-5 size-8 text-red-400" /><h2 className="text-xl font-semibold">Bulud yaddaşı</h2><p className="mt-4 text-sm leading-6 text-zinc-400">Profil, sınaq nəticələri, cavablar, fəaliyyət tarixçəsi və təhsil planı yalnız sənin hesabına bağlı saxlanılır. Dəyişikliklərdən sonra “Bazaya saxla” düyməsinə bas.</p><div className="mt-6 flex flex-wrap gap-3"><Button disabled={!user || busy} onClick={() => void run(async () => { await saveToCloud(); setMessage("Təhsil məlumatların bazada saxlanıldı."); })}><Cloud className="mr-2 size-4" />Bazaya saxla</Button><Button disabled={!user || busy} variant="secondary" onClick={() => {
+      <section className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8"><Cloud className="mb-5 size-8 text-red-400" /><h2 className="text-xl font-semibold">Bulud yaddaşı</h2><p className="mt-4 text-sm leading-6 text-zinc-400">Profil, sınaq nəticələri, cavablar, fəaliyyət tarixçəsi və təhsil planı yalnız sənin hesabına bağlı saxlanılır. Dəyişikliklər avtomatik bazaya yazılır. Bağlantı kəsilsə, yenidən qoşulanda təkrar göndərilir.</p><div className="mt-6 flex flex-wrap gap-3"><Button disabled={!user || busy} onClick={() => void run(async () => { await saveToCloud(); setMessage("Təhsil məlumatların bazada saxlanıldı."); })}><Cloud className="mr-2 size-4" />Bazaya saxla</Button><Button disabled={!user || busy} variant="secondary" onClick={() => {
         if (!window.confirm("Bu cihazdakı təhsil məlumatları bazadakı nüsxə ilə əvəzlənəcək. Davam edilsin?")) return;
         void run(async () => { await restoreFromCloud(); setMessage("Məlumatlar bərpa olundu. Dashboard-a keçə bilərsiniz."); });
       }}><Download className="mr-2 size-4" />Bərpa et</Button></div><Link href="/dashboard" className="mt-6 inline-block text-sm text-red-400">Dashboard-a keç →</Link><p className="mt-6 text-xs leading-5 text-zinc-500">Bərpa bu cihazdakı təhsil məlumatlarını əvəz edir. Tema və dil seçimin saxlanılır.</p></section>

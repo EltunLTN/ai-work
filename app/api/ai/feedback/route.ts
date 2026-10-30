@@ -1,3 +1,4 @@
+export const maxDuration = 300;
 import { requireAIAccess } from "@/lib/ai-access";
 import { NextResponse } from "next/server";
 import { generateFeedbackSummary } from "@/lib/ai/client";

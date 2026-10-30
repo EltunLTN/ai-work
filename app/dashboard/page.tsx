@@ -2,6 +2,7 @@
 
 import { useBrowserReady } from "@/hooks/use-browser-ready";
 import Loading from "@/app/loading";
+import { ProgressPanel } from "@/components/dashboard/progress-panel";
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -44,7 +45,7 @@ function DashboardContent() {
     return (
       <div className="kairo-page">
         <Navbar />
-        <main className="mx-auto max-w-5xl px-4 py-20">{t.dashboard.noData}</main>
+        <main className="mx-auto max-w-6xl space-y-6 px-4 py-12"><h1 className="text-3xl font-semibold">İnkişafın bir baxışda</h1><ProgressPanel /><p className="kairo-muted">Yeni sınaq üçün fənn və mövzu seç.</p></main>
       </div>
     );
   }
@@ -55,6 +56,7 @@ function DashboardContent() {
       <main className="mx-auto w-full max-w-6xl space-y-6 px-4 py-10 md:px-6">
         <h1 className="text-3xl font-black md:text-4xl">{t.dashboard.title}</h1>
 
+        <ProgressPanel />
         <DashboardCards result={result} completion={getPlanCompletion(plan, progress)} />
         <ScorePredictionCard result={result} />
 

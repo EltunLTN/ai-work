@@ -1,25 +1,16 @@
+import Link from "next/link";
+import { ArrowUpRight, BrainCircuit, Route, ScanLine } from "lucide-react";
 import { Footer } from "@/components/layout/footer";
-import { BusinessModelSection } from "@/components/landing/business-model-section";
 import { Navbar } from "@/components/layout/navbar";
-import { DashboardPreview, FinalCta } from "@/components/landing/dashboard-preview";
-import { FeatureCards, HowItWorks } from "@/components/landing/feature-cards";
-import { HeroSection } from "@/components/landing/hero-section";
 import { Announcement } from "@/components/landing/announcement";
+import { MatrixEntrance } from "@/components/landing/matrix-entrance";
+import { ProgressPanel } from "@/components/dashboard/progress-panel";
 
 export default function Home() {
-  return (
-    <div className="kairo-page">
-      <Navbar />
-      <Announcement />
-      <main>
-        <HeroSection />
-        <FeatureCards />
-        <HowItWorks />
-        <DashboardPreview />
-        <FinalCta />
-        <BusinessModelSection />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <MatrixEntrance><div className="kairo-page new-home"><Navbar /><Announcement /><main>
+    <section className="home-hero"><div className="hero-orbit" aria-hidden="true"><div /><div /><div /><span className="orbit-core">K</span><span className="orbit-label orbit-one">ANLA</span><span className="orbit-label orbit-two">MƏŞQ ET</span><span className="orbit-label orbit-three">İNKİŞAF ET</span></div><div className="relative z-10 max-w-3xl"><p className="eyebrow">● SƏNİN ÖYRƏNMƏ SİSTEMİN</p><h1>Əzbərləmə.<br /><span className="text-zinc-400">Əslində</span> <em>anla.</em></h1><p className="hero-description">Harada ilişdiyini gör. Mövzuna uyğun məşq et. Hər gün nə qədər irəlilədiyini real nəticələrlə izlə.</p><div className="mt-9 flex flex-wrap gap-3"><Link href="/onboarding" className="primary-link">Öz yolunu başlat <ArrowUpRight className="size-5" /></Link><Link href="/dashboard" className="secondary-link">İnkişafımı göstər</Link></div><p className="mt-6 text-xs text-zinc-500">Riyaziyyat · Fizika · Biologiya · Coğrafiya · Kimya</p></div><div className="hero-bottom"><span>01 / BİLİYİ ÖLÇ</span><span>02 / ZƏİF NÖQTƏNİ TAP</span><span>03 / İRƏLİLƏ</span></div></section>
+    <section className="home-section"><div className="section-heading"><p className="eyebrow">SƏNİN MƏLUMATLARIN</p><h2>Rəqəmlər danışsın.<br /><span className="text-zinc-500">Yalnız sənin nəticələrin.</span></h2><p>Uğur faizi uydurmuruq. Həll etdiyin hər sınaq, düzgün və səhv cavab bazada qeyd olunur.</p></div><ProgressPanel compact /></section>
+    <section className="home-section border-y border-white/10"><div className="section-heading"><p className="eyebrow">BİR-BİRİNƏ BAĞLI ADDIMLAR</p><h2>Sadəcə test deyil.<br />Öyrənmək üçün bir sistem.</h2></div><div className="grid gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 md:grid-cols-3">{[{ icon: ScanLine, number: "01", title: "Özünü tanı", description: "Fənnini, sinfini və mövzunu seç. Diaqnostik sınaqdan sonra hansı anlayışlara qayıtmalı olduğunu gör.", href: "/onboarding" }, { icon: BrainCircuit, number: "02", title: "Düşünərək məşq et", description: "Sinfinə uyğun yeni suallar, addım-addım həll izahları və söhbəti davam etdirən AI müəllim.", href: "/quiz" }, { icon: Route, number: "03", title: "Planla davam et", description: "Zəif mövzularına əsaslanan 7 günlük plan, yoxlanmış mövzu resursları və gündəlik tapşırıqlar.", href: "/plan" }].map(({ icon: Icon, ...item }) => <Link key={item.number} href={item.href} className="feature-tile"><div className="flex items-center justify-between"><Icon className="size-6 text-red-400" /><span className="font-mono text-xs text-zinc-600">{item.number}</span></div><h3 className="mt-10 text-2xl font-semibold">{item.title}</h3><p className="mt-4 text-sm leading-7 text-zinc-400">{item.description}</p><ArrowUpRight className="mt-8 size-5 text-zinc-500" /></Link>)}</div></section>
+    <section className="home-section"><div className="home-cta"><p className="eyebrow">NÖVBƏTİ ADDIM SƏNİNDİR</p><h2>Bu gün bir mövzunu<br /><em>daha yaxşı anla.</em></h2><Link href="/onboarding" className="primary-link mt-8">İlk sınağa keç <ArrowUpRight className="size-5" /></Link><a href="https://wumpus-echoes-of-the-deep.vercel.app/" target="_blank" rel="noopener noreferrer" className="mt-6 block text-sm text-zinc-400">Fasilə vaxtı? Wumpus oyna ↗</a></div></section>
+  </main><Footer /></div></MatrixEntrance>;
 }

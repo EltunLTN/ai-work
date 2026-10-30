@@ -21,6 +21,7 @@ export function LearningResourceCards({ resources, compact = false }: { resource
           </a>
         );
       })}
+      {resources.filter(resource => resource.kind !== "test").length < 2 && <p className="kairo-muted text-xs leading-5">Bu mövzu üçün video və ya material keçidinin bir hissəsi hələ təsdiqlənməyib. Yoxlanılmamış və əlaqəsiz keçidlər göstərilmir.</p>}
     </div>
   );
 }

@@ -17,7 +17,7 @@ export async function requireAIAccess(request: Request) {
     if (error || !user || !user.email_confirmed_at) return reply("Təsdiqlənmiş hesabla daxil olun.", 401);
     const { data: allowed, error: quotaError } = await db.rpc("consume_ai_quota");
     if (quotaError) return reply("İstifadə limiti yoxlanıla bilmədi. Yenidən cəhd edin.", 503);
-    if (!allowed) return reply("Gündəlik 100 AI sorğusu limitinə çatdınız. Sabah yenidən cəhd edin.", 429);
+    if (!allowed) return reply("Gündəlik 100 AI sorğusu limitinə çatılıb və ya hesab üçün AI istifadəsi dayandırılıb.", 429);
     return null;
   } catch {
     return reply("Hesab xidməti ilə əlaqə qurulmadı.", 503);
