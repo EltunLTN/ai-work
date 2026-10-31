@@ -35,3 +35,6 @@ html{scroll-behavior:smooth;scroll-padding-top:100px}body{background:var(--paper
 @media(max-width:900px){.admin-tool-grid{grid-template-columns:repeat(2,1fr)}.admin-metrics{grid-template-columns:repeat(2,1fr)}.admin-detail-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.chase-rabbit{height:165px}.time-experiment{padding:25px!important}.editorial-clock{width:230px;height:230px;margin-top:20px}.editorial-clock>i{height:70px}.admin-metrics article{padding:18px}.admin-metrics article>span{font-size:31px}.admin-tool-grid{grid-template-columns:1fr}.admin-subjects{grid-template-columns:1fr}.admin-detail-grid{grid-template-columns:1fr}.admin-attempt-list summary>span{display:block;margin-top:8px}.admin-section-nav>a{font-size:11px;padding:10px}}
 @media(prefers-reduced-motion:reduce){.escaping-pill{transition:none}.portal-depth>i{animation:none}.rabbit-traveller{will-change:auto}}
+/* Opacity-only page arrival keeps fixed tutor/guide controls anchored to the viewport. */
+.route-arrival{animation-name:page-arrival}
+@keyframes page-arrival{from{opacity:.55}to{opacity:1}}

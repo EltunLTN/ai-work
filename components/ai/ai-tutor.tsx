@@ -41,13 +41,13 @@ export function AITutor() {
     if (open) {
       const log = bottom.current?.parentElement;
       log?.scrollTo({ top: log.scrollHeight, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-      if (!loading) inputRef.current?.focus();
+      if (!loading) inputRef.current?.focus({ preventScroll: true });
     }
   }, [messages, loading, open]);
 
   function close() {
     setOpen(false);
-    launcher.current?.focus();
+    launcher.current?.focus({ preventScroll: true });
   }
 
   function toggleOpen() {
@@ -175,4 +175,3 @@ export function AITutor() {
     </div>
   );
 }
-
