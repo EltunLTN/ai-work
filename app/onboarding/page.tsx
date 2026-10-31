@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Footer } from "@/components/layout/footer";
+import { WorkspaceHeading } from "@/components/layout/workspace-heading";
 import { Navbar } from "@/components/layout/navbar";
 import { GradeSubjectSelector, TextbookSelector } from "@/components/onboarding/selectors";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,13 @@ export default function OnboardingPage() {
   const { t } = useLocale();
   const router = useRouter();
   const [profile, setProfile] = useState<StudentProfile>(() => getDefaultProfile());
+
+  useEffect(() => {
+    const selected = new URLSearchParams(window.location.search).get("subject");
+    if (selected && ["Riyaziyyat", "Fizika", "Biologiya", "Coğrafiya", "Kimya"].includes(selected)) {
+      queueMicrotask(() => setProfile(previous => getProfileForSelection(previous.grade, selected as Subject)));
+    }
+  }, []);
 
   const textbooks = useMemo(
     () => getTextbooksBySelection(profile.grade, profile.subject),
@@ -47,12 +55,9 @@ export default function OnboardingPage() {
   return (
     <div className="kairo-page">
       <Navbar />
-      <main className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 md:px-6">
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 md:px-6">
         <div>
-          <h1 className="text-3xl font-black md:text-4xl">{t.onboarding.title}</h1>
-          <p className="mt-2 max-w-2xl text-zinc-400">
-            {t.onboarding.subtitle}
-          </p>
+          <WorkspaceHeading index="01 / İLK ADDIM" title={t.onboarding.title} description={t.onboarding.subtitle} />
         </div>
 
         <div className="kairo-card space-y-6 rounded-3xl p-6">

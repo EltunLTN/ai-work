@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import type { User } from "@supabase/supabase-js";
 import { Cloud, Download, LogOut, ShieldCheck, UserRound } from "lucide-react";
+import { WorkspaceHeading } from "@/components/layout/workspace-heading";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
@@ -80,8 +81,8 @@ export default function AccountPage() {
     });
   }
 
-  return <div className="kairo-page"><Navbar /><main className="mx-auto w-full max-w-4xl flex-1 px-4 py-12 md:py-20">
-    <div className="mb-10"><p className="text-sm uppercase tracking-[0.22em] text-red-400">Kairo hesabı</p><h1 className="mt-3 text-4xl font-bold">Təhsil yolun, bir yerdə.</h1><p className="mt-4 max-w-xl text-zinc-400">Nəticələrini və fərdi planını təhlükəsiz saxla. Başqa cihazda hesabına daxil olub davam et.</p></div>
+  return <div className="kairo-page"><Navbar /><main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl flex-1 px-4 py-12 md:py-20">
+    <WorkspaceHeading index="07 / HESABIN" title="Təhsil yolun, bir yerdə." description="Profilin, nəticələrin və fərdi planın. Harada olursan ol, qaldığın yerdən davam et." />
     {user && <ProfileEditor userId={user.id} />}
     {loading ? <p role="status">Hesab yoxlanılır…</p> : <div className="grid gap-6 md:grid-cols-2">
       <section className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8">

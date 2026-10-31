@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import "./experience.css";
 import { AITutor } from "@/components/ai/ai-tutor";
 import { CloudProvider } from "@/components/account/cloud-provider";
+import { ExperienceProvider } from "@/components/experience/experience-provider";
 
 const display = Space_Grotesk({
   variable: "--font-display",
@@ -15,8 +17,10 @@ const body = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Kairo | AI DİM Coach",
-  description: "Kairo - AI-powered DİM exam preparation platform for Azerbaijani students.",
+  metadataBase: new URL("https://eltun.dev"),
+  title: { default: "Kairo — Sualların arxasınca get", template: "%s | Kairo" },
+  description: "Sinfinə uyğun sınaqlar, fərdi təhsil planı və real inkişaf analitikası. Kairo ilə anlayaraq öyrən.",
+  openGraph: { title: "Kairo — Sualların arxasınca get", description: "Maraqla başla. Anlayaraq davam et.", locale: "az_AZ", type: "website" },
 };
 
 export default function RootLayout({
@@ -27,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="az"
-      data-theme="dark"
+      data-theme="light"
       suppressHydrationWarning
       className={`${display.variable} ${body.variable} h-full antialiased`}
     >
@@ -35,10 +39,10 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "(function(){try{var t=localStorage.getItem('kairo.theme');if(!t){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t);var l=localStorage.getItem('kairo.locale');document.documentElement.setAttribute('lang',l==='en'?'en':'az');}catch(e){document.documentElement.setAttribute('data-theme','dark');document.documentElement.setAttribute('lang','az');}})();",
+              "(function(){try{var t=localStorage.getItem('kairo.theme')||'light';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');var l=localStorage.getItem('kairo.locale');document.documentElement.setAttribute('lang',l==='en'?'en':'az');}catch(e){}})();",
           }}
         />
-        <CloudProvider>{children}<AITutor /></CloudProvider>
+        <ExperienceProvider><CloudProvider>{children}<AITutor /></CloudProvider></ExperienceProvider>
       </body>
     </html>
   );

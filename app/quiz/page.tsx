@@ -8,6 +8,7 @@ import Loading from "@/app/loading";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Footer } from "@/components/layout/footer";
+import { WorkspaceHeading } from "@/components/layout/workspace-heading";
 import { Navbar } from "@/components/layout/navbar";
 import { AIQuestionGeneratorPanel } from "@/components/ai/ai-question-generator-panel";
 import { QuizCard } from "@/components/quiz/quiz-card";
@@ -142,7 +143,7 @@ function QuizContent() {
     return (
       <div className="kairo-page">
         <Navbar />
-        <main className="mx-auto max-w-4xl px-4 py-16">{t.quiz.loading}</main>
+        <main id="main-content" tabIndex={-1} className="mx-auto max-w-4xl px-4 py-16">{t.quiz.loading}</main>
       </div>
     );
   }
@@ -151,7 +152,7 @@ function QuizContent() {
     return (
       <div className="kairo-page">
         <Navbar />
-        <main className="mx-auto w-full max-w-4xl space-y-4 px-4 py-16">
+        <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl space-y-4 px-4 py-16">
           <h1 className="text-3xl font-black">{t.quiz.failed}</h1>
           <p className="text-zinc-300">{loadError ?? t.quiz.notReady}</p>
           <Button onClick={loadDiagnosticQuestions}>{t.quiz.retry}</Button>
@@ -176,9 +177,9 @@ function QuizContent() {
   return (
     <div className="kairo-page">
       <Navbar />
-      <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-10 md:px-6">
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl space-y-6 px-4 py-10 md:px-6">
         <div>
-          <h1 className="text-3xl font-black">{t.quiz.title}</h1>
+          <WorkspaceHeading index="02 / SINAQ" title={t.quiz.title} />
           <p className="mt-2 text-zinc-400">
             {profile.grade}-ci sinif {profile.subject} | {textbook?.title}
           </p>

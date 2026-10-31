@@ -1,74 +1,24 @@
 "use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ArrowUpRight, Command, Menu, RotateCcw, X } from "lucide-react";
 import { RabbitMark } from "@/components/brand/rabbit-mark";
 import { LanguageToggle } from "@/components/theme/language-toggle";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { Button } from "@/components/ui/button";
 import { useLocale } from "@/hooks/use-locale";
+import { useExperience } from "@/components/experience/experience-provider";
 
 export function Navbar() {
   const { t } = useLocale();
-  const links = [
-    { href: "/", label: t.nav.home },
-    { href: "/onboarding", label: t.nav.selection },
-    { href: "/quiz", label: t.nav.quiz },
-    { href: "/results", label: t.nav.results },
-    { href: "/plan", label: t.nav.plan },
-    { href: "/dashboard", label: t.nav.dashboard },
-    { href: "https://wumpus-echoes-of-the-deep.vercel.app/", label: t.nav.wumpusWorld, external: true },
-    { href: "/account", label: "Hesab" },
-  ];
-
-  return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/55 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 md:px-6">
-        <Link href="/" className="group flex shrink-0 items-center gap-3 text-zinc-100">
-          <RabbitMark className="h-8 w-8 shrink-0 text-white transition-transform duration-300 group-hover:rotate-6" />
-          <div>
-            <p className="text-lg font-bold tracking-wide">Kairo</p>
-            <p className="hidden whitespace-nowrap text-[10px] uppercase tracking-[0.24em] text-zinc-400 sm:block">Follow the rabbit</p>
-          </div>
-        </Link>
-
-        <nav aria-label="Əsas naviqasiya" className="hidden items-center gap-1 xl:flex">
-          {links.map((link) =>
-            link.external ? (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-xl px-3 py-2 text-sm text-amber-400 transition hover:bg-white/10 hover:text-amber-300"
-              >
-                {link.label} ↗
-              </a>
-            ) : (
-              <Link key={link.href} href={link.href} className="rounded-xl px-3 py-2 text-sm text-zinc-300 transition hover:bg-white/10 hover:text-white">
-                {link.label}
-              </Link>
-            )
-          )}
-        </nav>
-
-        <div className="flex shrink-0 items-center gap-2">
-          <Link href="/account" className="hidden rounded-xl px-3 py-2 text-sm sm:inline-flex xl:hidden">Hesab</Link>
-          <LanguageToggle />
-          <ThemeToggle />
-          <motion.div className="hidden sm:block" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-            <Link href="/onboarding">
-              <Button size="sm">{t.nav.start}</Button>
-            </Link>
-          </motion.div>
-        </div>
-      </div>
-      <details className="border-t border-white/10 px-4 py-2 xl:hidden">
-        <summary className="cursor-pointer py-2 text-sm text-zinc-300">Menyu</summary>
-        <nav aria-label="Mobil naviqasiya" className="grid grid-cols-2 gap-2 py-3">
-          {links.map(link => link.external ? <a key={link.href} href={link.href} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-amber-400/10 px-3 py-3 text-sm text-amber-400">{link.label} ↗</a> : <Link key={link.href} href={link.href} className="rounded-xl px-3 py-3 text-sm text-zinc-300 hover:bg-white/10">{link.label}</Link>)}
-        </nav>
-      </details>
-    </header>
-  );
+  const path = usePathname();
+  const [open, setOpen] = useState(false);
+  const { replay, openCommands } = useExperience();
+  const links = [{ href: "/onboarding", label: t.nav.selection }, { href: "/quiz", label: t.nav.quiz }, { href: "/plan", label: t.nav.plan }, { href: "/dashboard", label: "İnkişaf" }, { href: "/playground", label: "Playground" }];
+  useEffect(() => { queueMicrotask(() => setOpen(false)); }, [path]);
+  return <header className="site-nav" onKeyDown={e => { if (e.key === "Escape") setOpen(false); }}><div className="nav-inner">
+    <Link className="wordmark" href="/" aria-label="Kairo — ana səhifə"><RabbitMark className="nav-rabbit" /><span>kairo<span className="wordmark-dot">.</span></span><small>FOLLOW YOUR CURIOSITY</small></Link>
+    <nav className="desktop-nav" aria-label="Əsas naviqasiya">{links.map(l => <Link key={l.href} href={l.href} aria-current={path === l.href ? "page" : undefined}>{l.label}</Link>)}</nav>
+    <div className="nav-tools"><button className="icon-control command-trigger" onClick={openCommands} aria-label="Sürətli keçidlər — Ctrl və ya Command K"><Command size={17} /><kbd>K</kbd></button><div className="nav-theme"><ThemeToggle /></div><Link className="nav-account" href="/account">Hesab <ArrowUpRight size={15} /></Link><button className="mobile-toggle icon-control" aria-label={open ? "Menyunu bağla" : "Menyunu aç"} aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen(!open)}>{open ? <X size={21} /> : <Menu size={21} />}</button></div>
+  </div>{open && <nav className="mobile-nav" id="mobile-nav" aria-label="Mobil naviqasiya"><Link href="/" onClick={() => setOpen(false)}>Ana səhifə <span>00</span></Link>{links.map((l, i) => <Link key={l.href} href={l.href} onClick={() => setOpen(false)} aria-current={path === l.href ? "page" : undefined}>{l.label}<span>0{i + 1}</span></Link>)}<Link href="/results">Nəticələr <ArrowUpRight size={18} /></Link><Link href="/account">Hesab <ArrowUpRight size={18} /></Link><div className="mobile-nav-footer"><button onClick={replay}><RotateCcw size={15} /> Girişə qayıt</button><div className="flex items-center gap-3"><ThemeToggle /><LanguageToggle /></div></div></nav>}</header>;
 }

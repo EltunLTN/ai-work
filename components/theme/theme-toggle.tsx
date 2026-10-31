@@ -13,9 +13,9 @@ function applyTheme(mode: ThemeMode) {
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof window === "undefined") return "dark";
+    if (typeof window === "undefined") return "light";
     const stored = window.localStorage.getItem("kairo.theme") as ThemeMode | null;
-    return stored ?? (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+    return stored === "dark" ? "dark" : "light";
   });
 
   useEffect(() => {

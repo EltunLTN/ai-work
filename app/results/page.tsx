@@ -8,6 +8,7 @@ import Loading from "@/app/loading";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Footer } from "@/components/layout/footer";
+import { WorkspaceHeading } from "@/components/layout/workspace-heading";
 import { Navbar } from "@/components/layout/navbar";
 import { TopicPerformanceChart } from "@/components/charts/topic-performance-chart";
 import { AIInsightCard } from "@/components/results/ai-insight-card";
@@ -113,7 +114,7 @@ function ResultsContent() {
     return (
       <div className="kairo-page">
         <Navbar />
-        <main className="mx-auto max-w-4xl px-4 py-20">{t.results.noResult}</main>
+        <main id="main-content" tabIndex={-1} className="mx-auto max-w-4xl px-5 py-20"><div className="app-empty"><p className="mono-label">03 / NƏTİCƏLƏR</p><h1>İlk izini burax.</h1><p>{t.results.noResult}</p><Link href="/onboarding" className="editorial-button">Fənnini seç və başla ↗</Link></div></main><Footer />
       </div>
     );
   }
@@ -121,10 +122,10 @@ function ResultsContent() {
   return (
     <div className="kairo-page">
       <Navbar />
-      <main className="mx-auto w-full max-w-6xl space-y-8 px-4 py-10 md:px-6">
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-6xl space-y-8 px-4 py-10 md:px-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-black md:text-4xl">{t.results.title}</h1>
+            <WorkspaceHeading index="03 / NƏTİCƏ" title={t.results.title} />
             <p className="mt-2 max-w-3xl text-zinc-400">{summary}</p>
           </div>
           <LevelBadge level={result.level} />

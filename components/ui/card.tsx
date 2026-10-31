@@ -7,6 +7,7 @@ function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
       className={cn(
         "rounded-2xl border border-white/10 bg-zinc-900/70 text-zinc-100 shadow-[0_20px_70px_-45px_rgba(255,255,255,0.25)] backdrop-blur",
         className,
+        "ui-card",
       )}
       {...props}
     />

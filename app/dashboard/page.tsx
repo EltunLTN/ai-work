@@ -7,6 +7,7 @@ import { ProgressPanel } from "@/components/dashboard/progress-panel";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Footer } from "@/components/layout/footer";
+import { WorkspaceHeading } from "@/components/layout/workspace-heading";
 import { Navbar } from "@/components/layout/navbar";
 import { AIQuestionGeneratorPanel } from "@/components/ai/ai-question-generator-panel";
 import { TopicPerformanceChart } from "@/components/charts/topic-performance-chart";
@@ -45,7 +46,7 @@ function DashboardContent() {
     return (
       <div className="kairo-page">
         <Navbar />
-        <main className="mx-auto max-w-6xl space-y-6 px-4 py-12"><h1 className="text-3xl font-semibold">İnkişafın bir baxışda</h1><ProgressPanel /><p className="kairo-muted">Yeni sınaq üçün fənn və mövzu seç.</p></main>
+        <main id="main-content" tabIndex={-1} className="mx-auto max-w-6xl space-y-6 px-4 py-12"><WorkspaceHeading index="06 / İNKİŞAF" title="İnkişafın bir baxışda." description="Gündəlik məşqlərin, güclü tərəflərin və qayıtmalı olduğun mövzular." /><ProgressPanel /><p className="kairo-muted">Yeni sınaq üçün fənn və mövzu seç.</p></main><Footer />
       </div>
     );
   }
@@ -53,8 +54,8 @@ function DashboardContent() {
   return (
     <div className="kairo-page">
       <Navbar />
-      <main className="mx-auto w-full max-w-6xl space-y-6 px-4 py-10 md:px-6">
-        <h1 className="text-3xl font-black md:text-4xl">{t.dashboard.title}</h1>
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-6xl space-y-6 px-4 py-10 md:px-6">
+        <WorkspaceHeading index="06 / İNKİŞAF" title={t.dashboard.title} description="Hər məşq bir iz buraxır. Öz irəliləyişini burada izlə." />
 
         <ProgressPanel />
         <DashboardCards result={result} completion={getPlanCompletion(plan, progress)} />

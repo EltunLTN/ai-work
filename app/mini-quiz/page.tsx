@@ -8,6 +8,7 @@ import Loading from "@/app/loading";
 import { Suspense, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Footer } from "@/components/layout/footer";
+import { WorkspaceHeading } from "@/components/layout/workspace-heading";
 import { Navbar } from "@/components/layout/navbar";
 import { QuizCard } from "@/components/quiz/quiz-card";
 import { QuizProgress } from "@/components/quiz/quiz-progress";
@@ -99,9 +100,9 @@ function MiniQuizContent() {
   return (
     <div className="kairo-page">
       <Navbar />
-      <main className="mx-auto w-full max-w-4xl space-y-6 px-4 py-10 md:px-6">
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl space-y-6 px-4 py-10 md:px-6">
         <div className="space-y-2">
-          <h1 className="text-3xl font-black">Mövzu mini quiz</h1>
+          <WorkspaceHeading index="04 / MÖVZU MƏŞQİ" title="Bir mövzuya daha yaxından bax." />
           <p className="kairo-muted">Mövzu: {topic}</p>
           <p className="kairo-muted text-sm">Bu mini test seçilmiş mövzu üzrə qısa yoxlama üçündür.</p>
         </div>

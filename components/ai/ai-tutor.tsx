@@ -114,7 +114,7 @@ export function AITutor() {
   }
 
   return (
-    <div className="fixed right-4 bottom-4 z-50 md:right-6 md:bottom-6">
+    <div className="tutor-shell fixed right-4 bottom-4 z-50 md:right-6 md:bottom-6">
       {open ? (
         <section id="kairo-ai-tutor" role="dialog" aria-labelledby="tutor-title"
           onKeyDown={(event) => { if (event.key === "Escape") close(); }}

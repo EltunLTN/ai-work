@@ -7,6 +7,7 @@ import Loading from "@/app/loading";
 
 import { useEffect, useRef, useState } from "react";
 import { Footer } from "@/components/layout/footer";
+import { WorkspaceHeading } from "@/components/layout/workspace-heading";
 import { Navbar } from "@/components/layout/navbar";
 import { Button } from "@/components/ui/button";
 import { Progress, Skeleton } from "@/components/ui/progress";
@@ -152,9 +153,9 @@ function PlanContent() {
   return (
     <div className="kairo-page">
       <Navbar />
-      <main className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 md:px-6">
+      <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-5xl space-y-8 px-4 py-10 md:px-6">
         <div>
-          <h1 className="text-3xl font-black md:text-4xl">Sənin üçün uyğunlaşdırılmış yol xəritəsi</h1>
+          <WorkspaceHeading index="05 / YOL XƏRİTƏN" title="Öz ritminlə irəlilə." description="Zəif mövzularından başlayan, gündəlik vaxtına uyğun təhsil planı." />
           <p className="kairo-muted mt-2">Kliklənən dərs planı ilə material, test və video addımlarını izləyərək inkişaf et.</p>
         </div>
 
