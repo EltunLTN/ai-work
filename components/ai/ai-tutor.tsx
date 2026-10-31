@@ -39,7 +39,8 @@ export function AITutor() {
 
   useEffect(() => {
     if (open) {
-      bottom.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      const log = bottom.current?.parentElement;
+      log?.scrollTo({ top: log.scrollHeight, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
       if (!loading) inputRef.current?.focus();
     }
   }, [messages, loading, open]);
@@ -174,3 +175,4 @@ export function AITutor() {
     </div>
   );
 }
+
