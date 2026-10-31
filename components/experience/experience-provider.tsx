@@ -1,15 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import { RabbitTraveller } from "./rabbit-traveller";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode, type CSSProperties } from "react";
 import { ArrowUpRight, Clock3, Command, Eye, EyeOff, RotateCcw, Volume2, VolumeX, X } from "lucide-react";
 import { WhiteRabbit, type RabbitState } from "./white-rabbit";
 import { MotionSystem } from "./motion-system";
 
+const RabbitCanvas = dynamic(() => import("./rabbit-canvas"), { ssr: false, loading: () => <WhiteRabbit /> });
+
 type Scene = "closed" | "choice" | "arrival" | "invitation" | "chase" | "portal" | "reveal";
-const destinations = [{ href: "/", label: "Ana səhifə", detail: "Kairo dünyası" }, { href: "/onboarding", label: "Fənn və mövzu seç", detail: "Öyrənməyə başla" }, { href: "/quiz", label: "Sınaq", detail: "Biliyini yoxla" }, { href: "/results", label: "Nəticələr", detail: "Cavablarını anla" }, { href: "/plan", label: "Təhsil planı", detail: "7 günlük yol xəritəsi" }, { href: "/dashboard", label: "İnkişaf", detail: "Şəxsi analitika" }, { href: "/playground", label: "Playground", detail: "Wumpus və vaxt təcrübəsi" }, { href: "/account", label: "Hesab", detail: "Profil və yaddaş" }, { href: "/admin", label: "Admin", detail: "İdarəetmə" }];
+const destinations = [{ href: "/", label: "Ana səhifə", detail: "Kairo dünyası" }, { href: "/onboarding", label: "Fənn və mövzu seç", detail: "Öyrənməyə başla" }, { href: "/quiz", label: "Sınaq", detail: "Biliyini yoxla" }, { href: "/results", label: "Nəticələr", detail: "Cavablarını anla" }, { href: "/plan", label: "Təhsil planı", detail: "7 günlük yol xəritəsi" }, { href: "/dashboard", label: "İnkişaf", detail: "Şəxsi analitika" }, { href: "/playground", label: "Playground", detail: "Vaxt və diqqət təcrübəsi" }, { href: "/account", label: "Hesab", detail: "Profil və yaddaş" }, { href: "/admin", label: "Admin", detail: "İdarəetmə" }];
 const ExperienceContext = createContext({ replay: () => {}, openCommands: () => {}, showRabbit: () => {} });
 export const useExperience = () => useContext(ExperienceContext);
 
@@ -27,6 +31,8 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   const [query, setQuery] = useState("");
   const [watch, setWatch] = useState(false);
   const [reduced, setReduced] = useState(false);
+  const [bluePosition, setBluePosition] = useState<{ x: number; y: number } | null>(null);
+  const escapeIndex = useRef(0);
   const [focusedInput, setFocusedInput] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const menuRoot = useRef<HTMLDivElement>(null);
@@ -103,7 +109,11 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   }, [menu]);
 
   function finish() { safeWrite("kairo.entered", "1", true); setScene("closed"); }
-  function replay() { returnFocus.current = document.activeElement as HTMLElement; dialog.current?.close(); setMenu(false); setScene("choice"); }
+  function replay() { setBluePosition(null); returnFocus.current = document.activeElement as HTMLElement; dialog.current?.close(); setMenu(false); setScene("choice"); }
+  function escapeBlue() {
+    const places = innerWidth < 600 ? [{ x: 65, y: 38 }, { x: 72, y: 75 }, { x: 48, y: 28 }, { x: 72, y: 55 }] : [{ x: 78, y: 27 }, { x: 65, y: 75 }, { x: 83, y: 48 }, { x: 48, y: 22 }];
+    setBluePosition(places[escapeIndex.current++ % places.length]);
+  }
   function chime() {
     if (!sound) return;
     try {
@@ -124,6 +134,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
 
   return <ExperienceContext.Provider value={{ replay, openCommands: () => { setQuery(""); dialog.current?.showModal(); }, showRabbit }}>
     <div inert={overlay || undefined} aria-hidden={overlay || undefined}><a className="skip-link" href="#main-content">Əsas məzmuna keç</a><MotionSystem>{children}</MotionSystem></div>
+    {!overlay && !hidden && <RabbitTraveller state={rabbitState} reduced={reduced} home={path === "/"} quiet={quiet} />}
     {!overlay && <div ref={menuRoot} className={`rabbit-companion ${quiet ? "companion-quiet" : ""} ${hidden ? "companion-hidden" : ""}`} onKeyDown={e => { if (e.key === "Escape") { setMenu(false); menuRoot.current?.querySelector<HTMLButtonElement>(".rabbit-launcher")?.focus(); } }}>
       {menu && <div className="rabbit-menu" role="region" aria-label="Ağ Dovşan bələdçisi"><div className="rabbit-menu-heading"><span>Hara gedək?</span><button aria-label="Bələdçini bağla" onClick={() => setMenu(false)}><X size={16} /></button></div><Link href="/onboarding">Öyrənməyə başla <ArrowUpRight size={16} /></Link><Link href="/dashboard">İnkişafıma bax <ArrowUpRight size={16} /></Link><Link href="/playground">Playground-a keç <ArrowUpRight size={16} /></Link><button onClick={curiousWatch}><Clock3 size={16} /> Cib saatına bax</button><button onClick={replay}><RotateCcw size={16} /> Girişi yenidən göstər</button><button onClick={toggleMotion} aria-pressed={reduced}>{reduced ? "Hərəkət: azaldılıb" : "Hərəkəti azalt"}</button><button onClick={hideRabbit}><EyeOff size={16} /> Dovşanı gizlət</button></div>}
       {watch && <span className="rabbit-whisper" role="status">Tələsmə. Anlamağa vaxt ayır.</span>}
@@ -142,9 +153,9 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
     }}>
       <div className="choice-noise" aria-hidden="true" /><header className="choice-top"><span>KAİRO <i>—</i> THE CHOICE</span><div><button onClick={() => setSound(!sound)} aria-label={sound ? "Səsi söndür" : "Səsi aç"} aria-pressed={sound}>{sound ? <Volume2 size={17} /> : <VolumeX size={17} />}<span>{sound ? "Səs açıq" : "Səs bağlı"}</span></button><button onClick={finish}>Girişi keç <ArrowUpRight size={16} /></button></div></header>
       <div className="choice-content"><p className="mono-label">01 / THE CHOICE</p><h1 id="choice-title">Hər şey bir<br /><em>seçimlə</em> başlayır.</h1><p>Bildiyin yolda qal.<br />Ya da sualların arxasınca get.</p></div>
-      <div className="choice-portrait"><Image src="/mentor-entrance.webp" alt="İki açıq ovcunda seçim təklif edən orijinal elmi-fantastik mentor" fill priority sizes="(max-width: 700px) 100vw, 850px" /><button className="choice-pill pill-red" disabled={scene !== "choice"} onClick={redChoice} aria-label="Qırmızı pill — Ağ Dovşanın arxasınca get"><span className="pill-object" /><span className="pill-text">QIRMIZI PİLL<small>Kəşf et ↗</small></span></button><button className="choice-pill pill-blue" disabled={scene !== "choice"} onClick={finish} aria-label="Mavi pill — birbaşa sayta daxil ol"><span className="pill-object" /><span className="pill-text">MAVİ PİLL<small>Birbaşa daxil ol ↗</small></span></button></div>
-      <footer className="choice-bottom"><span>İKİ YOL. EYNİ DÜNYA.</span><span>Öz ritminlə. Öz seçiminlə.</span></footer>
-      {scene !== "choice" && <div className="rabbit-hole"><div className="tunnel-rings" aria-hidden="true"><i /><i /><i /><i /><i /></div><div className="chase-rabbit"><WhiteRabbit state={scene === "chase" || scene === "portal" ? "running" : "attention"} /></div><div className="invitation-copy"><p className="mono-label">THE WAY IN</p><h2>Follow the<br /><em>white rabbit.</em></h2><p>Bir az maraq. Yeni bir yol.</p></div><p className="sr-only" role="status">Ağ Dovşan səni sayta aparır. Girişi keç düyməsi ilə davam edə bilərsən.</p></div>}
+      <div className="choice-portrait"><Image src="/mentor-entrance.webp" alt="İki açıq ovcunda seçim təklif edən orijinal elmi-fantastik mentor" fill priority sizes="(max-width: 700px) 100vw, 850px" /><button className="choice-pill pill-red" disabled={scene !== "choice"} onClick={redChoice} aria-label="Qırmızı pill — Ağ Dovşanın arxasınca get"><span className="pill-object" /><span className="pill-text">QIRMIZI PİLL<small>Kəşf et ↗</small></span></button><div className="choice-pill pill-blue escaping-pill" style={bluePosition ? { left: `${bluePosition.x}%`, top: `${bluePosition.y}%` } : undefined} onPointerEnter={escapeBlue} onPointerDown={escapeBlue} aria-hidden="true"><span className="pill-object" /><span className="pill-text">MAVİ PİLL<small>Tutmaq o qədər də asan deyil.</small></span></div></div>
+      <footer className="choice-bottom"><span>BİR SEÇİM. YENİ BİR YOL.</span><span>Öz ritminlə. Öz seçiminlə.</span></footer>
+      {scene !== "choice" && <div className="rabbit-hole"><div className="portal-depth" aria-hidden="true">{Array.from({length: 12}, (_, i) => <i key={i} style={{ "--ring": i } as CSSProperties} />)}</div><div className="tunnel-rings" aria-hidden="true"><i /><i /><i /><i /><i /></div><div className="chase-rabbit"><RabbitCanvas state={scene === "chase" || scene === "portal" ? "running" : "attention"} reduced={reduced} /></div><div className="invitation-copy"><p className="mono-label">THE WAY IN</p><h2>Follow the<br /><em>white rabbit.</em></h2><p>Bir az maraq. Yeni bir yol.</p></div><p className="sr-only" role="status">Ağ Dovşan səni sayta aparır. Girişi keç düyməsi ilə davam edə bilərsən.</p></div>}
     </div>}
   </ExperienceContext.Provider>;
 }

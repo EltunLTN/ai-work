@@ -225,3 +225,9 @@ Apply database files in this order for an existing v1 installation: `learning-pl
 ## White Rabbit redesign
 
 See [the design audit and implementation guide](docs/redesign.md) for the editorial design system, SVG character rig, scene state machine, accessibility controls and running instructions. All original learning/auth/data flows remain in place. `/playground` adds a local timing experiment alongside the existing external Wumpus game. Ctrl/Cmd+K, the companion menu and footer expose real navigation and intro replay.
+
+## 3D guide and admin control center
+
+The current release removes the Wumpus game and its external links. The blue pill is decorative and evades the pointer; red and Skip remain accessible entry controls. A lazy-loaded original Three.js rabbit crosses from the homepage illustration into the fixed guide. The renderer caps device pixel ratio, pauses drawing when hidden/offscreen, disposes GPU resources and retains an SVG fallback. No external video/model assets are used.
+
+Apply `database/admin-control-center.sql` after the v2 migrations. It adds admin-only overview/detail/actions, bounded per-account AI limits (0–100), audited quota reset, profile-image moderation/restoration and learning-selection updates. Historical attempts remain unchanged. New avatar uploads are private, re-encoded WebP files; the admin upload policy requires the existing verified admin check. Run `database/verify-admin-control-center.sql` transactionally. The admin UI includes all application tools, per-user analytics, attempt/topic history, CSV export and audit details.

@@ -3,9 +3,6 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  async redirects() {
-    return [{ source: "/wumpus_world_v2.html", destination: "https://wumpus-echoes-of-the-deep.vercel.app/", permanent: false }];
-  },
   async headers() {
     return [{ source: "/:path*", headers: [
       { key: "X-Content-Type-Options", value: "nosniff" },
