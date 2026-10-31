@@ -26,6 +26,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   const [menu, setMenu] = useState(false);
   const [query, setQuery] = useState("");
   const [watch, setWatch] = useState(false);
+  const [reduced, setReduced] = useState(false);
   const [focusedInput, setFocusedInput] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const menuRoot = useRef<HTMLDivElement>(null);
@@ -47,11 +48,18 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => { const enabled = media.matches || safeRead("kairo.motion") === "reduce"; setReduced(enabled); document.documentElement.classList.toggle("motion-reduced", enabled); };
+    queueMicrotask(sync); media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
     if (!overlay) return;
     const old = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     intro.current?.querySelector<HTMLButtonElement>("button")?.focus();
-    return () => { document.body.style.overflow = old; requestAnimationFrame(() => (returnFocus.current ?? document.querySelector<HTMLElement>("#main-content"))?.focus()); };
+    return () => { document.body.style.overflow = old; requestAnimationFrame(() => (returnFocus.current?.isConnected ? returnFocus.current : document.querySelector<HTMLElement>("#main-content"))?.focus()); };
   }, [overlay]);
 
   useEffect(() => {
@@ -107,7 +115,8 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
       oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
     } catch { /* Sound is an optional enhancement. */ }
   }
-  function redChoice() { chime(); safeWrite("kairo.entered", "1", true); if (matchMedia("(prefers-reduced-motion: reduce)").matches) finish(); else setScene("arrival"); }
+  function redChoice() { chime(); safeWrite("kairo.entered", "1", true); if (reduced || matchMedia("(prefers-reduced-motion: reduce)").matches) finish(); else setScene("arrival"); }
+  function toggleMotion() { const next = !reduced; safeWrite("kairo.motion", next ? "reduce" : "system"); const effective = next || matchMedia("(prefers-reduced-motion: reduce)").matches; setReduced(effective); document.documentElement.classList.toggle("motion-reduced", effective); }
   function hideRabbit() { setHidden(true); setMenu(false); safeWrite("kairo.rabbit.hidden", "1"); }
   function showRabbit() { setHidden(false); safeWrite("kairo.rabbit.hidden", "0"); }
   function curiousWatch() { chime(); setWatch(true); setRabbitState("curiosity"); if (stageTimer.current) clearTimeout(stageTimer.current); stageTimer.current = setTimeout(() => { setWatch(false); setRabbitState("idle"); }, 2200); }
@@ -116,7 +125,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   return <ExperienceContext.Provider value={{ replay, openCommands: () => { setQuery(""); dialog.current?.showModal(); }, showRabbit }}>
     <div inert={overlay || undefined} aria-hidden={overlay || undefined}><a className="skip-link" href="#main-content">Əsas məzmuna keç</a><MotionSystem>{children}</MotionSystem></div>
     {!overlay && <div ref={menuRoot} className={`rabbit-companion ${quiet ? "companion-quiet" : ""} ${hidden ? "companion-hidden" : ""}`} onKeyDown={e => { if (e.key === "Escape") { setMenu(false); menuRoot.current?.querySelector<HTMLButtonElement>(".rabbit-launcher")?.focus(); } }}>
-      {menu && <div className="rabbit-menu" role="region" aria-label="Ağ Dovşan bələdçisi"><div className="rabbit-menu-heading"><span>Hara gedək?</span><button aria-label="Bələdçini bağla" onClick={() => setMenu(false)}><X size={16} /></button></div><Link href="/onboarding">Öyrənməyə başla <ArrowUpRight size={16} /></Link><Link href="/dashboard">İnkişafıma bax <ArrowUpRight size={16} /></Link><Link href="/playground">Playground-a keç <ArrowUpRight size={16} /></Link><button onClick={curiousWatch}><Clock3 size={16} /> Cib saatına bax</button><button onClick={replay}><RotateCcw size={16} /> Girişi yenidən göstər</button><button onClick={hideRabbit}><EyeOff size={16} /> Dovşanı gizlət</button></div>}
+      {menu && <div className="rabbit-menu" role="region" aria-label="Ağ Dovşan bələdçisi"><div className="rabbit-menu-heading"><span>Hara gedək?</span><button aria-label="Bələdçini bağla" onClick={() => setMenu(false)}><X size={16} /></button></div><Link href="/onboarding">Öyrənməyə başla <ArrowUpRight size={16} /></Link><Link href="/dashboard">İnkişafıma bax <ArrowUpRight size={16} /></Link><Link href="/playground">Playground-a keç <ArrowUpRight size={16} /></Link><button onClick={curiousWatch}><Clock3 size={16} /> Cib saatına bax</button><button onClick={replay}><RotateCcw size={16} /> Girişi yenidən göstər</button><button onClick={toggleMotion} aria-pressed={reduced}>{reduced ? "Hərəkət: azaldılıb" : "Hərəkəti azalt"}</button><button onClick={hideRabbit}><EyeOff size={16} /> Dovşanı gizlət</button></div>}
       {watch && <span className="rabbit-whisper" role="status">Tələsmə. Anlamağa vaxt ayır.</span>}
       <button className="rabbit-launcher" aria-label={hidden ? "Ağ Dovşanı göstər" : "Ağ Dovşan bələdçisini aç"} aria-expanded={!hidden && menu} onClick={() => hidden ? showRabbit() : setMenu(!menu)} onPointerEnter={() => setRabbitState("attention")} onPointerLeave={() => setRabbitState("idle")}>
         {hidden ? <Eye size={18} /> : <><WhiteRabbit state={rabbitState} /><span className="companion-caption">FOLLOW ME <span>↗</span></span></>}
