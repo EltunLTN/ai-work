@@ -28,3 +28,4 @@ html{scroll-behavior:smooth;scroll-padding-top:100px}body{background:var(--paper
 .motion-reduced *,.motion-reduced *:before,.motion-reduced *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.motion-reduced .reveal-ready:not(.is-visible){opacity:1;transform:none}.motion-reduced .rabbit-body,.motion-reduced .rabbit-head,.motion-reduced .rabbit-ear,.motion-reduced .rabbit-eyes,.motion-reduced .rabbit-watch{transform:none!important}.motion-reduced .hero-editorial-copy h1>span{opacity:1;transform:none;clip-path:none}.motion-reduced .route-arrival{opacity:1;transform:none}
 [data-theme=light] .tutor-shell>button{color:var(--paper)!important}.tutor-shell section button.bg-red-500{background:var(--red);color:white!important}
 @media(max-width:600px){.rabbit-artwork{overflow:clip}}
+.choice-pill .pill-text{background:#0b0c10d9;padding:7px 10px;border:1px solid #ffffff15;border-radius:3px}

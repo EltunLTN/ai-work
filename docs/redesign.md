@@ -23,7 +23,7 @@ The old presentation was dark red/black, with repeated rounded cards, a static o
 
 `experience.css` defines semantic surface, type, spacing and control styling for light/dark themes. Shared Button/Card and WorkspaceHeading establish application consistency. Auth, question generation, grading, plan state, cloud writes, profile/admin editing and resource validation retain their existing logic. The subject index passes a validated subject to onboarding.
 
-`/playground` exposes the existing Wumpus game and a local ten-second timing experiment. Timing is not a scored assessment, writes no student records, stops after 30 seconds and resets if the document becomes hidden. The watch interaction is optional; no important destination requires an Easter egg.
+`/playground` exposes the existing Wumpus game and a local ten-second timing experiment. Timing is not a scored assessment, writes no student records, stops after 30 seconds and resets if the document becomes hidden. The companion also offers a persisted reduced-motion option, while always respecting the operating system preference. The watch interaction is optional; no important destination requires an Easter egg.
 
 ## Controls and running
 
@@ -36,3 +36,9 @@ The old presentation was dark red/black, with repeated rounded cards, a static o
 ## Boundaries
 
 No Core Web Vitals claims without real representative measurement. Existing authenticated content requires a real session to inspect; guest route checks do not demonstrate authenticated edits. Existing public signup/reset email delivery still needs custom Supabase SMTP. The local Windows sandbox has previously failed Next prerender directory creation with EPERM; remote Vercel builds are the deployment validation when this recurs.
+
+## Verified before release
+
+35 existing tests pass. ESLint and TypeScript pass. Vercel preview build completed successfully (24 seconds). Browser checks covered initial choice, red passage/reveal, functional blue entry, skip/Escape, replay, session persistence, hidden-rabbit persistence/restoration, companion focus, Ctrl+K/filter/keyboard navigation, reduced motion (animation computed as none; red entry skips sequence), native back navigation, subject query selection, grade selection, guest quiz rejection, mini-quiz, plan/results/dashboard empty states, account/register fields, denied admin state, Playground timing result and 404. Home width checks at 320/375/768/1024/1440 showed scroll width equal to content width after fixing the decorative orbit. Account and onboarding were additionally inspected at 320. Browser console error scan returned no entries.
+
+Authenticated profile/admin mutations were not repeated for this visual release; their implementation is unchanged, and the existing integration/security tests pass. Live field Core Web Vitals and low-end device frame timing were not measured. The local build compiled and typechecked but failed during prerender mkdir with the known Windows EPERM; the remote production pipeline must be READY before release is called complete.

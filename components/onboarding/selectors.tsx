@@ -70,6 +70,7 @@ export function TextbookSelector({ profile, onSelect, onToggleTopic }: TextbookS
           return (
             <button
               key={book.id}
+              aria-pressed={active}
               onClick={() => onSelect(book.id)}
               className={`rounded-2xl border p-4 text-left transition ${
                 active ? "border-red-400 bg-red-500/10" : "border-white/10 bg-zinc-900/60 hover:border-white/25"
@@ -79,7 +80,7 @@ export function TextbookSelector({ profile, onSelect, onToggleTopic }: TextbookS
               <p className="mt-1 text-xs uppercase tracking-[0.2em] text-zinc-500">{book.sourceLabel}</p>
               <p className="kairo-muted mt-2 text-sm">{t.onboarding.topicsLabel}: {book.topics.slice(0, 3).join(", ")}...</p>
               {book.sourceUrl ? (
-                <p className="mt-1 text-xs text-zinc-500">{t.onboarding.ref}: {book.sourceUrl}</p>
+                <p className="mt-1 break-all text-xs text-zinc-500">{t.onboarding.ref}: {book.sourceUrl}</p>
               ) : null}
             </button>
           );
@@ -95,6 +96,7 @@ export function TextbookSelector({ profile, onSelect, onToggleTopic }: TextbookS
               return (
                 <button
                   key={topic}
+                  aria-pressed={selected}
                   onClick={() => onToggleTopic(topic)}
                   className={`rounded-xl border px-3 py-2 text-left text-sm transition ${
                     selected
