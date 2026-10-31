@@ -1,5 +1,7 @@
 # Kairo / Follow your curiosity
 
+This records the editorial redesign. The subsequent 3D/admin release supersedes the blue-pill, Wumpus and rendering descriptions below; see [3D/admin release](3d-admin-upgrade.md).
+
 ## Audit and compatibility
 
 This is an Azerbaijani learning application, not a portfolio. Next.js 16.4.3 App Router, React 19, TypeScript, Tailwind 4, existing Framer Motion and Recharts. Routes: `/`, `/onboarding`, `/quiz`, `/mini-quiz`, `/results`, `/plan`, `/dashboard`, `/account`, `/admin`; legacy Wumpus URL redirects to the existing external game. Eight authenticated AI endpoints and an admin model check call OpenAI through existing quota/auth guards. Supabase Auth, snapshots, append-only attempts, analytics RPCs, profiles, private avatars and admin audit remain unchanged. No schema, provider, quota or secret changes in this redesign.

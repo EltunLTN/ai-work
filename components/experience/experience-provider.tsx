@@ -44,6 +44,12 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   const overlay = scene !== "closed";
 
   useEffect(() => {
+    if (scene !== "choice") return;
+    const warmup = setTimeout(() => { void import("./rabbit-canvas").catch(() => {}); }, 300);
+    return () => clearTimeout(warmup);
+  }, [scene]);
+
+  useEffect(() => {
     queueMicrotask(() => {
       setHidden(safeRead("kairo.rabbit.hidden") === "1");
       setScene(path === "/" && safeRead("kairo.entered", true) !== "1" ? "choice" : "closed");

@@ -21,6 +21,7 @@ do $$declare details jsonb; rejected boolean:=false; begin
  details:=public.admin_control('detail','00000000-0000-4000-a000-000000000101');
  if details->'learning_profile'->>'subject'<>'Kimya' or details->'profile'->>'grade'<>'7' then raise exception 'Learning profile not saved';end if;
  if jsonb_array_length(details->'audit')<2 then raise exception 'Missing audit';end if;
+ if (select count(*) from public.admin_accounts())<2 then raise exception 'Account listing failed';end if;
  if (public.admin_control('overview')->>'accounts')::int<2 then raise exception 'Overview broken';end if;
  begin perform public.admin_control('learning_profile','00000000-0000-4000-a000-000000000101','{"subject":"Kimya","textbookId":"bad","selectedTopics":["Atom"]}'); exception when raise_exception then rejected:=true;end;
  if not rejected then raise exception 'Missing grade accepted';end if;
