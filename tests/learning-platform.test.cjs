@@ -54,3 +54,14 @@ test("stronger model preserves validated JSON contracts without unsupported temp
   assert.equal(api.rawRequests[0].store, false);
   assert.equal(api.rawRequests[0].text.format.type, "json_object");
 });
+
+test("resource grounding accepts retrieved API sources when JSON has no inline citations", async () => {
+  const topic = "İzotoplar və ionlar";
+  const href = "https://www.khanacademy.org/science/chemistry/atomic-structure/v/isotopes-and-ions";
+  const api = generator([{ __response: { status: "completed", output_text: JSON.stringify({ items: [{ topic, resources: [{ kind: "video", href, title: "Isotopes and ions", provider: "Khan Academy", language: "en" }] }] }), output: [{ type: "web_search_call", action: { type: "search", sources: [{ type: "url", url: href }] } }] } }], { ENABLE_RESOURCE_SEARCH: "true" });
+  const { verifiedTopicResources } = api.load("lib/ai/resource-search.ts");
+  const result = (await verifiedTopicResources([topic], "7", "Kimya")).get(topic);
+  assert.ok(result.some(resource => resource.href === href));
+  assert.equal(api.rawRequests[0].tool_choice, "required");
+  assert.ok(api.rawRequests[0].include.includes("web_search_call.action.sources"));
+});

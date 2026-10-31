@@ -23,12 +23,12 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/55 backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 md:px-6">
-        <Link href="/" className="group flex items-center gap-3 text-zinc-100">
-          <RabbitMark className="h-8 w-8 text-white transition-transform duration-300 group-hover:rotate-6" />
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 md:px-6">
+        <Link href="/" className="group flex shrink-0 items-center gap-3 text-zinc-100">
+          <RabbitMark className="h-8 w-8 shrink-0 text-white transition-transform duration-300 group-hover:rotate-6" />
           <div>
             <p className="text-lg font-bold tracking-wide">Kairo</p>
-            <p className="text-[10px] uppercase tracking-[0.24em] text-zinc-400">Follow the rabbit</p>
+            <p className="hidden whitespace-nowrap text-[10px] uppercase tracking-[0.24em] text-zinc-400 sm:block">Follow the rabbit</p>
           </div>
         </Link>
 
@@ -52,11 +52,11 @@ export function Navbar() {
           )}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <Link href="/account" className="rounded-xl px-3 py-2 text-sm xl:hidden">Hesab</Link>
+        <div className="flex shrink-0 items-center gap-2">
+          <Link href="/account" className="hidden rounded-xl px-3 py-2 text-sm sm:inline-flex xl:hidden">Hesab</Link>
           <LanguageToggle />
           <ThemeToggle />
-          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+          <motion.div className="hidden sm:block" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
             <Link href="/onboarding">
               <Button size="sm">{t.nav.start}</Button>
             </Link>

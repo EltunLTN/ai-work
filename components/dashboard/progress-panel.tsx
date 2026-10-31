@@ -9,6 +9,7 @@ import { CLOUD_STATUS_EVENT } from "@/components/account/cloud-provider";
 export function ProgressPanel({ target, compact = false }: { target?: string; compact?: boolean }) {
   const [data, setData] = useState<LearningDashboard | null>(null);
   const [status, setStatus] = useState("loading");
+  const [calendarAnchor] = useState(() => Date.now());
   useEffect(() => {
     let active = true;
     async function load() {
@@ -27,7 +28,7 @@ export function ProgressPanel({ target, compact = false }: { target?: string; co
     return () => { active = false; window.removeEventListener(CLOUD_STATUS_EVENT, changed); };
   }, [target]);
   if (status === "loading") return <p role="status" className="kairo-muted p-6">Analitika bazadan yüklənir…</p>;
-  if (status === "guest") return <section className="kairo-card rounded-3xl p-8"><p className="eyebrow">SƏNİN İNKİŞAFIN</p><h2 className="mt-3 text-2xl font-semibold">İlk nəticənlə başlayaq.</h2><p className="kairo-muted my-4">Uydurma faizlər yoxdur. Hesabına daxil ol, sınağı tamamla və real göstəricilərini burada gör.</p><Link href="/account" className="text-red-400">Hesabına daxil ol →</Link></section>;
+  if (status === "guest") return <section className="kairo-card rounded-3xl p-8"><p className="eyebrow">SƏNİN İNKİŞAFIN</p><h2 className="mt-3 text-2xl font-semibold">İlk nəticənlə başlayaq.</h2><p className="kairo-muted my-4">Hesabına daxil ol, sınağı tamamla və şəxsi göstəricilərini burada izlə.</p><Link href="/account" className="text-red-400">Hesabına daxil ol →</Link></section>;
   if (!data || status === "error") return <p role="alert" className="kairo-card rounded-2xl p-5">Analitika yüklənmədi. Bağlantını yoxlayıb səhifəni yeniləyin.</p>;
   const { totals } = data;
   const accuracy = totals.questions ? Math.round(100 * totals.correct / totals.questions) : null;
@@ -35,7 +36,7 @@ export function ProgressPanel({ target, compact = false }: { target?: string; co
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">{[{ label: "Həll edilən sual", value: totals.questions }, { label: "Düzgün cavab", value: totals.correct }, { label: "Səhv cavab", value: totals.wrong }, { label: "Ümumi dəqiqlik", value: accuracy === null ? "—" : `${accuracy}%` }].map(item => <section key={item.label} className="kairo-card rounded-2xl p-5"><p className="kairo-muted text-xs">{item.label}</p><p className="mt-3 text-3xl font-semibold tracking-tight">{item.value}</p></section>)}</div>
     {!totals.attempts ? <p className="kairo-muted rounded-2xl border border-dashed border-[var(--card-border)] p-6">Hələ sınaq qeydi yoxdur. İlk testi tamamladıqdan sonra günlük inkişaf, fənn və mövzu göstəriciləri görünəcək.</p> : <>
       <div className="grid gap-5 lg:grid-cols-2"><section className="kairo-card rounded-3xl p-6"><div className="flex items-center justify-between"><h2 className="font-semibold">Günlük irəliləyiş</h2><span className="kairo-muted text-xs">Son 14 gün · Bakı vaxtı</span></div><div className="daily-chart">{Array.from({ length: 14 }, (_, i) => {
-        const date = new Date(); date.setDate(date.getDate() - 13 + i);
+        const date = new Date(calendarAnchor - (13 - i) * 86400000);
         const day = new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Baku" }).format(date);
         const record = data.daily.find(d => d.day === day);
         const total = Number(record?.total ?? 0), correct = Number(record?.correct ?? 0);
