@@ -12,15 +12,14 @@ function applyTheme(mode: ThemeMode) {
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<ThemeMode>(() => {
-    if (typeof window === "undefined") return "light";
-    const stored = window.localStorage.getItem("kairo.theme") as ThemeMode | null;
-    return stored === "dark" ? "dark" : "light";
-  });
+  const [theme, setTheme] = useState<ThemeMode>("light");
 
   useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
+    queueMicrotask(() => {
+      const stored = document.documentElement.getAttribute("data-theme");
+      setTheme(stored === "dark" ? "dark" : "light");
+    });
+  }, []);
 
   function toggle() {
     const next: ThemeMode = theme === "dark" ? "light" : "dark";

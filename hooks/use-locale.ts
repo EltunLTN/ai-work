@@ -4,27 +4,23 @@ import { useEffect, useState } from "react";
 import { LOCALE_EVENT, LOCALE_STORAGE_KEY, normalizeLocale, translations, type Locale } from "@/lib/i18n";
 
 export function useLocale() {
-  const [locale, setLocaleState] = useState<Locale>(() => {
-    if (typeof window === "undefined") return "az";
-    return normalizeLocale(window.localStorage.getItem(LOCALE_STORAGE_KEY));
-  });
+  const [locale, setLocaleState] = useState<Locale>("az");
 
   useEffect(() => {
-    document.documentElement.lang = locale;
-
     const onChange = () => {
       const next = normalizeLocale(window.localStorage.getItem(LOCALE_STORAGE_KEY));
       setLocaleState(next);
       document.documentElement.lang = next;
     };
 
+    queueMicrotask(onChange);
     window.addEventListener(LOCALE_EVENT, onChange);
     window.addEventListener("storage", onChange);
     return () => {
       window.removeEventListener(LOCALE_EVENT, onChange);
       window.removeEventListener("storage", onChange);
     };
-  }, [locale]);
+  }, []);
 
   function setLocale(next: Locale) {
     window.localStorage.setItem(LOCALE_STORAGE_KEY, next);
