@@ -26,7 +26,7 @@ export function CloudProvider({ children }: { children: ReactNode }) {
         await saveToCloud();
         if (!active) return;
         if (revision === version) { localStorage.removeItem(dirtyKey()); announce("Bazaya saxlanıldı"); }
-      } catch { announce("Saxlanmadı · yenidən cəhd ediləcək"); }
+      } catch (error) { announce(error instanceof Error && error.message.includes("başqa cihazdan") ? error.message : "Saxlanmadı · yenidən cəhd ediləcək"); }
       finally { saving = false; if (active && userId && localStorage.getItem(dirtyKey())) timer = setTimeout(() => void sync(), revision === version ? 15000 : 1000); }
     }
     const changed = () => {

@@ -13,6 +13,7 @@ function guard({ user = { id: "student", email_confirmed_at: "2026-10-30" }, all
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
   }).outputText;
   const mockRequire = name => {
+    if (name === "node:net") return require(name);
     if (name === "next/server") return { NextResponse: Response };
     if (name === "@supabase/supabase-js") return { createClient: () => ({
       auth: { getUser: async token => { calls.push(token); if (throws) throw new Error("network"); return { data: { user }, error: null }; } },

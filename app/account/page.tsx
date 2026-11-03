@@ -1,5 +1,6 @@
 "use client";
 
+import { trackActivity, flushActivity } from "@/lib/activity-client";
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import type { User } from "@supabase/supabase-js";
@@ -89,6 +90,7 @@ export default function AccountPage() {
         <UserRound className="mb-5 size-8 text-red-400" /><h2 className="text-xl font-semibold">{recovery ? "Yeni şifrə" : user ? "Hesabın" : signup ? "Hesab yarat" : "Xoş gəldin"}</h2>
         {user && !recovery ? <div className="mt-5 space-y-5"><p className="break-all text-zinc-300">{user.email}</p><p className="text-sm text-zinc-400">E-poçt təsdiqlənib · {admin ? "Administrator" : "Şagird"}</p>{admin && <Link className="inline-flex items-center gap-2 rounded-xl bg-red-500 px-5 py-3 font-semibold text-white" href="/admin"><ShieldCheck className="size-4" />Admin paneli</Link>}<div><Button disabled={busy} variant="secondary" onClick={() => void run(async () => {
           await saveToCloud();
+          trackActivity("auth.signed_out"); await flushActivity();
           const { error } = await getSupabase().auth.signOut(); if (error) throw error;
           clearLearningData(); localStorage.removeItem("kairo.cloud.owner"); setUser(null); setAdmin(false); setMessage("Hesabdan çıxıldı. Bu cihazdakı təhsil məlumatları təmizləndi.");
         })}><LogOut className="mr-2 size-4" />Çıxış</Button></div><p className="text-xs text-zinc-500">Çıxışdan əvvəl məlumatların bazaya saxlanır. Çıxış cihazdakı təhsil məlumatlarını təmizləyir.</p></div> : <form onSubmit={submit} className="mt-6 space-y-4">

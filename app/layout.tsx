@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Plus_Jakarta_Sans } from "next/font/google";
+import { Manrope, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "./experience.css";
+import "./workspace.css";
+import { ActivityProvider } from "@/components/account/activity-provider";
 import { AITutor } from "@/components/ai/ai-tutor";
 import { CloudProvider } from "@/components/account/cloud-provider";
 import { ExperienceProvider } from "@/components/experience/experience-provider";
 
-const display = Space_Grotesk({
+const display = Manrope({
   variable: "--font-display",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 const body = Plus_Jakarta_Sans({
   variable: "--font-body",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 export const metadata: Metadata = {
@@ -42,7 +44,7 @@ export default function RootLayout({
               "(function(){try{var t=localStorage.getItem('kairo.theme')||'light';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');var l=localStorage.getItem('kairo.locale');document.documentElement.setAttribute('lang',l==='en'?'en':'az');}catch(e){}})();",
           }}
         />
-        <ExperienceProvider><CloudProvider>{children}<AITutor /></CloudProvider></ExperienceProvider>
+        <ExperienceProvider><CloudProvider><ActivityProvider />{children}<AITutor /></CloudProvider></ExperienceProvider>
       </body>
     </html>
   );
