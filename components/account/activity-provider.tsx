@@ -15,8 +15,11 @@ export function ActivityProvider() {
     };
     const submit = (e: Event) => { const form=e.target as HTMLFormElement; trackActivity("form.submitted", { control: form.dataset.activity || "form" }); };
     const hide = () => { if (document.hidden) void flushActivity(); };
-    const listener = getSupabase().auth.onAuthStateChange((event) => {
-      if (event === "SIGNED_IN") queueMicrotask(() => trackActivity("auth.signed_in"));
+    let currentUser: string | null = null;
+    const listener = getSupabase().auth.onAuthStateChange((event, session) => {
+      const nextUser = session?.user.id ?? null;
+      if (event === "SIGNED_IN" && nextUser !== currentUser) queueMicrotask(() => trackActivity("auth.signed_in"));
+      currentUser = nextUser;
       // The sign-out button is captured before token revocation; auth.users audit logs retain the actual auth event.
     });
     document.addEventListener("click",click); document.addEventListener("submit",submit); document.addEventListener("visibilitychange",hide);

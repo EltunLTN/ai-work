@@ -26,7 +26,10 @@ export default function OnboardingPage() {
     const saved = getStudentProfile();
     const requestedGrade = params.get("grade");
     if (isSubject(subject)) {
-      const p = getProfileForSelection((getGrades().includes(requestedGrade as Grade) ? requestedGrade : saved?.grade ?? getDefaultProfile().grade) as Grade, subject);
+      let p = getProfileForSelection((getGrades().includes(requestedGrade as Grade) ? requestedGrade : saved?.grade ?? getDefaultProfile().grade) as Grade, subject);
+      const topic = params.get("topic");
+      const book = topic ? getTextbooksBySelection(p.grade, subject).find(b => b.topics.includes(topic)) : null;
+      if (book && topic) p = { ...p, textbookId: book.id, selectedTopics: [topic] };
       queueMicrotask(() => { setGrade(p.grade); setProfiles([p]); setActive(subject); });
     } else if (previous) {
       queueMicrotask(() => { setGrade(previous.grade); setProfiles(previous.profiles); setActive(previous.profiles[0].subject); setCount(previous.count); });
