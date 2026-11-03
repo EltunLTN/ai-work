@@ -4,8 +4,10 @@ type ActivityKind = typeof ACTIVITY_KINDS[number];
 let queue: Array<{ kind: ActivityKind; path: string; details: Record<string, string | number> }> = [], timer: ReturnType<typeof setTimeout> | undefined;
 export function trackActivity(kind: ActivityKind, details: Record<string, string | number> = {}) {
   if (typeof window === "undefined") return;
-  queue.push({ kind, path: location.pathname, details }); if (queue.length > 25) queue.shift();
-  clearTimeout(timer); timer = setTimeout(() => void flushActivity(), 1200);
+  queue.push({ kind, path: location.pathname, details });
+  clearTimeout(timer);
+  if (queue.length >= 20) void flushActivity();
+  else timer = setTimeout(() => void flushActivity(), 1200);
 }
 export async function flushActivity() {
   clearTimeout(timer); if (!queue.length) return;
