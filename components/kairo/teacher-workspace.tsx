@@ -65,7 +65,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
         grade,
         topic,
         statement,
-        mode: "socratic",
+        mode: ["socratic","explain","practice"].includes(p.get("mode")??"") ? p.get("mode") : "socratic",
         ...(p.get("question") ? { question_id: p.get("question") } : {}),
       });
       setLesson(next);

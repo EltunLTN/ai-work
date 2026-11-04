@@ -28,35 +28,52 @@ export function useKairo<T>(operation: string, payload: object = {}, poll = 0) {
   useEffect(() => {
     let active = true;
     let running = false;
+    let identityVersion = 0;
+    let signedOut = false;
     async function load() {
-      if (running) return;
+      if (running || signedOut) return;
       running = true;
+      const loadVersion = identityVersion;
       try {
         const {
           data: { session },
         } = await getSupabase().auth.getSession();
-        if (!active) return;
+        if (!active || loadVersion !== identityVersion) return;
         if (!session) {
           setData(null);
           setStatus("guest");
           return;
         }
         const result = await kairo<T>(operation, JSON.parse(key));
-        if (active) {
+        if (active && loadVersion === identityVersion) {
           setData(result);
           setError("");
           setStatus("ready");
         }
       } catch (e) {
-        if (active) {
+        if (active && loadVersion === identityVersion) {
+          setData(null);
           setError(e instanceof Error ? e.message : "Bağlantı alınmadı.");
           setStatus("error");
         }
       } finally {
         running = false;
+        if (active && !signedOut && loadVersion !== identityVersion) void load();
       }
     }
     void load();
+    const { data: { subscription } } = getSupabase().auth.onAuthStateChange((event, session) => {
+      if (event !== "SIGNED_OUT" && event !== "SIGNED_IN") return;
+      identityVersion += 1;
+      signedOut = !session;
+      queueMicrotask(() => {
+        if (!active) return;
+        setData(null);
+        setError("");
+        setStatus(session ? "loading" : "guest");
+        if (session) void load();
+      });
+    });
     const timer = poll
       ? setInterval(() => {
           if (!document.hidden) void load();
@@ -67,6 +84,7 @@ export function useKairo<T>(operation: string, payload: object = {}, poll = 0) {
     return () => {
       active = false;
       if (timer) clearInterval(timer);
+      subscription.unsubscribe();
       window.removeEventListener("online", online);
     };
   }, [operation, key, poll, revision]);
