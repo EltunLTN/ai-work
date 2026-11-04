@@ -13,7 +13,7 @@ export async function requireAIAccess(request: Request) {
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return reply("Hesab xidməti hazır deyil.", 503);
   try {
-    const db = createClient(url, key, { global: { headers: { Authorization: authorization, ...(process.env.ACTIVITY_SERVER_SECRET ? { "x-kairo-audit": process.env.ACTIVITY_SERVER_SECRET } : {}) } }, auth: { persistSession: false, autoRefreshToken: false } });
+    const db = createClient(url, key, { global: { headers: { Authorization: authorization, "x-kairo-ai-budget-version": "1", ...(process.env.ACTIVITY_SERVER_SECRET ? { "x-kairo-audit": process.env.ACTIVITY_SERVER_SECRET } : {}) } }, auth: { persistSession: false, autoRefreshToken: false } });
     const { data: { user }, error } = await db.auth.getUser(authorization.slice(7));
     if (error || !user || !user.email_confirmed_at) return reply("Təsdiqlənmiş hesabla daxil olun.", 401);
     const { data: toolsAllowed, error: toolsError } = await db.rpc("kairo_ai_allowed");

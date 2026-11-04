@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   const token = request.headers.get("authorization")?.replace(/^Bearer /, "");
   if (!token) return NextResponse.json({ error: "Giriş tələb olunur." }, { status: 401 });
   try {
-    const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!, { global: { headers: { Authorization: `Bearer ${token}` } }, auth: { persistSession: false, autoRefreshToken: false } });
+    const db = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!, { global: { headers: { Authorization: `Bearer ${token}`, "x-kairo-ai-budget-version": "1", "x-kairo-audit": process.env.ACTIVITY_SERVER_SECRET ?? "" } }, auth: { persistSession: false, autoRefreshToken: false } });
     const { data: { user }, error } = await db.auth.getUser(token);
     if (error || !user) return NextResponse.json({ error: "Giriş tələb olunur." }, { status: 401 });
     const { data: admin } = await db.rpc("is_admin");

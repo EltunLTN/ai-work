@@ -13,6 +13,8 @@ in source, client variables, screenshots, chat, or logs.
   SDK retries and model fallbacks are rejected before inference.
 - Paid web discovery is removed, regardless of the old environment flag.
   Lesson links come from the reviewed resource catalog. Missing links stay missing.
+- Older deployments are denied by the shared per-account AI quota RPC unless they
+  provide both current server attestation and the budget integration version.
 - Before inference, a server-attested Supabase RPC atomically reserves twice the
   UTF-8 request bytes, framing allowance and maximum output (including reasoning).
   Reservations are never refunded, even on cancellation or uncertain upstream errors.
