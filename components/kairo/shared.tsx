@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { getSupabase } from "@/lib/supabase/client";
 import { usePathname } from "next/navigation";
@@ -136,6 +136,9 @@ export function ModuleStatus({
         <>
           <h2>Məlumat yüklənmədi.</h2>
           <p>{error}</p>
+          <Link href={`/account?next=${encodeURIComponent(path)}`}>
+            Hesab girişini yoxla ↗
+          </Link>
           <button className="module-button" onClick={retry}>
             Yenidən cəhd et
           </button>
@@ -192,5 +195,40 @@ export function Notice({
     >
       {children}
     </p>
+  );
+}
+
+export function Modal({
+  label,
+  onClose,
+  children,
+}: {
+  label: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const dialog = ref.current;
+    const previous = document.activeElement;
+    dialog?.showModal();
+    return () => {
+      dialog?.close();
+      if (previous instanceof HTMLElement && previous.isConnected)
+        previous.focus();
+    };
+  }, []);
+  return (
+    <dialog
+      ref={ref}
+      className="module-native-dialog"
+      aria-label={label}
+      onCancel={(e) => {
+        e.preventDefault();
+        onClose();
+      }}
+    >
+      {children}
+    </dialog>
   );
 }

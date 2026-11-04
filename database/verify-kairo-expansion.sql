@@ -71,7 +71,7 @@ update private.kairo_focus_sessions set last_seen=clock_timestamp()-interval '31
 set local role authenticated;
 select public.kairo_api('focus.heartbeat',jsonb_build_object('id',current_setting('kairo.test_focus_id')));
 reset role;
-update private.kairo_focus_sessions set last_seen=clock_timestamp()-interval '31 seconds',deadline=clock_timestamp()+interval '120 seconds' where id=current_setting('kairo.test_focus_id')::uuid;
+update private.kairo_focus_sessions set last_seen=clock_timestamp()-interval '31 seconds',deadline=clock_timestamp()-interval '0.1 seconds' where id=current_setting('kairo.test_focus_id')::uuid;
 set local role authenticated;
 select public.kairo_api('focus.heartbeat',jsonb_build_object('id',current_setting('kairo.test_focus_id')));
 reset role;

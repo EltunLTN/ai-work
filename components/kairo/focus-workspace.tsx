@@ -42,9 +42,9 @@ export function FocusWorkspace() {
     );
     const p = new URLSearchParams(window.location.search);
     queueMicrotask(() => {
-      setSettings(q.data!.preferences);
-      setSubject(p.get("subject") ?? "Riyaziyyat");
-      setTask((p.get("task") ?? "").slice(0, 300));
+      setSettings(q.data!.active?.settings ?? q.data!.preferences);
+      setSubject(q.data!.active?.subject ?? p.get("subject") ?? "Riyaziyyat");
+      setTask(q.data!.active?.task ?? (p.get("task") ?? "").slice(0, 300));
       const r = p.get("return_path");
       if (
         r &&
@@ -116,10 +116,19 @@ export function FocusWorkspace() {
     }
     lastPhase.current = key;
   }, [q.data]);
+  useEffect(() => {
+    if (q.data && !q.data.active) {
+      requestId.current = "";
+      lastPhase.current = "";
+    }
+  }, [q.data]);
   const s = q.data?.active;
   const remaining = s
     ? s.status === "active"
-      ? Math.max(0, (Date.parse(s.deadline) - now - offset) / 1000)
+      ? Math.min(
+          s.phase_seconds,
+          Math.max(0, (Date.parse(s.deadline) - now - offset) / 1000),
+        )
       : s.phase_seconds - s.phase_credited
     : settings.focus * 60;
   useEffect(() => {

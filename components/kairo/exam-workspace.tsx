@@ -11,7 +11,13 @@ import type {
   ExamTemplate,
   SavedAnswer,
 } from "@/lib/kairo/types";
-import { LockedSurface, ModuleHeading, ModuleStatus, Notice } from "./shared";
+import {
+  LockedSurface,
+  ModuleHeading,
+  ModuleStatus,
+  Modal,
+  Notice,
+} from "./shared";
 import { QuestionReview, QuestionView } from "./question";
 interface Catalog {
   templates: ExamTemplate[];
@@ -561,13 +567,8 @@ export function ExamWorkspace({ id }: { id: string }) {
         </aside>
       </div>
       {confirm && (
-        <div className="module-modal-backdrop">
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="submit-title"
-            className="module-modal"
-          >
+        <Modal label="İmtahanı təhvil ver?" onClose={() => setConfirm(false)}>
+          <section className="module-modal">
             <h2 id="submit-title">İmtahanı təhvil ver?</h2>
             <p>
               {unanswered} sual cavabsızdır. Təhvil verdikdən sonra cavabları
@@ -590,7 +591,7 @@ export function ExamWorkspace({ id }: { id: string }) {
               </button>
             </div>
           </section>
-        </div>
+        </Modal>
       )}
     </>
   );

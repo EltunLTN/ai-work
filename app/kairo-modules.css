@@ -1639,3 +1639,26 @@ progress::-webkit-progress-value {
   line-height: 1.9;
   margin: 20px 0;
 }
+
+.module-native-dialog {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  max-width: min(560px, calc(100vw - 32px));
+  width: 100%;
+  max-height: 90dvh;
+  overflow: auto;
+  margin: auto;
+  color: var(--ink);
+}
+.module-native-dialog::backdrop {
+  background: #0009;
+  backdrop-filter: blur(8px);
+}
+.module-native-dialog .module-modal {
+  width: 100%;
+  max-height: none;
+}
+html:has(.module-native-dialog[open]) {
+  overflow: hidden;
+}

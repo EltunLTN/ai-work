@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { getSupabase } from "@/lib/supabase/client";
 import { kairo, useKairo, dateTime } from "@/lib/kairo/client";
 import type { TutorSession, TutorState } from "@/lib/kairo/types";
-import { ModuleHeading, ModuleStatus, Notice } from "./shared";
+import { ModuleHeading, ModuleStatus, Modal, Notice } from "./shared";
 import { MathContent } from "./math-content";
 const subjects = ["Riyaziyyat", "Fizika", "Kimya", "Biologiya", "Coğrafiya"];
 export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
@@ -458,7 +458,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
         </div>
       )}
       {report && (
-        <div className="module-modal-backdrop">
+        <Modal label="Cavabı adminə bildir" onClose={() => setReport(null)}>
           <form
             className="module-modal module-form"
             onSubmit={(e) => {
@@ -504,7 +504,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
               </button>
             </div>
           </form>
-        </div>
+        </Modal>
       )}
     </div>
   );

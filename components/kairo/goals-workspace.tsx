@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { kairo, useKairo, dateTime } from "@/lib/kairo/client";
 import { admissionProgress } from "@/lib/kairo/goal-progress";
 import type { GoalState, Program } from "@/lib/kairo/types";
-import { ModuleHeading, ModuleStatus, Notice } from "./shared";
+import { ModuleHeading, ModuleStatus, Modal, Notice } from "./shared";
 export function GoalsWorkspace() {
   const q = useKairo<GoalState>("goals.get"),
     [search, setSearch] = useState(""),
@@ -333,7 +333,10 @@ export function GoalsWorkspace() {
         </>
       )}
       {selected && (
-        <div className="module-modal-backdrop">
+        <Modal
+          label="Universitet hədəfini saxla"
+          onClose={() => setSelected(null)}
+        >
           <form
             className="module-modal module-form"
             onSubmit={(e) => {
@@ -394,7 +397,7 @@ export function GoalsWorkspace() {
               </button>
             </div>
           </form>
-        </div>
+        </Modal>
       )}
     </>
   );
