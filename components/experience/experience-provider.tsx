@@ -25,6 +25,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   const [hidden, setHidden] = useState(false);
   const [sound, setSound] = useState(false);
   const [rabbitState, setRabbitState] = useState<RabbitState>("idle");
+  const [rabbitReady,setRabbitReady]=useState(false);
   const [menu, setMenu] = useState(false);
   const [query, setQuery] = useState("");
   const [watch, setWatch] = useState(false);
@@ -71,11 +72,12 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const timing: Partial<Record<Scene, [Scene, number]>> = { arrival: ["invitation", 900], invitation: ["chase", 1700], chase: ["portal", 1500], portal: ["reveal", 1500], reveal: ["closed", 850] };
+    if (scene === "arrival" && !rabbitReady) return;
     const step = timing[scene];
     if (!step) return;
     const timer = setTimeout(() => setScene(step[0]), step[1]);
     return () => clearTimeout(timer);
-  }, [scene]);
+  }, [scene,rabbitReady]);
 
   useEffect(() => {
     queueMicrotask(() => { setMenu(false); setRabbitState("transition"); });
@@ -110,7 +112,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   }, [menu]);
 
   function finish() { safeWrite("kairo.entered", "1", true); setScene("closed"); }
-  function replay() { setBluePosition(null); returnFocus.current = document.activeElement as HTMLElement; dialog.current?.close(); setMenu(false); setScene("choice"); }
+  function replay() { setRabbitReady(false); setBluePosition(null); returnFocus.current = document.activeElement as HTMLElement; dialog.current?.close(); setMenu(false); setScene("choice"); }
   function escapeBlue() {
     const places = innerWidth < 600 ? [{ x: 65, y: 38 }, { x: 72, y: 75 }, { x: 48, y: 28 }, { x: 72, y: 55 }] : [{ x: 78, y: 27 }, { x: 65, y: 75 }, { x: 83, y: 48 }, { x: 48, y: 22 }];
     setBluePosition(places[escapeIndex.current++ % places.length]);
@@ -155,7 +157,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
       <div className="choice-content"><p className="mono-label">01 / SƏNİN SEÇİMİN</p><h1 id="choice-title">Hər şey bir<br /><em>seçimlə</em> başlayır.</h1><p>Bildiyin yolda qal.<br />Ya da sualların arxasınca get.</p></div>
       <div className="choice-portrait"><Image src="/mentor-entrance.webp" alt="İki açıq ovcunda seçim təklif edən orijinal elmi-fantastik mentor" fill priority sizes="(max-width: 700px) 100vw, 850px" /><button className="choice-pill pill-red" disabled={scene !== "choice"} onClick={redChoice} aria-label="Qırmızı həb — Ağ Dovşanın arxasınca get"><span className="pill-object" /><span className="pill-text">QIRMIZI HƏB<small>Kəşf et ↗</small></span></button><div className="choice-pill pill-blue escaping-pill" style={bluePosition ? { left: `${bluePosition.x}%`, top: `${bluePosition.y}%` } : undefined} onPointerEnter={escapeBlue} onPointerDown={escapeBlue} aria-hidden="true"><span className="pill-object" /><span className="pill-text">MAVİ HƏB<small>Tutmaq o qədər də asan deyil.</small></span></div></div>
       <footer className="choice-bottom"><span>BİR SEÇİM. YENİ BİR YOL.</span><span>Öz ritminlə. Öz seçiminlə.</span></footer>
-      {scene !== "choice" && <div className="rabbit-hole"><div className="blackhole-core" aria-hidden="true"><i/><i/><i/></div><div className="portal-vignette" aria-hidden="true" /><div className="portal-stars" aria-hidden="true">{Array.from({ length: 28 }, (_, i) => <i key={i} style={{ "--star": i, "--angle": `${i * 137.5}deg`, "--distance": `${130 + i % 7 * 45}px` } as CSSProperties} />)}</div><div className="portal-depth" aria-hidden="true">{Array.from({length: 12}, (_, i) => <i key={i} style={{ "--ring": i } as CSSProperties} />)}</div><div className="tunnel-rings" aria-hidden="true"><i /><i /><i /><i /><i /></div><div className="chase-rabbit" aria-hidden="true"><WhiteRabbit state={scene === "chase" || scene === "portal" ? "running" : "attention"}/></div><div className="invitation-copy"><p className="mono-label">YENİ YOLUN BAŞLANĞICI</p><h2>Ağ dovşanın<br /><em>ardınca get.</em></h2><p>Maraq səni bir addım irəli aparır.</p></div><div className="journey-chapters" aria-hidden="true"><span>AĞ DOVŞAN</span><div>{["arrival","invitation","chase","portal","reveal"].map((step,i) => <i key={step} className={["arrival","invitation","chase","portal","reveal"].indexOf(scene) >= i ? "complete" : ""} />)}</div><span>{scene === "arrival" || scene === "invitation" ? "Onun arxasınca get" : scene === "chase" ? "Yeni yol açılır" : "Maraq dünyasına xoş gəldin"}</span></div><p className="sr-only" role="status">Ağ Dovşan səni sayta aparır. Girişi keç düyməsi ilə davam edə bilərsən.</p></div>}
+      <div className={`rabbit-hole ${scene === "choice" ? "rabbit-hole-preload" : ""}`} aria-hidden={scene === "choice"}><div className="blackhole-core" aria-hidden="true"><i/><i/><i/></div><div className="portal-vignette" aria-hidden="true" /><div className="portal-stars" aria-hidden="true">{Array.from({ length: 28 }, (_, i) => <i key={i} style={{ "--star": i, "--angle": `${i * 137.5}deg`, "--distance": `${130 + i % 7 * 45}px` } as CSSProperties} />)}</div><div className="portal-depth" aria-hidden="true">{Array.from({length: 12}, (_, i) => <i key={i} style={{ "--ring": i } as CSSProperties} />)}</div><div className="tunnel-rings" aria-hidden="true"><i /><i /><i /><i /><i /></div><div className="chase-rabbit" aria-hidden="true"><WhiteRabbit state={scene === "chase" || scene === "portal" ? "running" : "attention"} onReady={()=>setRabbitReady(true)}/></div><div className="invitation-copy"><p className="mono-label">YENİ YOLUN BAŞLANĞICI</p><h2>Ağ dovşanın<br /><em>ardınca get.</em></h2><p>Maraq səni bir addım irəli aparır.</p></div><div className="journey-chapters" aria-hidden="true"><span>AĞ DOVŞAN</span><div>{["arrival","invitation","chase","portal","reveal"].map((step,i) => <i key={step} className={["arrival","invitation","chase","portal","reveal"].indexOf(scene) >= i ? "complete" : ""} />)}</div><span>{scene === "arrival" || scene === "invitation" ? "Onun arxasınca get" : scene === "chase" ? "Yeni yol açılır" : "Maraq dünyasına xoş gəldin"}</span></div><p className="sr-only" role="status">Ağ Dovşan səni sayta aparır. Girişi keç düyməsi ilə davam edə bilərsən.</p></div>
     </div>}
   </ExperienceContext.Provider>;
 }
