@@ -25,10 +25,17 @@ do $$declare a uuid:=gen_random_uuid();b uuid:=gen_random_uuid();adm uuid:=gen_r
  r:=public.kairo_api('exam.submit',jsonb_build_object('id',sid));
  if (select count(distinct grade) from public.practice_attempts where user_id=a)<>2 then raise exception 'mixed results lost question grade';end if;
  r:=public.learning_api('replay.get',jsonb_build_object('id',sid));if jsonb_array_length(r->'events')<>3 then raise exception 'missing replay';end if;
+ perform public.learning_api('mistakes.get','{}');
  perform public.learning_api('mistake.save',jsonb_build_object('id',sid,'ordinal',0,'reason','rushing','note','QA self report'));
  if jsonb_array_length(public.learning_api('replay.get',jsonb_build_object('id',sid))->'notes')<>1 then raise exception 'missing mistake note';end if;
  perform set_config('request.jwt.claim.sub',adm::text,true);
  perform public.learning_api('admin.competitions','{}');
+ insert into private.kairo_tournaments(name,mode,template_id,subject,grade,question_count,registration_opens,registration_closes,starts_at,ends_at,status,question_ids)
+ values('Transaction QA arena','async',(select id from private.kairo_exam_templates limit 1),'Riyaziyyat',11,5,now()-interval '2 hours',now()-interval '1 hour',now()-interval '1 hour',now()+interval '1 hour','active','{}');
+ insert into private.kairo_registrations(tournament_id,user_id) select id,a from private.kairo_tournaments where name='Transaction QA arena';
+ insert into private.kairo_arena_entries(tournament_id,user_id,session_id) select id,a,sid from private.kairo_tournaments where name='Transaction QA arena';
+ r:=public.learning_api('admin.arena',jsonb_build_object('id',(select id from private.kairo_tournaments where name='Transaction QA arena')));
+ if jsonb_array_length(r->'entries')<>1 or r->'entries'->0->>'user_id'<>a::text then raise exception 'admin arena entries missing';end if;
  perform public.platform_api('admin.session',jsonb_build_object('id',sid,'user_id',a,'kind','exam'));
  perform public.learning_api('admin.replay',jsonb_build_object('id',sid));
 end $$;
