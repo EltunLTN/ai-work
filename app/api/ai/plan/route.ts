@@ -1,3 +1,4 @@
+import { isAIBudgetError, AI_BUDGET_MESSAGE } from "@/lib/ai/budget";
 import { requireAIAccess } from "@/lib/ai-access";
 import { NextResponse } from "next/server";
 import { generateStudyPlan } from "@/lib/ai/client";
@@ -34,7 +35,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ plan });
-  } catch {
+  } catch (error) {
+    if (isAIBudgetError(error)) return NextResponse.json({ error: AI_BUDGET_MESSAGE }, { status: 503, headers: { "Cache-Control": "no-store" } });
     return NextResponse.json({ error: "Plan yaradılarkən xəta baş verdi." }, { status: 500 });
   }
 }

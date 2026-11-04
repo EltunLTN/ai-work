@@ -26,42 +26,22 @@ test("resource catalog is subject-specific, handles Azerbaijani case and never s
   assert.ok(resources.allowedResourceUrl("https://www.youtube.com/watch?v=rfG8ce4nNh0", "video"));
 });
 
-test("web-discovered resources require an exact cited URL on an allowed provider", async () => {
-  const topic = "Hüceyrənin ümumi quruluşu";
-  const good = "https://www.khanacademy.org/science/biology/v/test-specific-cell-lesson";
-  const uncited = "https://www.khanacademy.org/science/biology/a/not-cited";
-  const api = generator([{ __response: {
-    status: "completed", output_text: JSON.stringify({ items: [{ topic, resources: [
-      { kind: "video", href: good, title: "Cell structure", provider: "Khan Academy", language: "en" },
-      { kind: "material", href: uncited, title: "Uncited", provider: "Khan Academy", language: "en" },
-      { kind: "material", href: "https://evil.example/page", title: "Untrusted", provider: "Wrong", language: "en" },
-    ] }] }), output: [{ type: "message", content: [{ type: "output_text", annotations: [{ type: "url_citation", url: good }, { type: "url_citation", url: "https://evil.example/page" }] }] }],
-  } }], { ENABLE_RESOURCE_SEARCH: "true" });
-  const { verifiedTopicResources } = api.load("lib/ai/resource-search.ts");
-  const result = (await verifiedTopicResources([topic], "6", "Biologiya")).get(topic);
-  assert.ok(result.some(r => r.href === good));
-  assert.ok(result.every(r => r.href !== uncited && !r.href.includes("evil.example")));
-  assert.equal(result.filter(r => r.kind === "test").length, 1);
+test("paid discovery is never called even with the old search flag enabled", async () => {
+ const api = generator([], { ENABLE_RESOURCE_SEARCH: "true" });
+ const { verifiedTopicResources } = api.load("lib/ai/resource-search.ts");
+ const result = (await verifiedTopicResources(["İnteqrala giriş"], "11", "Riyaziyyat")).get("İnteqrala giriş");
+ assert.ok(result.some(r => r.href.includes("IndefiniteIntegrals.aspx")));
+ assert.equal(api.rawRequests.length, 0);
 });
 
 test("stronger model preserves validated JSON contracts without unsupported temperature", async () => {
   const q = { topic: "İnteqrala giriş", question: "∫ 2x dx nədir?", options: ["x² + C", "2x + C", "x + C", "2 + C"], correctIndex: 0, explanation: "x² funksiyasının törəməsi 2x-dir.", difficulty: "medium" };
   const api = generator([[q]]);
   await api.generateDiagnosticQuestions({ grade: "11", subject: "Riyaziyyat", topics: [q.topic], count: 1 });
-  assert.equal(api.rawRequests[0].model, "gpt-6.1-sol");
+  assert.equal(api.rawRequests[0].model, "gpt-5.4-mini-2026-03-17");
   assert.equal(api.rawRequests[0].reasoning.effort, "medium");
   assert.equal(api.rawRequests[0].temperature, undefined);
   assert.equal(api.rawRequests[0].store, false);
   assert.equal(api.rawRequests[0].text.format.type, "json_object");
 });
 
-test("resource grounding accepts retrieved API sources when JSON has no inline citations", async () => {
-  const topic = "İzotoplar və ionlar";
-  const href = "https://www.khanacademy.org/science/chemistry/atomic-structure/v/isotopes-and-ions";
-  const api = generator([{ __response: { status: "completed", output_text: JSON.stringify({ items: [{ topic, resources: [{ kind: "video", href, title: "Isotopes and ions", provider: "Khan Academy", language: "en" }] }] }), output: [{ type: "web_search_call", action: { type: "search", sources: [{ type: "url", url: href }] } }] } }], { ENABLE_RESOURCE_SEARCH: "true" });
-  const { verifiedTopicResources } = api.load("lib/ai/resource-search.ts");
-  const result = (await verifiedTopicResources([topic], "7", "Kimya")).get(topic);
-  assert.ok(result.some(resource => resource.href === href));
-  assert.equal(api.rawRequests[0].tool_choice, "required");
-  assert.ok(api.rawRequests[0].include.includes("web_search_call.action.sources"));
-});

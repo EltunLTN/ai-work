@@ -94,7 +94,7 @@ test("tutor sends real conversation history and score evidence to the existing m
   });
   assert.ok(reply.answer.includes("x²"));
   assert.ok(reply.resources.length);
-  assert.equal(api.rawRequests[0].model, "gpt-6.1-sol");
+  assert.equal(api.rawRequests[0].model, "gpt-5.4-mini-2026-03-17");
   assert.equal(api.rawRequests[0].store, false);
   assert.equal(api.rawRequests[0].input.length, 5);
   assert.equal(api.requests[0].scoreEstimate.score, 25);

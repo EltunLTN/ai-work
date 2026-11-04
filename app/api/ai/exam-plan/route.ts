@@ -1,3 +1,4 @@
+import { isAIBudgetError, AI_BUDGET_MESSAGE } from "@/lib/ai/budget";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { requireAIAccess } from "@/lib/ai-access";
@@ -99,7 +100,8 @@ export async function POST(request: Request) {
       await rpc("exam.plan.save", { id: body.id, subject, plan }),
       { headers: { "Cache-Control": "no-store" } },
     );
-  } catch {
+  } catch (error) {
+    if (isAIBudgetError(error)) return NextResponse.json({ error: AI_BUDGET_MESSAGE }, { status: 503, headers: { "Cache-Control": "no-store" } });
     return NextResponse.json(
       {
         error:

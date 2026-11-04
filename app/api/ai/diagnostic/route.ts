@@ -1,3 +1,4 @@
+import { isAIBudgetError, AI_BUDGET_MESSAGE } from "@/lib/ai/budget";
 export const maxDuration = 300;
 import { requireAIAccess } from "@/lib/ai-access";
 import { NextResponse } from "next/server";
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ questions });
   } catch (error) {
+    if (isAIBudgetError(error)) return NextResponse.json({ error: AI_BUDGET_MESSAGE }, { status: 503, headers: { "Cache-Control": "no-store" } });
     const message = error instanceof Error ? error.message : "Diagnostic suallar yaradıla bilmədi.";
     return NextResponse.json({ error: message }, { status: 500 });
   }

@@ -1,3 +1,4 @@
+import { isAIBudgetError, AI_BUDGET_MESSAGE } from "@/lib/ai/budget";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { requireAIAccess } from "@/lib/ai-access";
@@ -143,7 +144,7 @@ export async function POST(request: Request) {
       } catch {}
     return NextResponse.json(
       {
-        error: request.signal.aborted
+        error: isAIBudgetError(error) ? AI_BUDGET_MESSAGE : request.signal.aborted
           ? "Cavab dayandırıldı."
           : error instanceof SyntaxError
             ? "Düzgün JSON göndər."

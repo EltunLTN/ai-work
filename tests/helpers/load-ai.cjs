@@ -17,6 +17,7 @@ function generator(batches = [], environment = {}) {
       compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true },
     }).outputText;
     const localRequire = (name) => {
+      if (name === "@supabase/supabase-js") return { createClient: () => ({ rpc: async () => ({ data: true, error: null }) }) };
       if (name === "openai") return class {
         responses = { create: async (request) => {
           rawRequests.push(request);
@@ -33,7 +34,7 @@ function generator(batches = [], environment = {}) {
       return require(name);
     };
     vm.runInThisContext(`(function(require,module,exports,process){${code}\n})`, { filename: file })(
-      localRequire, loadedModule, loadedModule.exports, { env: { OPENAI_API_KEY: "test-only", ...environment } },
+      localRequire, loadedModule, loadedModule.exports, { env: { OPENAI_API_KEY: "test-only", NEXT_PUBLIC_SUPABASE_URL: "https://test.supabase.co", NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "test-only", ACTIVITY_SERVER_SECRET: "test-only", ...environment } },
     );
     return loadedModule.exports;
   }

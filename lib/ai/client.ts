@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import { budgetedAI, COMPLIMENTARY_MODEL } from "@/lib/ai/budget";
 import { verifiedTopicResources } from "@/lib/ai/resource-search";
 import {
   ADAPTIVE_QUESTION_PROMPT,
@@ -24,7 +24,7 @@ import type {
   Topic,
 } from "@/lib/types";
 
-const MODEL = process.env.OPENAI_MODEL ?? "gpt-6.1-sol";
+const MODEL = process.env.OPENAI_MODEL ?? COMPLIMENTARY_MODEL;
 
 function normalizeQuestionStem(text: string): string {
   return text.toLowerCase().replace(/\s+/g, " ").replace(/[^\p{L}\p{N} ]/gu, "").trim();
@@ -423,11 +423,7 @@ function validateAndRepairQuestions(grade: Grade, subject: Subject, questions: Q
 }
 
 function client() {
-  const key = process.env.OPENAI_API_KEY;
-  if (!key) {
-    throw new Error("OPENAI_API_KEY təyin edilməyib.");
-  }
-  return new OpenAI({ apiKey: key, timeout: 80000, maxRetries: 0 });
+  return budgetedAI();
 }
 
 export async function generateGuidedLesson(input:{state:import("@/lib/kairo/types").TutorState;action:string;message:string;verification:boolean|null;verificationKey:unknown},signal:AbortSignal){

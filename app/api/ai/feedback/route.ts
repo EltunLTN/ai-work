@@ -1,3 +1,4 @@
+import { isAIBudgetError, AI_BUDGET_MESSAGE } from "@/lib/ai/budget";
 export const maxDuration = 300;
 import { requireAIAccess } from "@/lib/ai-access";
 import { NextResponse } from "next/server";
@@ -16,7 +17,8 @@ export async function POST(request: Request) {
 
     const feedback = await generateFeedbackSummary({ result: body.result });
     return NextResponse.json({ feedback });
-  } catch {
+  } catch (error) {
+    if (isAIBudgetError(error)) return NextResponse.json({ error: AI_BUDGET_MESSAGE }, { status: 503, headers: { "Cache-Control": "no-store" } });
     return NextResponse.json({ error: "Feedback hazırlanarkən xəta baş verdi." }, { status: 500 });
   }
 }

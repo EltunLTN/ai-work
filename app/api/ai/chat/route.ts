@@ -1,3 +1,4 @@
+import { isAIBudgetError, AI_BUDGET_MESSAGE } from "@/lib/ai/budget";
 import { requireAIAccess } from "@/lib/ai-access";
 import { NextResponse } from "next/server";
 import { parseChatInput } from "@/lib/ai/chat-input";
@@ -16,6 +17,7 @@ export async function POST(request: Request) {
     const reply = await generateTutorReply(input);
     return NextResponse.json(reply);
   } catch (error) {
+    if (isAIBudgetError(error)) return NextResponse.json({ error: AI_BUDGET_MESSAGE }, { status: 503, headers: { "Cache-Control": "no-store" } });
     if (error instanceof SyntaxError) return NextResponse.json({ error: "Sorğu JSON formatında olmalıdır." }, { status: 400 });
     const missingKey = error instanceof Error && error.message.includes("OPENAI_API_KEY");
     return NextResponse.json({ error: missingKey
