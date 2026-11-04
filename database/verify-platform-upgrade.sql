@@ -1,0 +1,42 @@
+-- All identities and learning records roll back. No OpenAI requests.
+begin;
+do $$
+declare a uuid:=gen_random_uuid();b uuid:=gen_random_uuid();adm uuid:=gen_random_uuid();rid uuid:=gen_random_uuid();br uuid:=gen_random_uuid();mid uuid;key text:='upgrade-qa-'||gen_random_uuid()::text;s jsonb:='{"subject":"Riyaziyyat","grade":11,"count":5,"seconds":30,"difficulty":"mixed","topic":""}';questions jsonb:='[]';r jsonb;ctx jsonb;lease uuid;i int;denied boolean:=false;begin
+ insert into auth.users(id,email,email_confirmed_at) values(a,a::text||'@example.invalid',now()),(b,b::text||'@example.invalid',now()),(adm,adm::text||'@example.invalid',now());
+ insert into public.account_profiles(id) values(a),(b),(adm);
+ insert into private.admin_emails(email) values(adm::text||'@example.invalid');
+ insert into private.kairo_profiles(user_id,nickname,consent_public) values(a,'qa-a-'||left(a::text,8),true),(b,'qa-b-'||left(b::text,8),true);
+ perform set_config('request.jwt.claim.sub',a::text,true);
+ begin perform public.platform_api('admin.overview','{}');exception when insufficient_privilege then denied:=true;end;if not denied then raise exception 'non-admin access';end if;
+ begin perform public.platform_api('duel.ai.claim',jsonb_build_object('settings',s,'request_id',rid));raise exception 'unattested AI generation';exception when insufficient_privilege then null;end;
+ insert into private.activity_server_keys(digest) values(encode(extensions.digest(key,'sha256'),'hex'));
+ perform set_config('request.headers',jsonb_build_object('x-kairo-audit',key)::text,true);
+ r:=public.platform_api('duel.ai.claim',jsonb_build_object('settings',s,'request_id',rid,'find',true));if not (r->>'generate')::boolean then raise exception 'generation claim';end if;
+ for i in 1..5 loop questions:=questions||jsonb_build_array(jsonb_build_object('subject','Riyaziyyat','grade',11,'topic','İnteqrala giriş','difficulty','easy','type','single','body',jsonb_build_object('statement','QA unikal sual '||i,'options',jsonb_build_array('A','B','C','D')),'answer_key','{"answer":0}'::jsonb,'explanation','QA cavab izahı','points',1));end loop;
+ r:=public.platform_api('duel.ai.save',jsonb_build_object('settings',s,'request_id',rid,'find',true,'questions',questions));mid:=(r->>'id')::uuid;
+ if r->'question'<>'null'::jsonb or r->'review'<>'null'::jsonb then raise exception 'early answer exposure';end if;
+ r:=public.platform_api('duel.ai.save',jsonb_build_object('settings',s,'request_id',rid,'find',true,'questions',questions));if r->>'id'<>mid::text then raise exception 'duel idempotency';end if;
+ perform set_config('request.jwt.claim.sub',b::text,true);
+ r:=public.platform_api('duel.ai.claim',jsonb_build_object('settings',s,'request_id',br,'find',true));if r->>'id'<>mid::text or r->>'status'<>'ready' then raise exception 'AI matchmaking';end if;
+ for i in 0..4 loop insert into private.kairo_duel_answers(match_id,round_index,user_id,answer,correct,duration_ms,base_points,speed_bonus,total_points) values(mid,i,a,'0',true,1000,100,40,140),(mid,i,b,'1',false,1200,0,0,0);end loop;
+ update private.kairo_duels set status='finished',winner_id=a where id=mid;
+ update private.kairo_duels set status='finished' where id=mid;
+ if (select count(*) from private.kairo_duel_ratings where match_id=mid)<>2 or private.kairo_duel_stats(a)->>'rating'<>'1025' or private.kairo_duel_stats(b)->>'rating'<>'990' then raise exception 'rating idempotency';end if;
+ if not exists(select 1 from private.kairo_achievements where user_id=a and code='first_win') then raise exception 'win achievement';end if;
+ perform set_config('request.jwt.claim.sub',adm::text,true);
+ r:=public.platform_api('admin.overview','{}');r:=public.platform_api('admin.user',jsonb_build_object('user_id',a));
+ if r->'insights'->'duel_stats'->>'wins'<>'1' then raise exception 'admin user stats';end if;
+ r:=public.platform_api('admin.session',jsonb_build_object('user_id',a,'id',mid,'kind','duel'));if jsonb_array_length(r->'items')<>5 or r->'items'->0->>'correct'<>'true' then raise exception 'admin duel answers';end if;
+ perform set_config('request.jwt.claim.sub',a::text,true);
+ insert into public.practice_attempts(user_id,attempt_id,kind,subject,grade,total,correct,topic_scores,submitted_at) values(a,'upgrade-qa','quiz','Riyaziyyat','11',5,2,'[{"topic":"İnteqrala giriş","total":5,"correct":2}]',now());
+ ctx:=public.platform_api('plan.get','{"subject":"Riyaziyyat","grade":11}');
+ r:=public.platform_api('plan.claim',jsonb_build_object('subject','Riyaziyyat','grade',11,'version',ctx->'context'->>'version'));lease:=(r->>'lease')::uuid;
+ r:=public.platform_api('plan.claim',jsonb_build_object('subject','Riyaziyyat','grade',11,'version',ctx->'context'->>'version'));if (r->>'claimed')::boolean then raise exception 'parallel plan lease';end if;
+ questions:='[]';for i in 1..7 loop questions:=questions||jsonb_build_array(jsonb_build_object('day',i,'topic','İnteqrala giriş','tasks',jsonb_build_array('Nümunəni həll et')));end loop;
+ perform public.platform_api('plan.save',jsonb_build_object('subject','Riyaziyyat','grade',11,'version',ctx->'context'->>'version','lease',lease,'dailyMinutes',45,'plan',jsonb_build_object('days',questions)));
+ r:=public.platform_api('plan.task','{"subject":"Riyaziyyat","grade":11,"key":"1:İnteqrala giriş:Nümunəni həll et","done":true}');
+ if r->'saved'->'completed'->>'1:İnteqrala giriş:Nümunəni həll et'<>'true' or r->'saved'->'completed' ? '2:İnteqrala giriş:Nümunəni həll et' then raise exception 'independent day tasks';end if;
+ if has_table_privilege('authenticated','private.kairo_duel_ratings','INSERT') or has_table_privilege('authenticated','private.kairo_adaptive_plans','SELECT') then raise exception 'raw private access';end if;
+end $$;
+select 'PASS: admin boundary, AI matching, answer privacy, ratings, achievements, plan lease and independent task status' as result;
+rollback;

@@ -22,8 +22,9 @@ in source, client variables, screenshots, chat, or logs.
   across all users, deployments and Production/Preview environments. It is below
   the owner's reported 2,500,000-token Mini-group incentive limit.
 - Requests stop on DB/configuration failure and from 23:55 through 00:05 UTC.
-  The initial start is the next UTC day after installation, avoiding unknown
-  earlier usage on the installation day. Baku restart time is 04:05.
+  The initial installation used a next-day activation hold. On 2026-11-04 the
+  owner reported low usage and requested immediate activation; that hold was removed.
+  Daily Baku restart time remains 04:05.
 - Admin `/admin` shows conservative reservations, not measured provider usage.
   No prompt text, outputs, user IDs or IP addresses are stored in budget tables.
 

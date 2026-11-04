@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { kairo, useKairo, dateTime } from "@/lib/kairo/client";
 import { parseCatalogCSV } from "@/lib/kairo/catalog-import";
 import type { ExamTemplate, PublicPlayer } from "@/lib/kairo/types";
@@ -172,6 +172,7 @@ export function KairoAdmin() {
     [rows, setRows] = useState<Record<string, string>[]>([]),
     [authorized, setAuthorized] = useState(false),
     [busy, setBusy] = useState(false);
+  useEffect(()=>{if(new URLSearchParams(location.search).get("section")==="arena")queueMicrotask(()=>setTab("arena"));},[]);
   async function mutate(op: string, p: object) {
     setMessage("");
     setBusy(true);

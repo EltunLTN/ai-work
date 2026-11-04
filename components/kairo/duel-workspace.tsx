@@ -1,9 +1,12 @@
 "use client";
 import Link from "next/link";
+import { DuelStanding } from "./progress-overview";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getSupabase } from "@/lib/supabase/client";
+import { aiFetch, getSupabase } from "@/lib/supabase/client";
 import { kairo, useKairo, useNow, clock, dateTime } from "@/lib/kairo/client";
+import { getTextbooksBySelection, isSupportedSelection } from "@/lib/textbook-reference";
+import type { Grade, Subject } from "@/lib/types";
 import type {
   Answer,
   DuelState,
@@ -134,22 +137,13 @@ export function DuelLobby() {
     }),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
-  const pool =
-    q.data?.pool
-      .filter(
-        (p) =>
-          p.subject === settings.subject &&
-          p.grade === settings.grade &&
-          (settings.difficulty === "mixed" ||
-            p.difficulty === settings.difficulty) &&
-          (!settings.topic || p.topic === settings.topic),
-      )
-      .reduce((n, p) => n + Number(p.count), 0) ?? 0;
   async function create(op: string) {
     setBusy(true);
     setError("");
     try {
-      const next = await kairo<DuelState>(op, { settings });
+      const response = await aiFetch("/api/ai/duel-questions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({settings,request_id:crypto.randomUUID(),find:op==="duel.find"})});
+      const next = await response.json() as DuelState & {error?:string};
+      if(!response.ok)throw new Error(next.error??"AI sualları hazırlanmadı.");
       if (next.token)
         sessionStorage.setItem(`kairo-invite:${next.id}`, next.token);
       router.push(`/kairo/duel/match/${next.id}`);
@@ -164,9 +158,9 @@ export function DuelLobby() {
       <ModuleHeading
         eyebrow="05 / Duel"
         title="Bilik qarşılaşması."
-        description="Eyni suallar. Eyni vaxt. Dostunu dəvət et və ya uyğun rəqib axtar. Xallar serverdə hesablanır."
+        description="AI ilə yeni suallar. Eyni vaxt və bərabər şərtlər. Xallar serverdə hesablanır."
       />
-      <ModuleStatus {...q} retry={q.refresh} />
+      <ModuleStatus {...q} retry={q.refresh} /><DuelStanding/>
       {error && <Notice error>{error}</Notice>}
       {q.data && (
         <>
@@ -206,17 +200,7 @@ export function DuelLobby() {
                       })
                     }
                   >
-                    {[
-                      ...new Set(
-                        q.data.pool
-                          .filter((p) => p.subject === settings.subject)
-                          .map((p) => p.grade),
-                      ),
-                    ]
-                      .sort()
-                      .map((g) => (
-                        <option key={g}>{g}</option>
-                      ))}
+                    {Array.from({length:11},(_,i)=><option key={i+1} value={i+1}>{i+1}</option>)}
                   </select>
                 </label>
                 <label>
@@ -286,41 +270,22 @@ export function DuelLobby() {
                     }
                   >
                     <option value="">Qarışıq mövzular</option>
-                    {[
-                      ...new Set(
-                        q.data.pool
-                          .filter(
-                            (p) =>
-                              p.subject === settings.subject &&
-                              p.grade === settings.grade &&
-                              (settings.difficulty === "mixed" ||
-                                p.difficulty === settings.difficulty),
-                          )
-                          .map((p) => p.topic),
-                      ),
-                    ].map((t) => (
-                      <option key={t}>{t}</option>
-                    ))}
+{[...new Set(getTextbooksBySelection(String(settings.grade) as Grade,settings.subject as Subject).flatMap(t=>t.topics))].map(t=><option key={t}>{t}</option>)}
                   </select>
                 </label>
               </div>
-              <p>
-                {pool} uyğun yoxlanmış sual{" "}
-                {pool < settings.count
-                  ? "· Bu seçim üçün sual sayı kifayət etmir."
-                  : ""}
-              </p>
+              <p>Yeni duel üçün AI mövzuya uyğun suallar hazırlayır. Son qarşılaşmalarındakı suallar təkrar qəbul edilmir. AI suallarında səhv ehtimalı var; nəticə yarış reytinqində sayılır.</p>
               <div className="module-actions">
                 <button
                   className="module-button primary"
-                  disabled={busy || !q.data.consent || pool < settings.count}
+                  disabled={busy || !q.data.consent || !isSupportedSelection(String(settings.grade) as Grade,settings.subject as Subject)}
                   onClick={() => void create("duel.create")}
                 >
                   Dostunu dəvət et
                 </button>
                 <button
                   className="module-button"
-                  disabled={busy || !q.data.consent || pool < settings.count}
+                  disabled={busy || !q.data.consent || !isSupportedSelection(String(settings.grade) as Grade,settings.subject as Subject)}
                   onClick={() => void create("duel.find")}
                 >
                   Rəqib axtar
@@ -416,6 +381,9 @@ export function Achievements({
   items: Array<{ code: string; earned_at: string }>;
 }) {
   const names: Record<string, string> = {
+    first_win: "İlk duel qələbəsi",
+    five_wins: "5 duel qələbəsi",
+    ten_wins: "10 duel qələbəsi",
     first_duel_win: "İlk duel qələbəsi",
     first_arena_win: "İlk Arena qələbəsi",
     weekly_champion: "Həftənin qalibi",
@@ -523,7 +491,11 @@ export function DuelWorkspace({ id }: { id: string }) {
     setBusy(true);
     setError("");
     try {
-      const s = await kairo<DuelState>(op, { id, ...p });
+      let s: DuelState;
+      if(op==="duel.rematch"){
+       const response=await aiFetch("/api/ai/duel-questions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({settings:q.data!.settings,request_id:crypto.randomUUID(),find:false})});
+       const data=await response.json();if(!response.ok)throw new Error(data.error??"Yeni suallar hazırlanmadı.");s=data;
+      }else s = await kairo<DuelState>(op, { id, ...p });
       if (s.token) {
         sessionStorage.setItem(`kairo-invite:${s.id}`, s.token);
         setInvite(`${location.origin}/kairo/duel/join/${s.token}`);

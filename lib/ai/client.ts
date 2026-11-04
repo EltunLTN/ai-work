@@ -506,6 +506,7 @@ async function generateTopicQuestions(input: {
   level: StudentLevel;
   count: number;
   excludedQuestionStems?: string[];
+  difficulty?: "easy" | "medium" | "hard";
 }, prompt: string): Promise<Question[]> {
   const topics = [...new Set(input.topics.map((topic) => topic.trim()).filter(Boolean))];
   if (!isSupportedSelection(input.grade, input.subject)) {
@@ -553,6 +554,7 @@ async function generateTopicQuestions(input: {
             topics: topicCounts.map((item) => item.topic),
             weakTopics: topicCounts.map((item) => item.topic),
             level: input.level,
+            requestedDifficulty: input.difficulty ?? "mixed",
             count: topicCounts.reduce((sum, item) => sum + item.count, 0),
             topicCounts,
             nonce: Date.now(),
@@ -571,7 +573,7 @@ async function generateTopicQuestions(input: {
       input.grade,
       input.subject,
       normalizeQuestions(input.grade, input.subject, parsed),
-    ).filter((q) => quotas.has(q.topic));
+    ).filter((q) => quotas.has(q.topic) && (!input.difficulty || q.difficulty === input.difficulty));
 
     for (const question of uniqueByStem(candidates, excludedQuestionStems)) {
       const topicCount = questions.filter((q) => q.topic === question.topic).length;
@@ -595,6 +597,7 @@ export async function generateDiagnosticQuestions(input: {
   level?: StudentLevel;
   count?: number;
   excludedQuestionStems?: string[];
+  difficulty?: "easy" | "medium" | "hard";
 }): Promise<Question[]> {
   return generateTopicQuestions({
     ...input,

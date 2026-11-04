@@ -5,8 +5,9 @@ export async function kairo<T>(
   operation: string,
   payload: object = {},
 ): Promise<T> {
-  const { data, error } = await getSupabase().rpc("kairo_api", {
-    operation,
+  const extended = operation.startsWith("platform.");
+  const { data, error } = await getSupabase().rpc(extended ? "platform_api" : "kairo_api", {
+    operation: extended ? operation.slice(9) : operation,
     payload,
   });
   if (error)

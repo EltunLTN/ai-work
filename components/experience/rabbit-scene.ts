@@ -52,6 +52,8 @@ export function mountRabbitScene(canvas: HTMLCanvasElement, getState: () => Rabb
     const g = new T.Group(); g.position.set(side * .3, .45, -.05); g.rotation.z = -side * .14; head.add(g);
     sphere(g, fur, 0, .55, 0, .18, .7, .16); sphere(g, pink, 0, .58, .112, .105, .53, .052); return g;
   });
+  // Soft crown tufts and cheek volumes keep the same silhouette in every scene.
+  for (const side of [-1,0,1]) { const tuft=sphere(head,fur,side*.12,.51,.04,.15,.18,.17);tuft.rotation.z=side*.25; }
   const eyes = [-1, 1].map(side => { const g = new T.Group(); g.position.set(side * .255, .06, .43); head.add(g); sphere(g, eye, 0, 0, 0, .096, .125, .065); sphere(g, white, -.025, .039, .057, .023, .028, .01); return g; });
   sphere(head, fur, -.15, -.22, .43, .23, .18, .15); sphere(head, fur, .15, -.22, .43, .23, .18, .15);
   sphere(head, pink, 0, -.14, .574, .09, .06, .052);
@@ -80,6 +82,7 @@ export function mountRabbitScene(canvas: HTMLCanvasElement, getState: () => Rabb
   const shadow = new T.Mesh(shadowGeometry, shadowMaterial); shadow.rotation.x = -Math.PI / 2; shadow.position.y = -.035; scene.add(shadow);
   let visible = true, disposed = false, last = 0, lastPointer = 0, staticFrames = 0;
   let previousState: RabbitState | null = null;
+  let stride=0;
   const pointer = new T.Vector2();
   const onPointer = (e: PointerEvent) => { if (performance.now() - lastPointer < 80) return; lastPointer = performance.now(); pointer.set((e.clientX / innerWidth - .5) * .5, (e.clientY / innerHeight - .5) * .12); };
   const resize = () => { const { width, height } = canvas.getBoundingClientRect(); if (!width || !height) return; renderer.setSize(width, height, false); camera.aspect = width / height; camera.updateProjectionMatrix(); render(performance.now()); };
@@ -89,9 +92,10 @@ export function mountRabbitScene(canvas: HTMLCanvasElement, getState: () => Rabb
     if (reduced && state === previousState && staticFrames > 4) return;
     staticFrames = reduced && state === previousState ? staticFrames + 1 : 0; previousState = state;
     const running = state === "running" || state === "hop";
-    body.position.y = reduced ? 0 : running ? Math.abs(Math.sin(t * 11)) * .16 : Math.sin(t * 1.7) * .018;
+    stride=T.MathUtils.lerp(stride,running?1:0,.12);
+    body.position.y = reduced ? 0 : stride * Math.abs(Math.sin(t * 11)) * .16 + (1-stride) * Math.sin(t * 1.7) * .018;
     body.rotation.y = T.MathUtils.lerp(body.rotation.y, -.2 + (reduced ? 0 : pointer.x), .055);
-    head.rotation.z = reduced ? 0 : state === "curiosity" ? .17 : Math.sin(t * .8) * .025;
+    head.rotation.z = T.MathUtils.lerp(head.rotation.z,reduced ? 0 : state === "curiosity" ? .17 : Math.sin(t * .8) * .025,.08);
     head.rotation.x = reduced ? 0 : pointer.y;
     torso.scale.y = .76 + (reduced ? 0 : Math.sin(t * 1.7) * .01);
     ears.forEach((ear, i) => { ear.rotation.z = (i ? -.14 : .14) + (reduced ? 0 : Math.sin(t * (running ? 10 : 1.4) + i) * (running ? .15 : .035)); });
