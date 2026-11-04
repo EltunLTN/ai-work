@@ -11,8 +11,8 @@ export function LanguageToggle() {
       variant="secondary"
       size="sm"
       onClick={() => setLocale(locale === "az" ? "en" : "az")}
-      aria-label="Language toggle"
-      title="Language toggle"
+      aria-label="Dili dəyiş"
+      title="Dili dəyiş"
       className="min-w-14"
     >
       {locale === "az" ? "AZ" : "EN"}
