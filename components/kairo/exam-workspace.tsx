@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useReplayRecorder } from "./replay-recorder";
 import { ExamStudyPlan } from "./exam-study-plan";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -179,6 +180,7 @@ export function ExamWorkspace({ id }: { id: string }) {
     state.current = q.data;
     indexRef.current = index;
   }, [q.data, index]);
+  const flushReplay = useReplayRecorder(id, q.data?.status === "active", index);
   const storageKey = `kairo-exam:${id}`;
   const flush = useCallback(async () => {
     if (
@@ -288,6 +290,7 @@ export function ExamWorkspace({ id }: { id: string }) {
         throw new Error(
           "Cavablar hələ bazaya çatmayıb. Bağlantını bərpa edib yenidən göndər.",
         );
+      await flushReplay();
       const next = await kairo<ExamState>("exam.submit", { id });
       setData(next);
       pending.current = {};
@@ -298,7 +301,7 @@ export function ExamWorkspace({ id }: { id: string }) {
     } finally {
       setBusy(false);
     }
-  }, [flush, id, setData, storageKey, offset]);
+  }, [flush, flushReplay, id, setData, storageKey, offset]);
   useEffect(() => {
     if (q.data?.status !== "active" || remaining > 0) return;
     const timer = setTimeout(() => void submit(), 1000);
@@ -397,10 +400,10 @@ export function ExamWorkspace({ id }: { id: string }) {
           </Link>
         </div>
         <section className="module-panel">
-          <h2>Fənnlər üzrə nəticə</h2>
+          <h2>Fənnlər üzrə nəticə</h2><Link className="module-button" href={`/kairo/replay/${id}`}>İmtahanı təkrar izlə və səhvləri təhlil et ↗</Link>
           {s.result?.subjects.map((t) => (
-            <div className="metric-row" key={t.subject}>
-              <span>{t.subject}</span>
+            <div className="metric-row" key={`${t.subject}:${t.grade??""}`}>
+              <span>{t.subject}{t.grade?` · ${t.grade}-ci sinif`:""}</span>
               <strong>
                 {t.correct}/{t.total} · {t.earned}/{t.maximum} xam bal
               </strong>
@@ -422,7 +425,7 @@ export function ExamWorkspace({ id }: { id: string }) {
             </div>
           ))}
         </section>
-        {s.status === "finalized" && s.mode === "exam" && s.result && (
+        {s.status === "finalized" && s.mode === "exam" && s.template.practice_mode !== "mixed" && s.result && (
           <ExamStudyPlan
             id={s.id}
             grade={s.template.grade}
@@ -596,3 +599,4 @@ export function ExamWorkspace({ id }: { id: string }) {
     </>
   );
 }
+

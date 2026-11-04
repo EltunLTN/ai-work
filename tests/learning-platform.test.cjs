@@ -17,8 +17,8 @@ test("practice rows preserve subject, topic evidence, missing historical time an
 
 test("resource catalog is subject-specific, handles Azerbaijani case and never substitutes a generic homepage", () => {
   const resources = generator().load("lib/learning-resources.ts");
-  assert.equal(resources.getLearningResources("İnteqrala giriş", "11", "Riyaziyyat").length, 3);
-  assert.equal(resources.getLearningResources("İnteqrala giriş", "3", "Riyaziyyat").length, 1);
+  assert.equal(resources.getLearningResources("İnteqral", "11", "Riyaziyyat").length, 3);
+  assert.equal(resources.getLearningResources("İnteqral", "3", "Riyaziyyat").length, 1);
   assert.equal(resources.getLearningResources("Yeni xüsusi mövzu", "11", "Coğrafiya").length, 1);
   assert.equal(resources.getLearningResources("Atomun quruluşu", "7", "Kimya").filter(r => r.kind === "video").length, 1);
   assert.equal(resources.getLearningResources("Atomun quruluşu", "7", "Fizika").length, 1);
@@ -29,13 +29,13 @@ test("resource catalog is subject-specific, handles Azerbaijani case and never s
 test("paid discovery is never called even with the old search flag enabled", async () => {
  const api = generator([], { ENABLE_RESOURCE_SEARCH: "true" });
  const { verifiedTopicResources } = api.load("lib/ai/resource-search.ts");
- const result = (await verifiedTopicResources(["İnteqrala giriş"], "11", "Riyaziyyat")).get("İnteqrala giriş");
+ const result = (await verifiedTopicResources(["İnteqral"], "11", "Riyaziyyat")).get("İnteqral");
  assert.ok(result.some(r => r.href.includes("IndefiniteIntegrals.aspx")));
  assert.equal(api.rawRequests.length, 0);
 });
 
 test("stronger model preserves validated JSON contracts without unsupported temperature", async () => {
-  const q = { topic: "İnteqrala giriş", question: "∫ 2x dx nədir?", options: ["x² + C", "2x + C", "x + C", "2 + C"], correctIndex: 0, explanation: "x² funksiyasının törəməsi 2x-dir.", difficulty: "medium" };
+  const q = { topic: "İnteqral", question: "∫ 2x dx nədir?", options: ["x² + C", "2x + C", "x + C", "2 + C"], correctIndex: 0, explanation: "x² funksiyasının törəməsi 2x-dir.", difficulty: "medium" };
   const api = generator([[q]]);
   await api.generateDiagnosticQuestions({ grade: "11", subject: "Riyaziyyat", topics: [q.topic], count: 1 });
   assert.equal(api.rawRequests[0].model, "gpt-5.4-mini-2026-03-17");
@@ -44,4 +44,5 @@ test("stronger model preserves validated JSON contracts without unsupported temp
   assert.equal(api.rawRequests[0].store, false);
   assert.equal(api.rawRequests[0].text.format.type, "json_object");
 });
+
 

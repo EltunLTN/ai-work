@@ -2,6 +2,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import { normalizeMathMarkdown } from "@/lib/math-markdown";
 export function MathContent({ children }: { children: string }) {
   return (
     <div className="math-content">
@@ -31,8 +32,9 @@ export function MathContent({ children }: { children: string }) {
             ),
         }}
       >
-        {children}
+        {normalizeMathMarkdown(children)}
       </ReactMarkdown>
     </div>
   );
 }
+

@@ -12,6 +12,8 @@ import {
   GraduationCap,
   Swords,
   Trophy,
+  FlaskConical,
+  ScanSearch,
 } from "lucide-react";
 import { KAIRO_ROUTES } from "@/lib/kairo/client";
 import type { PublicPlayer } from "@/lib/kairo/types";
@@ -22,6 +24,8 @@ const icons = {
   focus: Focus,
   duel: Swords,
   arena: Trophy,
+  lab: FlaskConical,
+  mistakes: ScanSearch,
 };
 export function KairoAccountBoundary({
   children,
@@ -232,3 +236,4 @@ export function Modal({
     </dialog>
   );
 }
+

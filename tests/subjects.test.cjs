@@ -79,7 +79,7 @@ for (const subject of sciences) {
     const tutor = generator(["Fənn üzrə izah"]);
     const { parseChatInput } = tutor.load("lib/ai/chat-input.ts");
     const context = parseChatInput({ messages: [{ role: "user", content: `${topic} mövzusunu izah et` }],
-      context: { grade: "11", subject, topics: [topic, "İnteqrala giriş"] } });
+      context: { grade: "11", subject, topics: [topic, "İnteqral"] } });
     assert.deepEqual(context.context.topics, [topic]);
     const reply = await tutor.generateTutorReply(context);
     assert.equal(tutor.requests[0].learningContext.subject, subject);
@@ -91,7 +91,7 @@ for (const subject of sciences) {
 test("wrong-grade and wrong-subject topics are rejected before any model call", async () => {
   const api = generator();
   await assert.rejects(api.generateDiagnosticQuestions({ grade: "1", subject: "Kimya", topics: ["Atomun quruluşu"], count: 1 }), /sinif/);
-  await assert.rejects(api.generateDiagnosticQuestions({ grade: "11", subject: "Kimya", topics: ["İnteqrala giriş"], count: 1 }), /mövzu siyahısına/);
+  await assert.rejects(api.generateDiagnosticQuestions({ grade: "11", subject: "Kimya", topics: ["İnteqral"], count: 1 }), /mövzu siyahısına/);
   assert.equal(api.requests.length, 0);
 });
 
@@ -100,3 +100,4 @@ test("tutor history is isolated by subject and grade, including overlapping scie
   assert.notEqual(getTutorSessionKey({ grade: "7", subject: "Fizika" }), getTutorSessionKey({ grade: "7", subject: "Kimya" }));
   assert.notEqual(getTutorSessionKey({ grade: "7", subject: "Kimya" }), getTutorSessionKey({ grade: "11", subject: "Kimya" }));
 });
+

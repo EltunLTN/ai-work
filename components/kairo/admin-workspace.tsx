@@ -200,6 +200,7 @@ export function KairoAdmin() {
       <Link className="module-button" href="/admin">
         Hesablar və əməliyyat jurnalına qayıt ↗
       </Link>
+      <Link className="module-button primary" href="/admin/overview?competitions=1">Bütün duel və Arena nəticələrini aç ↗</Link>
       <ModuleStatus {...q} retry={q.refresh} />
       {message && <Notice>{message}</Notice>}
       {q.data && (
@@ -834,3 +835,4 @@ function TournamentForm({
     </details>
   );
 }
+

@@ -32,6 +32,7 @@ export interface BankQuestion {
   written_review?: { score: number | null; feedback: string };
 }
 export interface ExamTemplate {
+  practice_mode?: "class"|"mixed";
   id: string;
   name: string;
   version: number;
@@ -71,6 +72,7 @@ export interface ExamResult {
   pending: number;
   status: "provisional" | "final";
   subjects: Array<{
+    grade?: string;
     subject: string;
     total: number;
     correct: number;
@@ -233,6 +235,10 @@ export interface TutorState {
   messages: TutorMessage[];
 }
 export interface Program {
+  source_status?: "official"|"secondary"|"preliminary";
+  cutoff_status?: "verified"|"reported"|"unknown";
+  reported_cutoff?: string|null;
+  reported_state_cutoff?: string|null;
   id: string;
   university_id: string;
   university: string;
@@ -324,3 +330,4 @@ export interface ArenaState {
     my_match: string | null;
   }>;
 }
+

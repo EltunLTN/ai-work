@@ -38,6 +38,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
           : subjects[0],
       );
       setTopic((p.get("topic") ?? "").slice(0, 200));
+      setStatement((p.get("statement") ?? "").slice(0, 4000));
       setGrade(Math.max(1, Math.min(11, Number(p.get("grade")) || 11)));
     });
     return () => controller.current?.abort();
@@ -509,3 +510,4 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
     </div>
   );
 }
+

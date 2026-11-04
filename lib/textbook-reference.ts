@@ -1,8 +1,15 @@
+import curriculum from "@/data/curriculum.json";
 import textbooks from "@/data/textbooks.json";
 import scienceTextbooks from "@/data/science-textbooks.json";
 import type { Grade, Subject, StudentProfile, TextbookReference } from "@/lib/types";
 
-const references = [...textbooks, ...scienceTextbooks] as TextbookReference[];
+// Preserve saved textbook IDs while making the supplied chapter catalogue authoritative.
+const legacy = [...textbooks, ...scienceTextbooks] as TextbookReference[];
+const references: TextbookReference[] = [...legacy.filter(book => !curriculum.sinif_fennler.some(row => row.fenn === book.subject && String(row.sinif) === book.grade)), ...curriculum.sinif_fennler.flatMap(row => {
+ const existing = legacy.filter(b => b.subject === row.fenn && b.grade === String(row.sinif));
+ const books = existing.length ? existing : [{id: row.movzular[0].id + "-book", grade: String(row.sinif), subject: row.fenn, title: row.fenn + " · " + row.sinif + "-ci sinif"}];
+ return books.map(book => ({...book, grade:String(row.sinif) as Grade,subject:row.fenn as Subject,sourceLabel:"E-Dərslik · bölmə və fəsil kataloqu",sourceUrl:row.derslikler[0],topics:row.movzular.map(t=>t.basliq)}));
+})];
 
 export const SUBJECTS: Subject[] = ["Riyaziyyat", "Fizika", "Biologiya", "Coğrafiya", "Kimya"];
 
@@ -55,3 +62,4 @@ export function getDefaultProfile(): StudentProfile {
 export function getTopicsForProfile(profile: StudentProfile): string[] {
   return getTextbookById(profile.textbookId)?.topics ?? [];
 }
+

@@ -4,16 +4,16 @@ const { test } = require("node:test");
 const { generator } = require("./helpers/load-ai.cjs");
 
 const planInput = {
-  grade: "11", subject: "Riyaziyyat", weakTopics: ["İnteqrala giriş"], level: "beginner",
-  targetImprovement: "Ölçülən inkişaf", curriculumTopics: ["İnteqrala giriş", "Törəmə"],
-  topicScores: [{ topic: "İnteqrala giriş", accuracy: 25 }], dailyMinutes: 45,
+  grade: "11", subject: "Riyaziyyat", weakTopics: ["İnteqral"], level: "beginner",
+  targetImprovement: "Ölçülən inkişaf", curriculumTopics: ["İnteqral", "Funksiyanın törəməsi"],
+  topicScores: [{ topic: "İnteqral", accuracy: 25 }], dailyMinutes: 45,
   resultSubmittedAt: "2026-10-13T10:00:00.000Z",
 };
 const plan = () => ({
   title: "İnteqral üzrə 7 günlük məşq", summary: "Sınaqdakı 25% nəticəyə əsaslanan məşq.",
   tips: ["Səhvlərini təkrar həll et."],
   days: Array.from({ length: 7 }, (_, index) => ({
-    day: index + 1, topic: "İnteqrala giriş", focus: "İbtidai funksiyanın tapılması",
+    day: index + 1, topic: "İnteqral", focus: "İbtidai funksiyanın tapılması",
     tasks: ["10 dəqiqə qüvvət qaydasını təkrar et", "8 suallıq mini test həll et"],
     estimatedMinutes: 40, checkpoint: index === 6,
     resources: [{ href: "https://fake.example/made-up-book" }],
@@ -29,10 +29,10 @@ test("AI plan is seven validated days, uses direct curated links and preserves a
   assert.equal(api.requests[0].dailyMinutes, 45);
   assert.equal(api.requests[0].topicScores[0].accuracy, 25);
   for (const day of result.days) {
-    assert.equal(day.topic, "İnteqrala giriş");
+    assert.equal(day.topic, "İnteqral");
     assert.equal(day.resources.length, 3);
     assert.ok(day.resources.some((resource) => resource.href.includes("IndefiniteIntegrals.aspx")));
-    assert.ok(day.resources.some((resource) => resource.href === "/mini-quiz?topic=%C4%B0nteqrala%20giri%C5%9F&subject=Riyaziyyat&grade=11"));
+    assert.ok(day.resources.some((resource) => resource.href === "/mini-quiz?topic=%C4%B0nteqral&subject=Riyaziyyat&grade=11"));
     assert.ok(day.resources.every((resource) => !/fake|google.com\/search|youtube.com\/results/.test(resource.href)));
   }
 });
@@ -75,9 +75,9 @@ test("chat rejects injected roles and oversized requests, sanitizes student evid
   assert.equal(parseChatInput({ messages: [{ role: "user", content: "x".repeat(6001) }] }), null);
   assert.equal(parseChatInput({ messages: [{ role: "assistant", content: "hello" }] }), null);
   const parsed = parseChatInput({ messages: [{ role: "user", content: "  İntegralı izah et  " }],
-    context: { grade: "11", topics: ["İnteqrala giriş", "Toplama və çıxma"],
-      result: { totalQuestions: 8, totalCorrect: 2, topicScores: [{ topic: "İnteqrala giriş", correct: 2, total: 8, accuracy: 100 }] } } });
-  assert.deepEqual(parsed.context.topics, ["İnteqrala giriş"]);
+    context: { grade: "11", topics: ["İnteqral", "Toplama və çıxma"],
+      result: { totalQuestions: 8, totalCorrect: 2, topicScores: [{ topic: "İnteqral", correct: 2, total: 8, accuracy: 100 }] } } });
+  assert.deepEqual(parsed.context.topics, ["İnteqral"]);
   assert.equal(parsed.context.result.topicScores[0].accuracy, 25);
   assert.equal(parsed.messages[0].content, "İntegralı izah et");
 });
@@ -88,8 +88,8 @@ test("tutor sends real conversation history and score evidence to the existing m
     locale: "az", messages: [{ role: "user", content: "İnteqral nədir?" },
       { role: "assistant", content: "İnteqral törəmənin tərs əməlidir." },
       { role: "user", content: "İnteqralı nümunə ilə izah et." }],
-    context: { grade: "11", topics: ["İnteqrala giriş"], result: {
-      totalQuestions: 8, totalCorrect: 2, topicScores: [{ topic: "İnteqrala giriş", correct: 2, total: 8, accuracy: 25 }],
+    context: { grade: "11", topics: ["İnteqral"], result: {
+      totalQuestions: 8, totalCorrect: 2, topicScores: [{ topic: "İnteqral", correct: 2, total: 8, accuracy: 25 }],
     } },
   });
   assert.ok(reply.answer.includes("x²"));
@@ -135,7 +135,7 @@ test("stored attempts, feedback, plan progress and generated quiz handoff use re
   } };
   try {
     const store = generator().load("lib/storage.ts");
-    const profile = { grade: "11", subject: "Riyaziyyat", textbookId: "math-11-ederslik-817", selectedTopics: ["İnteqrala giriş"] };
+    const profile = { grade: "11", subject: "Riyaziyyat", textbookId: "math-11-ederslik-817", selectedTopics: ["İnteqral"] };
     store.saveStudentProfile(profile);
     assert.equal(store.getQuizResult(), null);
     const result = { ...profile, totalQuestions: 8, totalCorrect: 2, overallAccuracy: 25, submittedAt: planInput.resultSubmittedAt };
@@ -161,3 +161,4 @@ test("stored attempts, feedback, plan progress and generated quiz handoff use re
     assert.equal(store.getStudyPlan(), null);
   } finally { global.window = previousWindow; }
 });
+

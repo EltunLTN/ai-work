@@ -16,7 +16,10 @@ export function GoalsWorkspace() {
     [year, setYear] = useState(new Date().getFullYear() + 1),
     [funding, setFunding] = useState("either"),
     [error, setError] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [pagination,setPagination] = useState({key:"",limit:60});
+  const filterKey=JSON.stringify([search,university,language,group]);
+  const shown=pagination.key===filterKey?pagination.limit:60;
   const programs = useMemo(
     () =>
       q.data?.programs.filter(
@@ -53,7 +56,7 @@ export function GoalsWorkspace() {
       {error && <Notice error>{error}</Notice>}
       {q.data && (
         <>
-          <section>
+          <aside className="module-panel catalog-provenance"><h2>2026/2027 kataloqu</h2><p>Göndərilən Excel-dən 54 universitet və 1 179 ixtisas variantı daxil edilib. 375 qəbul kodu üçün üçüncü tərəfin məlumatı var; ilkin siyahılar və bildirilmiş ballar rəsmi təsdiq kimi göstərilmir. Kod, dil, təhsil forması və balı DİM-in qəbul jurnalı ilə yoxla. Boş bal 0 demək deyil.</p><p>V qrupdakı “6/60” kimi göstəricilər mənbədəki formada saxlanır, 700 ballıq nəticəyə çevrilmir.</p><a href="https://www.abiturient.az/" target="_blank" rel="noreferrer">DİM-in Abituriyent jurnalı ↗</a></aside><section>
             <h2>
               Hədəflərim <span className="muted">{q.data.goals.length}/12</span>
             </h2>
@@ -90,10 +93,10 @@ export function GoalsWorkspace() {
                         <span>şəxsi hədəf / 700</span>
                       </div>
                       <p>
-                        Tarixi keçid balı:{" "}
+                        Mənbənin bildirdiyi keçid balı:{" "}
                         {cutoff === null
                           ? "təsdiqlənmiş məlumat yoxdur"
-                          : `${cutoff} (${g.program.year})`}
+                          : `${cutoff} (${g.program.year})${g.program.cutoff_status === "reported" ? " · rəsmi təsdiqlənməyib" : ""}`}
                       </p>
                       {progress ? (
                         <>
@@ -140,8 +143,8 @@ export function GoalsWorkspace() {
           <section className="module-panel">
             <h2>İxtisas kataloqu</h2>
             <Notice>
-              Kataloq rəsmi universitet səhifələrinə əsaslanır. Boş xanalar
-              təsdiqlənməmiş məlumatdır. Tarixi keçid balı qəbul zəmanəti deyil.
+              Hər sətrin mənbəsi və təsdiq statusu göstərilir. İlkin siyahı və
+              üçüncü tərəfin balları DİM-in rəsmi təsdiqi deyil. Boş bal 0 demək deyil.
             </Notice>
             <div className="module-filters">
               <label>
@@ -215,12 +218,12 @@ export function GoalsWorkspace() {
                   </tr>
                 </thead>
                 <tbody>
-                  {programs.map((p) => (
+                  {programs.slice(0,shown).map((p) => (
                     <tr key={p.id}>
                       <td>
                         <strong>{p.university}</strong>
                         <br />
-                        {p.name}
+                        {p.name}<br/><small className="catalog-status">{p.source_status==="preliminary"?"İlkin siyahı · rəsmi təsdiq tələb olunur":p.cutoff_status==="reported"?"Üçüncü tərəfin məlumatı · DİM ilə təsdiqlənməyib":"Mənbəli məlumat"}</small>
                       </td>
                       <td>
                         {p.language}
@@ -233,7 +236,7 @@ export function GoalsWorkspace() {
                         {p.code ?? "—"}
                       </td>
                       <td>
-                        {p.cutoff ?? "Məlumat yoxdur"}
+                        {p.reported_cutoff ?? p.cutoff ?? "Məlumat yoxdur"}
                         <br />
                         <small>{p.year}</small>
                       </td>
@@ -243,7 +246,7 @@ export function GoalsWorkspace() {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Rəsmi mənbə ↗
+                          Mənbəni aç ↗
                         </a>
                         <br />
                         <small>
@@ -253,7 +256,7 @@ export function GoalsWorkspace() {
                         </small>
                         <br />
                         <small>
-                          Yoxlama:{" "}
+                          Kataloqa daxil edilmə:{" "}
                           {new Date(p.verified_at).toLocaleDateString("az-AZ")}
                         </small>
                       </td>
@@ -269,6 +272,8 @@ export function GoalsWorkspace() {
                   ))}
                 </tbody>
               </table>
+              <p className="data-note">{Math.min(shown,programs.length)} / {programs.length} uyğun ixtisas variantı</p>
+              {programs.length>shown&&<button className="module-button" onClick={()=>setPagination({key:filterKey,limit:shown+60})}>Daha 60 ixtisas göstər</button>}
               {!programs.length && (
                 <p>
                   Axtarışa uyğun təsdiqlənmiş proqram yoxdur. Filtrləri dəyiş.
@@ -402,3 +407,4 @@ export function GoalsWorkspace() {
     </>
   );
 }
+

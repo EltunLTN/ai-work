@@ -6,14 +6,15 @@ export async function kairo<T>(
   payload: object = {},
 ): Promise<T> {
   const extended = operation.startsWith("platform.");
-  const { data, error } = await getSupabase().rpc(extended ? "platform_api" : "kairo_api", {
-    operation: extended ? operation.slice(9) : operation,
+  const learning = operation.startsWith("learning.");
+  const { data, error } = await getSupabase().rpc(learning ? "learning_api" : extended ? "platform_api" : "kairo_api", {
+    operation: learning ? operation.slice(9) : extended ? operation.slice(9) : operation,
     payload,
   });
   if (error)
     throw new Error(
       error.code === "42501"
-        ? "Bu əməliyyat üçün təsdiqlənmiş hesab və uyğun icazə tələb olunur."
+        ? (error.message.includes("tapılmadı") ? "Bu yarış tapılmadı və ya onun iştirakçısı deyilsən. Admin nəticələri İdarəetmə mərkəzində açılır." : error.message.includes("Sessiya bitib") ? "Sessiya bitib. Hesab bölməsindən yenidən daxil ol." : error.message.includes("dayandırılıb") ? "Hesab istifadəsi dayandırılıb. Administratorla əlaqə saxla." : error.message.includes("Təsdiqlənmiş") ? "E-poçtunu təsdiqlə və hesabına yenidən daxil ol." : "Bu məlumata giriş icazən yoxdur. Öz hesabınla daxil olduğunu yoxla.")
         : error.message,
     );
   return data as T;
@@ -141,4 +142,7 @@ export const KAIRO_ROUTES = [
   },
   { href: "/kairo/duel", label: "Kairo Duel", short: "Duel", icon: "duel" },
   { href: "/kairo/arena", label: "Kairo Arena", short: "Arena", icon: "arena" },
+  { href: "/kairo/lab", label:"Virtual laboratoriya",short:"Laboratoriya",icon:"lab" },
+  { href: "/kairo/mistakes", label:"Səhv analizi və təkrar izləmə",short:"Təhlil",icon:"mistakes" },
 ] as const;
+

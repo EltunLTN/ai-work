@@ -1,0 +1,1289 @@
+{
+  "info": {
+    "ad": "Azərbaycan E-Dərslik: 5 fənn, siniflər üzrə bölmə və fəsil başlıqları",
+    "dil": "az",
+    "qeyd": "Bunlar dərsliklərin bölmə/fəsil başlıqlarıdır; ayrı-ayrı dərs/məşğələ başlıqlarının tam siyahısı deyil. Bəzi siniflərdə e-Dərslikdə əvvəlki nəşrlərdən istifadə olunub. Orfoqrafiya/capitalization oxunaqlılıq üçün normallaşdırılıb.",
+    "movzularin_seviyyesi": "bölmə/fəsil"
+  },
+  "sinif_fennler": [
+    {
+      "fenn": "Riyaziyyat",
+      "sinif": 5,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "riyaziyyat-5-01",
+          "basliq": "Natural ədədlər və onlar üzərində əməllər"
+        },
+        {
+          "id": "riyaziyyat-5-02",
+          "basliq": "Adi kəsrlər"
+        },
+        {
+          "id": "riyaziyyat-5-03",
+          "basliq": "Onluq kəsrlər"
+        },
+        {
+          "id": "riyaziyyat-5-04",
+          "basliq": "Faiz"
+        },
+        {
+          "id": "riyaziyyat-5-05",
+          "basliq": "Dəyişəni olan ifadələr. Tənlik. Bərabərsizlik"
+        },
+        {
+          "id": "riyaziyyat-5-06",
+          "basliq": "Müstəvi fiqurlar"
+        },
+        {
+          "id": "riyaziyyat-5-07",
+          "basliq": "Fəza fiqurları"
+        },
+        {
+          "id": "riyaziyyat-5-08",
+          "basliq": "Statistika və məlumatların təsviri"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=840",
+        "https://e-derslik.edu.az/player/index3.php?book_id=841"
+      ],
+      "ederslik_book_ids": [
+        840,
+        841
+      ]
+    },
+    {
+      "fenn": "Riyaziyyat",
+      "sinif": 6,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "riyaziyyat-6-01",
+          "basliq": "Natural ədədlər və onlar üzərində əməllər"
+        },
+        {
+          "id": "riyaziyyat-6-02",
+          "basliq": "Nisbət. Tənasüb. Faiz"
+        },
+        {
+          "id": "riyaziyyat-6-03",
+          "basliq": "Tam ədədlər"
+        },
+        {
+          "id": "riyaziyyat-6-04",
+          "basliq": "Düzbucaqlı koordinat sistemi"
+        },
+        {
+          "id": "riyaziyyat-6-05",
+          "basliq": "Çoxluqlar və onlar üzərində əməllər"
+        },
+        {
+          "id": "riyaziyyat-6-06",
+          "basliq": "Dəyişəni olan ifadələr. Tənlik. Bərabərsizlik"
+        },
+        {
+          "id": "riyaziyyat-6-07",
+          "basliq": "Üçbucaqlar"
+        },
+        {
+          "id": "riyaziyyat-6-08",
+          "basliq": "Həndəsi fiqurların sahəsi və həcmi"
+        },
+        {
+          "id": "riyaziyyat-6-09",
+          "basliq": "Statistika və ehtimal"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=906",
+        "https://e-derslik.edu.az/player/index3.php?book_id=907"
+      ],
+      "ederslik_book_ids": [
+        906,
+        907
+      ]
+    },
+    {
+      "fenn": "Riyaziyyat",
+      "sinif": 7,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "riyaziyyat-7-01",
+          "basliq": "Rasional ədədlər. Üçbucağın elementləri"
+        },
+        {
+          "id": "riyaziyyat-7-02",
+          "basliq": "Natural üstlü qüvvət. Üçbucaqların konqruyentliyi"
+        },
+        {
+          "id": "riyaziyyat-7-03",
+          "basliq": "Çoxhədli. Orta perpendikulyar"
+        },
+        {
+          "id": "riyaziyyat-7-04",
+          "basliq": "Müxtəsər vurma düsturları. Paralellik əlamətləri"
+        },
+        {
+          "id": "riyaziyyat-7-05",
+          "basliq": "Tənliklər sistemi. Üçbucağın tərəfləri və bucaqları. Statistika və ehtimal"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=291"
+      ],
+      "ederslik_book_ids": [
+        291
+      ]
+    },
+    {
+      "fenn": "Riyaziyyat",
+      "sinif": 8,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "riyaziyyat-8-01",
+          "basliq": "Kvadrat kök. Həqiqi ədədlər"
+        },
+        {
+          "id": "riyaziyyat-8-02",
+          "basliq": "Pifaqor teoremi"
+        },
+        {
+          "id": "riyaziyyat-8-03",
+          "basliq": "Kvadrat tənliklər"
+        },
+        {
+          "id": "riyaziyyat-8-04",
+          "basliq": "Dördbucaqlılar"
+        },
+        {
+          "id": "riyaziyyat-8-05",
+          "basliq": "Rasional ifadələr"
+        },
+        {
+          "id": "riyaziyyat-8-06",
+          "basliq": "Fiqurların sahəsi"
+        },
+        {
+          "id": "riyaziyyat-8-07",
+          "basliq": "Rasional tənliklər"
+        },
+        {
+          "id": "riyaziyyat-8-08",
+          "basliq": "Fiqurların oxşarlığı"
+        },
+        {
+          "id": "riyaziyyat-8-09",
+          "basliq": "Bərabərsizliklər"
+        },
+        {
+          "id": "riyaziyyat-8-10",
+          "basliq": "Triqonometrik nisbətlər. Koordinatlar üsulu. Fiqurların çevrilməsi"
+        },
+        {
+          "id": "riyaziyyat-8-11",
+          "basliq": "Məlumatın toplanması və təqdimi. Ehtimalın hesablanması"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=393"
+      ],
+      "ederslik_book_ids": [
+        393
+      ]
+    },
+    {
+      "fenn": "Riyaziyyat",
+      "sinif": 9,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "riyaziyyat-9-01",
+          "basliq": "n-ci dərəcədən kök. Rasional üstlü qüvvət"
+        },
+        {
+          "id": "riyaziyyat-9-02",
+          "basliq": "Çevrə"
+        },
+        {
+          "id": "riyaziyyat-9-03",
+          "basliq": "Funksiyalar. Qrafiklər"
+        },
+        {
+          "id": "riyaziyyat-9-04",
+          "basliq": "Çevrənin tənliyi"
+        },
+        {
+          "id": "riyaziyyat-9-05",
+          "basliq": "Tənliklər. Tənliklər sistemi"
+        },
+        {
+          "id": "riyaziyyat-9-06",
+          "basliq": "Çoxbucaqlılar"
+        },
+        {
+          "id": "riyaziyyat-9-07",
+          "basliq": "Bərabərsizliklər"
+        },
+        {
+          "id": "riyaziyyat-9-08",
+          "basliq": "Vektorlar"
+        },
+        {
+          "id": "riyaziyyat-9-09",
+          "basliq": "Ədədi ardıcıllıqlar"
+        },
+        {
+          "id": "riyaziyyat-9-10",
+          "basliq": "Məlumatın təqdimi. Birləşmələr. Ehtimal"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=507"
+      ],
+      "ederslik_book_ids": [
+        507
+      ]
+    },
+    {
+      "fenn": "Riyaziyyat",
+      "sinif": 10,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "riyaziyyat-10-01",
+          "basliq": "Funksiyalar"
+        },
+        {
+          "id": "riyaziyyat-10-02",
+          "basliq": "Fəzada nöqtə, düz xətt, müstəvi"
+        },
+        {
+          "id": "riyaziyyat-10-03",
+          "basliq": "Bucağın triqonometrik funksiyaları"
+        },
+        {
+          "id": "riyaziyyat-10-04",
+          "basliq": "Sinuslar, kosinuslar teoremi"
+        },
+        {
+          "id": "riyaziyyat-10-05",
+          "basliq": "Triqonometrik funksiyalar"
+        },
+        {
+          "id": "riyaziyyat-10-06",
+          "basliq": "Çoxüzlülər"
+        },
+        {
+          "id": "riyaziyyat-10-07",
+          "basliq": "Triqonometrik tənliklər"
+        },
+        {
+          "id": "riyaziyyat-10-08",
+          "basliq": "Fiqurların həcmi"
+        },
+        {
+          "id": "riyaziyyat-10-09",
+          "basliq": "Üstlü və loqarifmik funksiyalar"
+        },
+        {
+          "id": "riyaziyyat-10-10",
+          "basliq": "Kompleks ədədlər"
+        },
+        {
+          "id": "riyaziyyat-10-11",
+          "basliq": "Məlumatlar, proqnozlar"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=408"
+      ],
+      "ederslik_book_ids": [
+        408
+      ]
+    },
+    {
+      "fenn": "Riyaziyyat",
+      "sinif": 11,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "riyaziyyat-11-01",
+          "basliq": "Çoxhədlilər"
+        },
+        {
+          "id": "riyaziyyat-11-02",
+          "basliq": "Fəzada vektorlar"
+        },
+        {
+          "id": "riyaziyyat-11-03",
+          "basliq": "Limit"
+        },
+        {
+          "id": "riyaziyyat-11-04",
+          "basliq": "Fırlanma fiqurları. Silindr, konus, kürə"
+        },
+        {
+          "id": "riyaziyyat-11-05",
+          "basliq": "Funksiyanın törəməsi"
+        },
+        {
+          "id": "riyaziyyat-11-06",
+          "basliq": "Fırlanma fiqurlarının həcmi"
+        },
+        {
+          "id": "riyaziyyat-11-07",
+          "basliq": "Törəmənin tətbiqi ilə funksiyanın araşdırılması"
+        },
+        {
+          "id": "riyaziyyat-11-08",
+          "basliq": "İnteqral"
+        },
+        {
+          "id": "riyaziyyat-11-09",
+          "basliq": "Statistika və ehtimal"
+        },
+        {
+          "id": "riyaziyyat-11-10",
+          "basliq": "Tənliklər, bərabərsizliklər, tənliklər sistemi"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=817"
+      ],
+      "ederslik_book_ids": [
+        817
+      ]
+    },
+    {
+      "fenn": "Fizika",
+      "sinif": 6,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "fizika-6-01",
+          "basliq": "Fizika nəyi öyrənir"
+        },
+        {
+          "id": "fizika-6-02",
+          "basliq": "Materiya"
+        },
+        {
+          "id": "fizika-6-03",
+          "basliq": "Maddə və onun xassələri"
+        },
+        {
+          "id": "fizika-6-04",
+          "basliq": "Qarşılıqlı təsirlər və hərəkət"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=237"
+      ],
+      "ederslik_book_ids": [
+        237
+      ]
+    },
+    {
+      "fenn": "Fizika",
+      "sinif": 7,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "fizika-7-01",
+          "basliq": "Mexaniki hərəkət"
+        },
+        {
+          "id": "fizika-7-02",
+          "basliq": "Qüvvə"
+        },
+        {
+          "id": "fizika-7-03",
+          "basliq": "Mexaniki iş və enerji"
+        },
+        {
+          "id": "fizika-7-04",
+          "basliq": "Təzyiq"
+        },
+        {
+          "id": "fizika-7-05",
+          "basliq": "Sadə mexanizmlər. Cisimlərin tarazlığı"
+        },
+        {
+          "id": "fizika-7-06",
+          "basliq": "Mexaniki rəqslər və dalğalar"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=290"
+      ],
+      "ederslik_book_ids": [
+        290
+      ]
+    },
+    {
+      "fenn": "Fizika",
+      "sinif": 8,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "fizika-8-01",
+          "basliq": "Molekulların istilik hərəkəti. Daxili enerji"
+        },
+        {
+          "id": "fizika-8-02",
+          "basliq": "İstilik hadisələrində enerjinin saxlanması qanunu"
+        },
+        {
+          "id": "fizika-8-03",
+          "basliq": "Maddənin aqreqat hallarının dəyişməsi"
+        },
+        {
+          "id": "fizika-8-04",
+          "basliq": "İstilik mühərrikləri"
+        },
+        {
+          "id": "fizika-8-05",
+          "basliq": "Elektrik yükü. Elektrik sahəsi"
+        },
+        {
+          "id": "fizika-8-06",
+          "basliq": "Elektrik cərəyanı"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=381"
+      ],
+      "ederslik_book_ids": [
+        381
+      ]
+    },
+    {
+      "fenn": "Fizika",
+      "sinif": 9,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "fizika-9-01",
+          "basliq": "Müxtəlif mühitlərdə elektrik cərəyanı"
+        },
+        {
+          "id": "fizika-9-02",
+          "basliq": "Maqnit sahəsi"
+        },
+        {
+          "id": "fizika-9-03",
+          "basliq": "İşıq hadisələri"
+        },
+        {
+          "id": "fizika-9-04",
+          "basliq": "Atom və atom nüvəsi"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=148"
+      ],
+      "ederslik_book_ids": [
+        148
+      ]
+    },
+    {
+      "fenn": "Fizika",
+      "sinif": 10,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "fizika-10-01",
+          "basliq": "Kinematikanın əsasları"
+        },
+        {
+          "id": "fizika-10-02",
+          "basliq": "Dinamikanın əsasları"
+        },
+        {
+          "id": "fizika-10-03",
+          "basliq": "Saxlanma qanunları"
+        },
+        {
+          "id": "fizika-10-04",
+          "basliq": "Mexaniki rəqslər və dalğalar"
+        },
+        {
+          "id": "fizika-10-05",
+          "basliq": "Relyativistik mexanika"
+        },
+        {
+          "id": "fizika-10-06",
+          "basliq": "Molekulyar-kinetik nəzəriyyə"
+        },
+        {
+          "id": "fizika-10-07",
+          "basliq": "Termodinamikanın əsasları"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=218"
+      ],
+      "ederslik_book_ids": [
+        218
+      ]
+    },
+    {
+      "fenn": "Fizika",
+      "sinif": 11,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "fizika-11-01",
+          "basliq": "Elektromaqnit sahəsi"
+        },
+        {
+          "id": "fizika-11-02",
+          "basliq": "Müxtəlif mühitlərdə sabit cərəyan qanunları"
+        },
+        {
+          "id": "fizika-11-03",
+          "basliq": "Elektromaqnit rəqsləri və dalğaları"
+        },
+        {
+          "id": "fizika-11-04",
+          "basliq": "Atom fizikası"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=282"
+      ],
+      "ederslik_book_ids": [
+        282
+      ]
+    },
+    {
+      "fenn": "Biologiya",
+      "sinif": 6,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "biologiya-6-01",
+          "basliq": "Biologiyanın tədqiqat obyektləri"
+        },
+        {
+          "id": "biologiya-6-02",
+          "basliq": "Orqanizmlərin hüceyrəvi quruluşu. Toxumalar, orqanlar və orqanlar sistemi"
+        },
+        {
+          "id": "biologiya-6-03",
+          "basliq": "Bitkilərin vegetativ orqanları"
+        },
+        {
+          "id": "biologiya-6-04",
+          "basliq": "Bitkilərin generativ orqanları"
+        },
+        {
+          "id": "biologiya-6-05",
+          "basliq": "Canlılarda hərəkət, dayaq, qidalanma və tənəffüs"
+        },
+        {
+          "id": "biologiya-6-06",
+          "basliq": "Orqanizmlərdə maddələrin daşınması, ifrazat, çoxalma və inkişaf"
+        },
+        {
+          "id": "biologiya-6-07",
+          "basliq": "Orqanizm və təbii birliklərə mühitin təsiri"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=538"
+      ],
+      "ederslik_book_ids": [
+        538
+      ]
+    },
+    {
+      "fenn": "Biologiya",
+      "sinif": 7,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "biologiya-7-01",
+          "basliq": "Hüceyrə və orqanizm"
+        },
+        {
+          "id": "biologiya-7-02",
+          "basliq": "Bitki orqanizmi"
+        },
+        {
+          "id": "biologiya-7-03",
+          "basliq": "Bitkilərdə çoxalma"
+        },
+        {
+          "id": "biologiya-7-04",
+          "basliq": "Heyvanların bədən örtükləri və bədən quruluşu"
+        },
+        {
+          "id": "biologiya-7-05",
+          "basliq": "Bioloji müxtəliflik"
+        },
+        {
+          "id": "biologiya-7-06",
+          "basliq": "Ekosistemlərdə enerji axını"
+        },
+        {
+          "id": "biologiya-7-07",
+          "basliq": "Sağlam həyat tərzi"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=863",
+        "https://e-derslik.edu.az/player/index3.php?book_id=864"
+      ],
+      "ederslik_book_ids": [
+        863,
+        864
+      ]
+    },
+    {
+      "fenn": "Biologiya",
+      "sinif": 8,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "biologiya-8-01",
+          "basliq": "Həyatın kimyası"
+        },
+        {
+          "id": "biologiya-8-02",
+          "basliq": "Bitki orqanizmi"
+        },
+        {
+          "id": "biologiya-8-03",
+          "basliq": "Qan dövranı sistemi"
+        },
+        {
+          "id": "biologiya-8-04",
+          "basliq": "Tənəffüs sistemi"
+        },
+        {
+          "id": "biologiya-8-05",
+          "basliq": "Həzm və qidalanma"
+        },
+        {
+          "id": "biologiya-8-06",
+          "basliq": "Heyvanlarda və insanda çoxalma"
+        },
+        {
+          "id": "biologiya-8-07",
+          "basliq": "Canlı aləmin təsnifatı"
+        },
+        {
+          "id": "biologiya-8-08",
+          "basliq": "İnsan sağlamlığı və ətraf mühit"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=927",
+        "https://e-derslik.edu.az/player/index3.php?book_id=928"
+      ],
+      "ederslik_book_ids": [
+        927,
+        928
+      ]
+    },
+    {
+      "fenn": "Biologiya",
+      "sinif": 9,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "biologiya-9-01",
+          "basliq": "Canlı orqanizmlərin kimyəvi tərkibi"
+        },
+        {
+          "id": "biologiya-9-02",
+          "basliq": "Hüceyrə canlının quruluş və inkişaf vahididir"
+        },
+        {
+          "id": "biologiya-9-03",
+          "basliq": "Orqanizm tam bir sistemdir"
+        },
+        {
+          "id": "biologiya-9-04",
+          "basliq": "Populyasiya. Növ"
+        },
+        {
+          "id": "biologiya-9-05",
+          "basliq": "Ali sinir fəaliyyəti"
+        },
+        {
+          "id": "biologiya-9-06",
+          "basliq": "Canlılar və ətraf mühit"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=144"
+      ],
+      "ederslik_book_ids": [
+        144
+      ]
+    },
+    {
+      "fenn": "Biologiya",
+      "sinif": 10,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "biologiya-10-01",
+          "basliq": "Biosferdə istehsal və istehlak"
+        },
+        {
+          "id": "biologiya-10-02",
+          "basliq": "Canlılarda baş verən dəyişkənliklər"
+        },
+        {
+          "id": "biologiya-10-03",
+          "basliq": "Üzvi aləmin təkamülü"
+        },
+        {
+          "id": "biologiya-10-04",
+          "basliq": "Genetika"
+        },
+        {
+          "id": "biologiya-10-05",
+          "basliq": "Ətraf mühitin qorunması və bərpası"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=221"
+      ],
+      "ederslik_book_ids": [
+        221
+      ]
+    },
+    {
+      "fenn": "Biologiya",
+      "sinif": 11,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "biologiya-11-01",
+          "basliq": "Həyatın yaranması"
+        },
+        {
+          "id": "biologiya-11-02",
+          "basliq": "Mikrobiologiya"
+        },
+        {
+          "id": "biologiya-11-03",
+          "basliq": "Seleksiya"
+        },
+        {
+          "id": "biologiya-11-04",
+          "basliq": "Biotexnologiya və bionika"
+        },
+        {
+          "id": "biologiya-11-05",
+          "basliq": "Biosfer"
+        },
+        {
+          "id": "biologiya-11-06",
+          "basliq": "Xordalıların ali nümayəndəsi - insan. Onun inkişafı və mühit"
+        },
+        {
+          "id": "biologiya-11-07",
+          "basliq": "Hüceyrənin nəzarətli və nəzarətsiz bölünməsi"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=276"
+      ],
+      "ederslik_book_ids": [
+        276
+      ]
+    },
+    {
+      "fenn": "Coğrafiya",
+      "sinif": 6,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "coğrafiya-6-01",
+          "basliq": "Coğrafiya: dünən və bu gün"
+        },
+        {
+          "id": "coğrafiya-6-02",
+          "basliq": "Cəmiyyət"
+        },
+        {
+          "id": "coğrafiya-6-03",
+          "basliq": "Yerin bərk təbəqəsi"
+        },
+        {
+          "id": "coğrafiya-6-04",
+          "basliq": "Şəffaf kürə"
+        },
+        {
+          "id": "coğrafiya-6-05",
+          "basliq": "Yerin su təbəqəsi"
+        },
+        {
+          "id": "coğrafiya-6-06",
+          "basliq": "Təbiət və insan"
+        },
+        {
+          "id": "coğrafiya-6-07",
+          "basliq": "Yer - Günəş sistemində"
+        },
+        {
+          "id": "coğrafiya-6-08",
+          "basliq": "Yer səthinin təsviri"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=540"
+      ],
+      "ederslik_book_ids": [
+        540
+      ]
+    },
+    {
+      "fenn": "Coğrafiya",
+      "sinif": 7,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "coğrafiya-7-01",
+          "basliq": "Yer haqqında biliklərin inkişafı"
+        },
+        {
+          "id": "coğrafiya-7-02",
+          "basliq": "Yer kürəsinin kartoqrafik təsviri"
+        },
+        {
+          "id": "coğrafiya-7-03",
+          "basliq": "Yer Günəş sistemində"
+        },
+        {
+          "id": "coğrafiya-7-04",
+          "basliq": "Yer səthinin relyefi"
+        },
+        {
+          "id": "coğrafiya-7-05",
+          "basliq": "Yerin hava təbəqəsi"
+        },
+        {
+          "id": "coğrafiya-7-06",
+          "basliq": "Yer kürəsində suyun paylanması"
+        },
+        {
+          "id": "coğrafiya-7-07",
+          "basliq": "Yerin canlı təbəqəsi"
+        },
+        {
+          "id": "coğrafiya-7-08",
+          "basliq": "Dünya dövlətlərinin müxtəlifliyi"
+        },
+        {
+          "id": "coğrafiya-7-09",
+          "basliq": "İqtisadiyyat və coğrafiya"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=288"
+      ],
+      "ederslik_book_ids": [
+        288
+      ]
+    },
+    {
+      "fenn": "Coğrafiya",
+      "sinif": 8,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "coğrafiya-8-01",
+          "basliq": "Coğrafi kəşflərdən tədqiqatlara doğru"
+        },
+        {
+          "id": "coğrafiya-8-02",
+          "basliq": "Xəritələr və onların üzərində təsvir üsulları"
+        },
+        {
+          "id": "coğrafiya-8-03",
+          "basliq": "Yerin hərəkəti və onun coğrafi nəticələri"
+        },
+        {
+          "id": "coğrafiya-8-04",
+          "basliq": "Yerin fəal tektonik təbəqəsi"
+        },
+        {
+          "id": "coğrafiya-8-05",
+          "basliq": "Atmosfer"
+        },
+        {
+          "id": "coğrafiya-8-06",
+          "basliq": "Yerin su təbəqəsi"
+        },
+        {
+          "id": "coğrafiya-8-07",
+          "basliq": "Biosfer"
+        },
+        {
+          "id": "coğrafiya-8-08",
+          "basliq": "Dünya ölkələrinin təsnifatı"
+        },
+        {
+          "id": "coğrafiya-8-09",
+          "basliq": "Əhali və təsərrüfatın ərazi təşkili"
+        },
+        {
+          "id": "coğrafiya-8-10",
+          "basliq": "Ekoloji mühit və onun mühafizəsi"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=397"
+      ],
+      "ederslik_book_ids": [
+        397
+      ]
+    },
+    {
+      "fenn": "Coğrafiya",
+      "sinif": 9,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "coğrafiya-9-01",
+          "basliq": "Relyef və onun təsərrüfata təsiri"
+        },
+        {
+          "id": "coğrafiya-9-02",
+          "basliq": "İqlim və onun təsərrüfatda rolu"
+        },
+        {
+          "id": "coğrafiya-9-03",
+          "basliq": "Su ehtiyatları və onların iqtisadi əhəmiyyəti"
+        },
+        {
+          "id": "coğrafiya-9-04",
+          "basliq": "Bioehtiyatların müxtəlifliyi və ondan istifadə"
+        },
+        {
+          "id": "coğrafiya-9-05",
+          "basliq": "Qədim və müasir sivilizasiyalar"
+        },
+        {
+          "id": "coğrafiya-9-06",
+          "basliq": "Dünya əhalisinin müxtəlifliyi"
+        },
+        {
+          "id": "coğrafiya-9-07",
+          "basliq": "İqtisadi-sosial həyat və onun inkişaf yolları"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=468"
+      ],
+      "ederslik_book_ids": [
+        468
+      ]
+    },
+    {
+      "fenn": "Coğrafiya",
+      "sinif": 10,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "coğrafiya-10-01",
+          "basliq": "Yer səma cismidir"
+        },
+        {
+          "id": "coğrafiya-10-02",
+          "basliq": "Yer səthinin təsviri"
+        },
+        {
+          "id": "coğrafiya-10-03",
+          "basliq": "Yer qabığının inkişaf tarixi"
+        },
+        {
+          "id": "coğrafiya-10-04",
+          "basliq": "İqlim ehtiyatları"
+        },
+        {
+          "id": "coğrafiya-10-05",
+          "basliq": "Quru suları"
+        },
+        {
+          "id": "coğrafiya-10-06",
+          "basliq": "Coğrafi təbəqə"
+        },
+        {
+          "id": "coğrafiya-10-07",
+          "basliq": "Dünya əhalisi"
+        },
+        {
+          "id": "coğrafiya-10-08",
+          "basliq": "Siyasi münasibətlər"
+        },
+        {
+          "id": "coğrafiya-10-09",
+          "basliq": "Elmi-texniki inqilab və iqtisadiyyat"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=220"
+      ],
+      "ederslik_book_ids": [
+        220
+      ]
+    },
+    {
+      "fenn": "Coğrafiya",
+      "sinif": 11,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "coğrafiya-11-01",
+          "basliq": "Xəritə-coğrafi informasiya vasitəsidir"
+        },
+        {
+          "id": "coğrafiya-11-02",
+          "basliq": "Təbiətdən səmərəli istifadə"
+        },
+        {
+          "id": "coğrafiya-11-03",
+          "basliq": "Dünyanın demoqrafik mənzərəsi"
+        },
+        {
+          "id": "coğrafiya-11-04",
+          "basliq": "İqtisadi inkişafın istiqamətləri"
+        },
+        {
+          "id": "coğrafiya-11-05",
+          "basliq": "Qlobal problemlər və onların həlli yolları"
+        },
+        {
+          "id": "coğrafiya-11-06",
+          "basliq": "Beynəlxalq inteqrasiya və qloballaşma"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=814"
+      ],
+      "ederslik_book_ids": [
+        814
+      ]
+    },
+    {
+      "fenn": "Kimya",
+      "sinif": 7,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "kimya-7-01",
+          "basliq": "Kimyəvi elementlər"
+        },
+        {
+          "id": "kimya-7-02",
+          "basliq": "Atomun quruluşu"
+        },
+        {
+          "id": "kimya-7-03",
+          "basliq": "Kimyəvi birləşmələr"
+        },
+        {
+          "id": "kimya-7-04",
+          "basliq": "Qarışıqlar"
+        },
+        {
+          "id": "kimya-7-05",
+          "basliq": "Qarışıqların ayrılma üsulları"
+        },
+        {
+          "id": "kimya-7-06",
+          "basliq": "Kimyəvi reaksiyalar"
+        },
+        {
+          "id": "kimya-7-07",
+          "basliq": "Turşular və əsaslar"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=871",
+        "https://e-derslik.edu.az/player/index3.php?book_id=872"
+      ],
+      "ederslik_book_ids": [
+        871,
+        872
+      ]
+    },
+    {
+      "fenn": "Kimya",
+      "sinif": 8,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "kimya-8-01",
+          "basliq": "Atomun quruluşu və dövri cədvəl"
+        },
+        {
+          "id": "kimya-8-02",
+          "basliq": "Kimyəvi rabitə"
+        },
+        {
+          "id": "kimya-8-03",
+          "basliq": "Kimyəvi reaksiyaların təsnifatı"
+        },
+        {
+          "id": "kimya-8-04",
+          "basliq": "Kimyəvi reaksiyaların sürəti və ona təsir edən amillər"
+        },
+        {
+          "id": "kimya-8-05",
+          "basliq": "Oksidləşmə və reduksiya prosesləri"
+        },
+        {
+          "id": "kimya-8-06",
+          "basliq": "Turşular və əsaslar"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=935",
+        "https://e-derslik.edu.az/player/index3.php?book_id=936"
+      ],
+      "ederslik_book_ids": [
+        935,
+        936
+      ]
+    },
+    {
+      "fenn": "Kimya",
+      "sinif": 9,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "kimya-9-01",
+          "basliq": "Metalların ümumi xarakteristikası"
+        },
+        {
+          "id": "kimya-9-02",
+          "basliq": "Əsas yarımqrup metalları"
+        },
+        {
+          "id": "kimya-9-03",
+          "basliq": "Əlavə yarımqrup metalları"
+        },
+        {
+          "id": "kimya-9-04",
+          "basliq": "Qeyri-metalların ümumi xarakteristikası"
+        },
+        {
+          "id": "kimya-9-05",
+          "basliq": "Flüor yarımqrupu elementləri"
+        },
+        {
+          "id": "kimya-9-06",
+          "basliq": "Oksigen yarımqrupu elementləri"
+        },
+        {
+          "id": "kimya-9-07",
+          "basliq": "Azot yarımqrupu elementləri"
+        },
+        {
+          "id": "kimya-9-08",
+          "basliq": "Karbon yarımqrupu elementləri"
+        },
+        {
+          "id": "kimya-9-09",
+          "basliq": "Sadə üzvi birləşmələrlə tanışlıq"
+        },
+        {
+          "id": "kimya-9-10",
+          "basliq": "Karbohidrogenlər"
+        },
+        {
+          "id": "kimya-9-11",
+          "basliq": "Karbohidrogenlərin oksigenli və azotlu törəmələri"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=151"
+      ],
+      "ederslik_book_ids": [
+        151
+      ]
+    },
+    {
+      "fenn": "Kimya",
+      "sinif": 10,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "kimya-10-01",
+          "basliq": "Oksid, əsas, turşu və duzların quruluşları"
+        },
+        {
+          "id": "kimya-10-02",
+          "basliq": "Doymuş alifatik karbohidrogenlər"
+        },
+        {
+          "id": "kimya-10-03",
+          "basliq": "Doymamış alifatik karbohidrogenlər"
+        },
+        {
+          "id": "kimya-10-04",
+          "basliq": "Tsiklik karbohidrogenlər"
+        },
+        {
+          "id": "kimya-10-05",
+          "basliq": "Karbohidrogenlərin təbii mənbələri"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=226"
+      ],
+      "ederslik_book_ids": [
+        226
+      ]
+    },
+    {
+      "fenn": "Kimya",
+      "sinif": 11,
+      "seviyye": "bölmə/fəsil",
+      "movzular": [
+        {
+          "id": "kimya-11-01",
+          "basliq": "Spirtlər və fenollar"
+        },
+        {
+          "id": "kimya-11-02",
+          "basliq": "Aldehidlər"
+        },
+        {
+          "id": "kimya-11-03",
+          "basliq": "Karbon turşuları və onların törəmələri"
+        },
+        {
+          "id": "kimya-11-04",
+          "basliq": "Karbohidratlar (saxaridlər)"
+        },
+        {
+          "id": "kimya-11-05",
+          "basliq": "Nitrobirləşmələr, aminlər, aminturşular və zülallar"
+        },
+        {
+          "id": "kimya-11-06",
+          "basliq": "Polimerlər"
+        }
+      ],
+      "derslikler": [
+        "https://e-derslik.edu.az/player/index3.php?book_id=349"
+      ],
+      "ederslik_book_ids": [
+        349
+      ]
+    }
+  ]
+}
+

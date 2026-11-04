@@ -19,10 +19,12 @@ interface Home {
 const descriptions = [
   "Vaxtlı imtahan, saxlanmış cavablar, ətraflı nəticə.",
   "İpucu ilə düşün, addım-addım həll et.",
-  "Rəsmi mənbələrdən ixtisaslar və şəxsi hədəflər.",
+  "Mənbəli ixtisas kataloqu və şəxsi hədəflər.",
   "Diqqətini topla, real iş vaxtını izlə.",
   "Dostunla eyni suallarda üz-üzə gəl.",
   "Həftəlik sınaq və canlı pley-off yarışları.",
+  "Qrafik, həndəsə və fizika təcrübələri.",
+  "İmtahanını təkrar izlə, səhvlərindən öyrən.",
 ];
 export function KairoHub({ widget = false }: { widget?: boolean }) {
   const q = useKairo<Home>("home.get");
@@ -89,3 +91,4 @@ export function KairoHub({ widget = false }: { widget?: boolean }) {
     </section>
   );
 }
+

@@ -11,6 +11,7 @@ import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { getSupabase } from "@/lib/supabase/client";
 import { clearLearningData, restoreFromCloud, saveToCloud } from "@/lib/cloud-storage";
+import { StudentIdentity } from "@/components/kairo/student-identity";
 import { ProfileEditor } from "@/components/account/profile-editor";
 
 export default function AccountPage() {
@@ -85,7 +86,7 @@ export default function AccountPage() {
 
   return <div className="kairo-page"><Navbar /><main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-4xl flex-1 px-4 py-12 md:py-20">
     <WorkspaceHeading index="07 / HESABIN" title="Təhsil yolun, bir yerdə." description="Profilin, nəticələrin və fərdi planın. Harada olursan ol, qaldığın yerdən davam et." />
-    {user && <ProfileEditor userId={user.id} />}
+    {user && <><StudentIdentity/><ProfileEditor userId={user.id} /></>}
     {loading ? <p role="status">Hesab yoxlanılır…</p> : <div className="grid gap-6 md:grid-cols-2">
       <section className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8">
         <UserRound className="mb-5 size-8 text-red-400" /><h2 className="text-xl font-semibold">{recovery ? "Yeni şifrə" : user ? "Hesabın" : signup ? "Hesab yarat" : "Xoş gəldin"}</h2>
@@ -114,3 +115,4 @@ export default function AccountPage() {
     {message && <p role="status" aria-live="polite" className="mt-6 rounded-2xl border border-red-400/20 bg-red-400/10 p-4 text-sm">{message}</p>}
   </main><Footer /></div>;
 }
+
