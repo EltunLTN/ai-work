@@ -29,10 +29,10 @@ function PlanJourney({subject,grade}:{subject:Subject;grade:Grade}){
  const refresh=q.refresh;
  useEffect(()=>{const update=()=>refresh();window.addEventListener(STORAGE_CHANGE_EVENT,update);return()=>window.removeEventListener(STORAGE_CHANGE_EVENT,update);},[refresh]);
  useEffect(()=>{if(!q.data)return;const fingerprint=`${q.data.context.version}:${minutes}`;if(!initial.current){initial.current=true;if(q.data.saved&&q.data.saved.daily_minutes!==minutes){queueMicrotask(()=>setMinutes(q.data!.saved!.daily_minutes));return;}}
- if(evidence.total&&(!q.data.saved?.plan||q.data.saved.source_version!==q.data.context.version||q.data.saved.daily_minutes!==minutes)&&auto.current!==fingerprint){auto.current=fingerprint;queueMicrotask(()=>void generate());}
+ if(!running.current&&evidence.total&&(!q.data.saved?.plan||q.data.saved.source_version!==q.data.context.version||q.data.saved.daily_minutes!==minutes)&&auto.current!==fingerprint){auto.current=fingerprint;queueMicrotask(()=>void generate());}
  // Generate once per persisted evidence version, never for every poll.
  // eslint-disable-next-line react-hooks/exhaustive-deps
- },[q.data?.context.version,q.data?.saved?.source_version,minutes,evidence.total]);
+ },[q.data?.context.version,q.data?.saved?.source_version,minutes,evidence.total,busy]);
  async function toggle(key:string,done:boolean){setTaskBusy(true);try{q.setData(await kairo<PlanState>("platform.plan.task",{...selection,key,done}));}catch(e){setMessage((e as Error).message);}finally{setTaskBusy(false);}}
  const active=plan?.days.find(d=>d.day===day)??plan?.days[0],completion=plan?planTaskCompletion(plan.days,saved?.completed??{}):0;
  const start=plan?.generatedAt??saved?.updated_at??"1970-01-01T00:00:00Z";

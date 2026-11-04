@@ -10,6 +10,8 @@
 - Dashboard integrates module results, duel outcomes, ranking, badges, tutor counts, focus activity and weak-topic plan links with the existing subject analytics.
 - Entrance uses one persistent 3D rabbit renderer through the intro, hero and dock; no SVG/3D loading swap. Added softer crown/head animation and an accretion-ring black-hole passage. Intro/footer text is Azerbaijani, with reduced-motion support preserved.
 
-Validation: TypeScript, ESLint and 55 Node tests pass. `database/verify-platform-upgrade.sql` verifies admin denial, AI matching/idempotency/answer privacy, ratings/badges and plan leases/day-specific task state in a rollback-only transaction. No persistent QA accounts are created. Live model correctness and the organization's free-token status cannot be established by these tests.
+Validation: TypeScript, ESLint and 57 Node tests pass. `database/verify-platform-upgrade.sql` verifies admin denial, AI matching/idempotency/answer privacy, ratings/badges and plan leases/day-specific task state in a rollback-only transaction. No persistent QA accounts are created. Live model correctness and the organization's free-token status cannot be established by these tests.
 
 SQL migrations are additive and private tables have RLS with client grants revoked. Migration versions have been reconciled to the CLI-generated local files. Previous local Git index state was preserved; releases use the connected GitHub API against the current remote main tree.
+
+Final regressions: duplicate requests cannot release another generation lease; new evidence arriving during plan generation is queued for the next update; the choice screen is hidden during portal reveal to prevent a flash.
