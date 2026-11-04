@@ -1,7 +1,7 @@
 import type { MiniQuizAttempt } from "@/lib/storage";
 import type { QuizResult, TopicScore } from "@/lib/types";
 
-export type PracticeRow = { user_id: string; attempt_id: string; kind: "quiz" | "mini"; subject: string; grade: string; total: number; correct: number; topic_scores: TopicScore[]; submitted_at: string; duration_seconds: number | null };
+export type PracticeRow = { source?: "practice" | "exam"; user_id: string; attempt_id: string; kind: "quiz" | "mini"; subject: string; grade: string; total: number; correct: number; topic_scores: TopicScore[]; submitted_at: string; duration_seconds: number | null };
 export function practiceRows(userId: string, attempts: QuizResult[], minis: MiniQuizAttempt[]): PracticeRow[] {
   const seconds = (value?: number) => typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.min(14400, Math.round(value))) : null;
   const rows: PracticeRow[] = attempts.map(a => ({ user_id: userId, attempt_id: `quiz-${a.submittedAt}`, kind: "quiz", subject: a.subject, grade: a.grade, total: a.totalQuestions, correct: a.totalCorrect, topic_scores: a.topicScores, submitted_at: a.submittedAt, duration_seconds: seconds(a.durationSeconds) }));

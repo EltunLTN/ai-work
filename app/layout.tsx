@@ -3,6 +3,8 @@ import { Manrope, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "./experience.css";
 import "./workspace.css";
+import "./kairo-modules.css";
+import "katex/dist/katex.min.css";
 import { ActivityProvider } from "@/components/account/activity-provider";
 import { AITutor } from "@/components/ai/ai-tutor";
 import { CloudProvider } from "@/components/account/cloud-provider";
@@ -33,6 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="az"
+      data-scroll-behavior="smooth"
       data-theme="light"
       suppressHydrationWarning
       className={`${display.variable} ${body.variable} h-full antialiased`}

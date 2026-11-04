@@ -5,6 +5,6 @@ export async function GET(request: Request) {
   const url=process.env.NEXT_PUBLIC_SUPABASE_URL,key=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,secret=process.env.ACTIVITY_SERVER_SECRET;
   if(!url||!key||!secret) return NextResponse.json({error:"Not configured"},{status:503});
   const db=createClient(url,key,{global:{headers:{"x-kairo-audit":secret}},auth:{persistSession:false}});
-  const {data,error}=await db.rpc("prune_activity");
-  return NextResponse.json(error?{error:"Retention failed"}:{removed:data},{status:error?503:200});
+  const [{data,error},maintenance]=await Promise.all([db.rpc("prune_activity"),db.rpc("kairo_maintenance")]);
+  return NextResponse.json((error||maintenance.error)?{error:"Scheduled maintenance failed"}:{removed:data,maintenance:maintenance.data},{status:(error||maintenance.error)?503:200});
 }

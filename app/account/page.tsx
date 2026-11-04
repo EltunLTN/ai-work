@@ -49,6 +49,7 @@ export default function AccountPage() {
     return () => { active = false; };
   }, []);
 
+  useEffect(()=>{if(!user?.email_confirmed_at||recovery)return;const next=new URLSearchParams(window.location.search).get("next");if(next&&/^\/kairo(?:\/[a-zA-Z0-9/_-]+)?$/.test(next))window.location.replace(next);},[user,recovery]);
   async function run(action: () => Promise<void>) {
     setBusy(true); setMessage("");
     try { await action(); } catch (error) { setMessage(error instanceof Error ? error.message : "Əməliyyat alınmadı."); }

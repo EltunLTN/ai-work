@@ -14,7 +14,7 @@ export function Navbar() {
   const path = usePathname();
   const [open, setOpen] = useState(false);
   const { replay, openCommands } = useExperience();
-  const links = [{ href: "/onboarding", label: t.nav.selection }, { href: "/quiz", label: t.nav.quiz }, { href: "/plan", label: t.nav.plan }, { href: "/dashboard", label: "İnkişaf" }, { href: "/playground", label: "Playground" }];
+  const links = [{ href: "/onboarding", label: t.nav.selection }, { href: "/quiz", label: t.nav.quiz }, { href: "/plan", label: t.nav.plan }, { href: "/dashboard", label: "İnkişaf" }, { href: "/kairo", label: "Alətlər" }];
   useEffect(() => { queueMicrotask(() => setOpen(false)); }, [path]);
   return <header className="site-nav" onKeyDown={e => { if (e.key === "Escape") setOpen(false); }}><div className="nav-inner">
     <Link className="wordmark" href="/" aria-label="Kairo — ana səhifə"><RabbitMark className="nav-rabbit" /><span>kairo<span className="wordmark-dot">.</span></span><small>FOLLOW YOUR CURIOSITY</small></Link>

@@ -234,3 +234,8 @@ Apply `database/admin-control-center.sql` after the v2 migrations, then `databas
 
 ## Learning workspace release
 See [dashboard, mixed exams and activity journal](docs/learning-workspace-release.md) for behavior, database rollout and verification. Apply `database/learning-workspace.sql` and `database/activity-journal.sql` after the existing admin migrations.
+
+
+## Kairo platform expansion
+
+See [platform expansion release notes](docs/platform-expansion-release.md) for the six modules, routes, migrations, configuration, verification and official-data gates.

@@ -270,7 +270,7 @@ function PlanContent() {
 
                     {activeDay.checkpoint ? <p className="kairo-card rounded-2xl p-4 text-sm">Yoxlama günü: aşağıdakı 8 suallıq testi tamamla. Nəticə ən azı 70% olduqda növbəti mərhələyə keç; əks halda səhvləri təkrar et.</p> : null}
                     {activeDay.checkpoint && checkpointAttempt ? <p className="kairo-card rounded-2xl p-4 text-sm">Son yoxlama: {checkpointAttempt.correct}/{checkpointAttempt.total} düzgün cavab. {checkpointAttempt.correct / checkpointAttempt.total >= 0.7 ? "Yoxlama keçildi — növbəti mərhələyə hazırsan." : "Qaydaları və səhvlərini təkrar et, sonra yenidən yoxla."}</p> : null}
-                    <LearningResourceCards resources={activeResources} />
+                    <div className="module-actions"><Link className="module-button" href={`/kairo/focus?subject=${encodeURIComponent(getQuizResult()?.subject??"Riyaziyyat")}&task=${encodeURIComponent(activeDay?.topic??"Plan üzrə məşq")}&return_path=/plan`}>Bu mövzuya fokuslan ↗</Link></div><LearningResourceCards resources={activeResources} />
                   </>
                 ) : null}
               </section>

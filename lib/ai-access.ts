@@ -16,6 +16,9 @@ export async function requireAIAccess(request: Request) {
     const db = createClient(url, key, { global: { headers: { Authorization: authorization, ...(process.env.ACTIVITY_SERVER_SECRET ? { "x-kairo-audit": process.env.ACTIVITY_SERVER_SECRET } : {}) } }, auth: { persistSession: false, autoRefreshToken: false } });
     const { data: { user }, error } = await db.auth.getUser(authorization.slice(7));
     if (error || !user || !user.email_confirmed_at) return reply("Təsdiqlənmiş hesabla daxil olun.", 401);
+    const { data: toolsAllowed, error: toolsError } = await db.rpc("kairo_ai_allowed");
+    if (toolsError) return reply("İmtahan statusu yoxlanıla bilmədi.", 503);
+    if (!toolsAllowed) return reply("Aktiv imtahan və ya duel zamanı AI yardımı bağlıdır.", 403);
     const { data: allowed, error: quotaError } = await db.rpc("consume_ai_quota");
     if (quotaError) return reply("İstifadə limiti yoxlanıla bilmədi. Yenidən cəhd edin.", 503);
     if (!allowed) return reply("Hesabın gündəlik AI sorğusu limitinə çatılıb və ya hesab üçün AI istifadəsi dayandırılıb.", 429);

@@ -6,7 +6,7 @@ const vm = require("node:vm");
 const ts = require("typescript");
 const path = require("node:path");
 
-function guard({ user = { id: "student", email_confirmed_at: "2026-10-30" }, allowed = true, quotaError = null, throws = false } = {}) {
+function guard({ user = { id: "student", email_confirmed_at: "2026-10-30" }, allowed = true, quotaError = null, toolsAllowed = true, throws = false } = {}) {
   const calls = [];
   const loadedModule = { exports: {} };
   const source = ts.transpileModule(fs.readFileSync(path.resolve(__dirname, "../lib/ai-access.ts"), "utf8"), {
@@ -17,7 +17,7 @@ function guard({ user = { id: "student", email_confirmed_at: "2026-10-30" }, all
     if (name === "next/server") return { NextResponse: Response };
     if (name === "@supabase/supabase-js") return { createClient: () => ({
       auth: { getUser: async token => { calls.push(token); if (throws) throw new Error("network"); return { data: { user }, error: null }; } },
-      rpc: async name => { calls.push(name); return { data: allowed, error: quotaError }; },
+      rpc: async name => { calls.push(name); return { data: name === "kairo_ai_allowed" ? toolsAllowed : allowed, error: quotaError }; },
     }) };
     throw new Error(name);
   };
@@ -45,7 +45,7 @@ test("unverified users cannot consume quota or invoke AI", async () => {
 test("verified user is checked by Auth server and consumes persistent quota", async () => {
   const g = guard();
   assert.equal(await g.check(request({ authorization: "Bearer verified-token" })), null);
-  assert.deepEqual(g.calls, ["verified-token", "consume_ai_quota"]);
+  assert.deepEqual(g.calls, ["verified-token", "kairo_ai_allowed", "consume_ai_quota"]);
 });
 test("quota and database failures fail closed", async () => {
   for (const [options, status] of [[{ allowed: false }, 429], [{ quotaError: { message: "offline" } }, 503], [{ throws: true }, 503]]) {
@@ -63,3 +63,5 @@ test("all AI routes enforce access before parsing input", () => {
     assert.ok(code.indexOf("requireAIAccess(request)") < code.indexOf("await request."), folder);
   }
 });
+
+test("locked exam rejects AI before consuming quota", async()=>{const g=guard({toolsAllowed:false});assert.equal((await g.check(request({authorization:"Bearer test"}))).status,403);assert.deepEqual(g.calls,["test","kairo_ai_allowed"]);});

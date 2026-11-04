@@ -15,7 +15,7 @@ export function MotionSystem({ children }: { children: ReactNode }) {
     const artwork = new IntersectionObserver(entries => entries.forEach(e => e.target.classList.toggle("decoration-sleep", !e.isIntersecting)));
     const collect = () => {
       root.current?.querySelectorAll<HTMLElement>("[data-reveal], .workspace main > section, .workspace main > .grid, .workspace main > .kairo-card").forEach(element => {
-        if (seen.has(element)) return;
+        if (seen.has(element) || element.closest(".kairo-module-main") || element.matches(".kairo-hub-widget")) return;
         seen.add(element); element.classList.add("reveal-ready"); observer.observe(element);
       });
       root.current?.querySelectorAll(".rabbit-artwork,.closing-portal,.time-rabbit").forEach(element => artwork.observe(element));

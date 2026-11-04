@@ -4,7 +4,9 @@ import type { RabbitState } from "./white-rabbit";
 
 /** Original, procedural 3D character. No downloaded models, textures or film assets. */
 export function mountRabbitScene(canvas: HTMLCanvasElement, getState: () => RabbitState, isReduced: () => boolean) {
-  const renderer = new T.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "low-power" });
+  const webglContext = canvas.getContext("webgl2", { alpha:true, antialias:true, powerPreference:"low-power" });
+  if (!webglContext || !webglContext.getShaderPrecisionFormat(webglContext.VERTEX_SHADER, webglContext.HIGH_FLOAT) || !webglContext.getShaderPrecisionFormat(webglContext.FRAGMENT_SHADER, webglContext.HIGH_FLOAT)) throw new Error("WebGL2 unavailable");
+  const renderer = new T.WebGLRenderer({ canvas, context: webglContext, alpha: true, antialias: true, powerPreference: "low-power" });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = T.ACESFilmicToneMapping;

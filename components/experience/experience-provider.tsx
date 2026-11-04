@@ -13,7 +13,7 @@ import { MotionSystem } from "./motion-system";
 const RabbitCanvas = dynamic(() => import("./rabbit-canvas"), { ssr: false, loading: () => <WhiteRabbit /> });
 
 type Scene = "closed" | "choice" | "arrival" | "invitation" | "chase" | "portal" | "reveal";
-const destinations = [{ href: "/", label: "Ana səhifə", detail: "Kairo dünyası" }, { href: "/onboarding", label: "Fənn və mövzu seç", detail: "Öyrənməyə başla" }, { href: "/quiz", label: "Sınaq", detail: "Biliyini yoxla" }, { href: "/results", label: "Nəticələr", detail: "Cavablarını anla" }, { href: "/plan", label: "Təhsil planı", detail: "7 günlük yol xəritəsi" }, { href: "/dashboard", label: "İnkişaf", detail: "Şəxsi analitika" }, { href: "/playground", label: "Playground", detail: "Vaxt və diqqət təcrübəsi" }, { href: "/account", label: "Hesab", detail: "Profil və yaddaş" }, { href: "/admin", label: "Admin", detail: "İdarəetmə" }];
+const destinations = [{href:"/kairo/exam",label:"İmtahan simulyatoru",detail:"Vaxtlı imtahan"},{href:"/kairo/tutor",label:"AI müəllim",detail:"Addım-addım öyrən"},{href:"/kairo/university-goals",label:"Universitet hədəfim",detail:"İxtisas və hədəflər"},{href:"/kairo/focus",label:"Fokus",detail:"Diqqət və vaxt"},{href:"/kairo/duel",label:"Duel",detail:"Canlı qarşılaşma"},{href:"/kairo/arena",label:"Arena",detail:"Həftəlik yarışlar"},{ href: "/", label: "Ana səhifə", detail: "Kairo dünyası" }, { href: "/onboarding", label: "Fənn və mövzu seç", detail: "Öyrənməyə başla" }, { href: "/quiz", label: "Sınaq", detail: "Biliyini yoxla" }, { href: "/results", label: "Nəticələr", detail: "Cavablarını anla" }, { href: "/plan", label: "Təhsil planı", detail: "7 günlük yol xəritəsi" }, { href: "/dashboard", label: "İnkişaf", detail: "Şəxsi analitika" }, { href: "/playground", label: "Playground", detail: "Vaxt və diqqət təcrübəsi" }, { href: "/account", label: "Hesab", detail: "Profil və yaddaş" }, { href: "/admin", label: "Admin", detail: "İdarəetmə" }];
 const ExperienceContext = createContext({ replay: () => {}, openCommands: () => {}, showRabbit: () => {} });
 export const useExperience = () => useContext(ExperienceContext);
 
@@ -100,7 +100,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
     };
     const focus = (e: FocusEvent) => setFocusedInput(e.target instanceof HTMLElement && e.target.matches("input, textarea, select, [contenteditable=true]"));
     const key = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); if (intro.current) return; if (dialog.current?.open) dialog.current.close(); else dialog.current?.showModal(); }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); if (intro.current || document.documentElement.classList.contains("kairo-locked")) return; if (dialog.current?.open) dialog.current.close(); else dialog.current?.showModal(); }
     };
     active(); window.addEventListener("scroll", scroll, { passive: true }); window.addEventListener("pointerdown", active); window.addEventListener("keydown", key); document.addEventListener("focusin", focus);
     return () => { clearTimeout(idle); clearTimeout(hop); window.removeEventListener("scroll", scroll); window.removeEventListener("pointerdown", active); window.removeEventListener("keydown", key); document.removeEventListener("focusin", focus); };
@@ -138,7 +138,7 @@ export function ExperienceProvider({ children }: { children: ReactNode }) {
   function curiousWatch() { chime(); setWatch(true); setRabbitState("curiosity"); if (stageTimer.current) clearTimeout(stageTimer.current); stageTimer.current = setTimeout(() => { setWatch(false); setRabbitState("idle"); }, 2200); }
   useEffect(() => () => { if (stageTimer.current) clearTimeout(stageTimer.current); }, []);
 
-  return <ExperienceContext.Provider value={{ replay, openCommands: () => { setQuery(""); dialog.current?.showModal(); }, showRabbit }}>
+  return <ExperienceContext.Provider value={{ replay, openCommands: () => { if(document.documentElement.classList.contains("kairo-locked"))return; setQuery(""); dialog.current?.showModal(); }, showRabbit }}>
     <div inert={overlay || undefined} aria-hidden={overlay || undefined}><a className="skip-link" href="#main-content">Əsas məzmuna keç</a><MotionSystem>{children}</MotionSystem></div>
     {!overlay && !hidden && <RabbitTraveller state={rabbitState} reduced={reduced} home={path === "/"} quiet={quiet} />}
     {!overlay && <div ref={menuRoot} className={`rabbit-companion ${quiet ? "companion-quiet" : ""} ${hidden ? "companion-hidden" : ""}`} onKeyDown={e => { if (e.key === "Escape") { setMenu(false); menuRoot.current?.querySelector<HTMLButtonElement>(".rabbit-launcher")?.focus(); } }}>
