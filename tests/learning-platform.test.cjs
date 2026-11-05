@@ -39,7 +39,8 @@ test("stronger model preserves validated JSON contracts without unsupported temp
   const api = generator([[q]]);
   await api.generateDiagnosticQuestions({ grade: "11", subject: "Riyaziyyat", topics: [q.topic], count: 1 });
   assert.equal(api.rawRequests[0].model, "gpt-5.4-mini-2026-03-17");
-  assert.equal(api.rawRequests[0].reasoning.effort, "medium");
+  assert.equal(api.rawRequests[0].reasoning.effort, "low");
+  assert.ok(api.rawRequests[0].max_output_tokens <= 2500);
   assert.equal(api.rawRequests[0].temperature, undefined);
   assert.equal(api.rawRequests[0].store, false);
   assert.equal(api.rawRequests[0].text.format.type, "json_object");

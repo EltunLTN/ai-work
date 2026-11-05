@@ -540,8 +540,8 @@ async function generateTopicQuestions(input: {
     ];
     const response = await openai.responses.create({
       model: MODEL,
-      reasoning: { effort: "medium" },
-      max_output_tokens: 12000,
+      reasoning: { effort: "low" },
+      max_output_tokens: Math.min(12000, 1800 + topicCounts.reduce((sum, item) => sum + item.count, 0) * 420),
       store: false,
       text: { format: { type: "json_object" } },
       input: [

@@ -33,3 +33,11 @@ All models declare their assumptions in the interface and use no API tokens. The
 
 References consulted: OpenAI model and latency documentation, Supabase function guidance, OpenStax pendulum model, NHGRI dominant allele description, and Cordero et al., DOI 10.1039/B801115J. UI links identify the relevant educational sources. Do not substitute an unrelated resource if a topic has no reviewed link.
 
+## Live verification
+
+Production account UI returned a complete teacher reply and an explicit full solution to 75 × 4 / 100 = 3, with rendered math. A one-question grade-2 practice opened with the selected curriculum. QA left it through the new personal-practice exit; database status is abandoned with zero exam-result records, so no fabricated correct/wrong knowledge evidence was added. Results UI displayed real historical subject/grade rows and the ungraded stopped practice.
+
+All 20 laboratory views rendered in the browser. Mobile 375px checks found and fixed filter-grid overflow and contained the logic truth table in a scroll wrapper. Quadratic coefficient keyboard control updated the graph; AA × aa showed 100% Aa.
+
+The global complimentary policy remains enabled at 2,000,000 reserved tokens per UTC day. The app cannot observe complimentary organization enrollment or tokens consumed by unrelated applications.
+
