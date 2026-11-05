@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { KairoAccountBoundary } from "@/components/kairo/shared";
 import { usePathname } from "next/navigation";
 import { MessageCircle, X } from "lucide-react";
+import { SocratesPortrait } from "./socrates-portrait";
 const Teacher = dynamic(
   () =>
     import("@/components/kairo/teacher-workspace").then(
@@ -29,13 +30,13 @@ export function AITutor() {
     <div className="ai-tutor-launcher">
       <button
         ref={launcher}
-        className="teacher-launcher"
+        className="teacher-launcher socrates-launcher"
         aria-label={open ? "AI müəllimi bağla" : "AI müəllimi aç"}
         aria-expanded={open}
         aria-controls="kairo-teacher-popup"
         onClick={() => (open ? close() : setOpen(true))}
       >
-        <MessageCircle size={18} /> <span>AI müəllim</span>
+        <SocratesPortrait/><span className="socrates-chat-badge"><MessageCircle size={15}/></span><span className="socrates-launcher-name">Sokrat</span>
       </button>
       {open && (
         <section
@@ -50,7 +51,7 @@ export function AITutor() {
           }}
         >
           <header className="teacher-popup-header">
-            <span>Kairo / AI müəllim</span>
+            <span>Sokrat <small> / Kairo AI müəllim</small></span>
             <div>
               <Link href="/kairo/tutor" onClick={close}>
                 Tam ekran ↗
@@ -70,4 +71,3 @@ export function AITutor() {
     </div>
   );
 }
-

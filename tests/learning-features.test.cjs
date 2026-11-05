@@ -48,6 +48,25 @@ test("plans with wrong-grade topics, duplicate days or no checkpoint are rejecte
   assert.equal(validateStudyPlan(noCheckpoint, planInput.curriculumTopics, "11"), null);
 });
 
+test("model plan prose is safe for Postgres jsonb without losing Azerbaijani, math, or paired emoji", async () => {
+  const dirty = plan();
+  dirty.title += "\u0000";
+  dirty.summary = "\uD800 Məkan: (−2; 4), x² ≥ 0 🧠\nİzah\tburada";
+  dirty.tips = ["Təkrar\u0000 et\uDC00"];
+  dirty.days[0].tasks[0] = "4 cüt nöqtə üçün \u0000x² + y² hesabla";
+  dirty.days[0].focus += "\u0000";
+  const api = generator([dirty]);
+  const result = await api.generateStudyPlan(planInput);
+  assert.equal(api.requests.length, 1, "a storage encoding problem must not spend a second AI call");
+  assert.equal(result.days[0].tasks[0], "4 cüt nöqtə üçün x² + y² hesabla");
+  assert.equal(result.summary, "� Məkan: (−2; 4), x² ≥ 0 🧠\nİzah\tburada");
+  assert.equal(result.tips[0], "Təkrar et�");
+  assert.ok(!JSON.stringify(result).includes("\\u0000"));
+  assert.ok(!JSON.stringify(result).includes("\\ud800"));
+  const empty = plan(); empty.days[0].tasks[0] = "\u0000";
+  assert.equal(api.load("lib/study-plan.ts").validateStudyPlan(empty, planInput.curriculumTopics, "11"), null);
+});
+
 test("AI plan retries malformed responses and respects daily time budget", async () => {
   const oversized = plan(); oversized.days[0].estimatedMinutes = 90;
   const api = generator([oversized, plan()]);
@@ -161,4 +180,3 @@ test("stored attempts, feedback, plan progress and generated quiz handoff use re
     assert.equal(store.getStudyPlan(), null);
   } finally { global.window = previousWindow; }
 });
-

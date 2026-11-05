@@ -3,10 +3,16 @@ import type { Grade, StudyPlan, Subject } from "@/lib/types";
 
 export const STUDY_PLAN_VERSION = 3;
 
+// JSON permits NUL and lone UTF-16 surrogates; PostgreSQL jsonb does not.
+// Clean model prose before validation/persistence, preserving math and valid pairs.
+function planText(value: string): string {
+  return value.replace(/\u0000/g, "").replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, "\uFFFD").trim();
+}
+
 export function validateStudyPlan(value: unknown, topics: string[], grade: Grade, subject: Subject = "Riyaziyyat"): StudyPlan | null {
   if (!value || typeof value !== "object") return null;
   const plan = value as StudyPlan;
-  const text = (item: unknown): item is string => typeof item === "string" && item.trim().length > 0;
+  const text = (item: unknown): item is string => typeof item === "string" && planText(item).length > 0;
   if (!text(plan.title) || !text(plan.summary) || !Array.isArray(plan.days) || plan.days.length !== 7 ||
       !Array.isArray(plan.tips) || plan.tips.length < 1 || !plan.tips.every(text)) return null;
 
@@ -18,16 +24,16 @@ export function validateStudyPlan(value: unknown, topics: string[], grade: Grade
       typeof day.checkpoint === "boolean") || !days.some((day) => day.checkpoint)) return null;
 
   return {
-    title: plan.title.trim(),
-    summary: plan.summary.trim(),
-    tips: plan.tips.map((tip) => tip.trim()),
+    title: planText(plan.title),
+    summary: planText(plan.summary),
+    tips: plan.tips.map(planText),
     version: STUDY_PLAN_VERSION,
     generatedAt: new Date().toISOString(),
     days: days.map((day) => ({
       day: day.day,
       topic: day.topic,
-      focus: day.focus.trim(),
-      tasks: day.tasks.map((task) => task.trim()),
+      focus: planText(day.focus),
+      tasks: day.tasks.map(planText),
       estimatedMinutes: day.estimatedMinutes,
       checkpoint: day.checkpoint,
       resources: getLearningResources(day.topic!, grade, subject),

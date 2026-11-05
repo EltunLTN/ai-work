@@ -6,6 +6,7 @@ import { kairo, useKairo, dateTime } from "@/lib/kairo/client";
 import type { TutorSession, TutorState } from "@/lib/kairo/types";
 import { ModuleHeading, ModuleStatus, Modal, Notice } from "./shared";
 import { MathContent } from "./math-content";
+import { SocratesPortrait } from "@/components/ai/socrates-portrait";
 const subjects = ["Riyaziyyat", "Fizika", "Kimya", "Biologiya", "Coğrafiya"];
 export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
   const list = useKairo<{ sessions: TutorSession[] }>("tutor.list"),
@@ -168,8 +169,8 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
       {!compact && (
         <ModuleHeading
           eyebrow="02 / AI müəllim"
-          title="Cavabı tap. Məntiqi anla."
-          description="Bir sual, bir addım, öz həllin. Köməkli öyrənmə ayrıca qeyd olunur və müstəqil imtahan nəticəsi sayılmır."
+          title="Sual ver. Birlikdə düşünək."
+          description="Sokrat — Kairo-nun AI müəllimi. Mövzunu anla, ipucları ilə irəlilə və öz həllini tap. Köməkli dərslər imtahan nəticəsi sayılmır."
         />
       )}
       <ModuleStatus {...list} retry={list.refresh} />
@@ -186,6 +187,10 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
       {list.data && (
         <div className="teacher-layout">
           <aside className="teacher-sidebar">
+            <div className="socrates-guide">
+              <SocratesPortrait thinking={busy}/>
+              <div><p className="eyebrow">SOKRAT / AI MÜƏLLİM</p><h2>Hazır cavabdan əvvəl,<br/>yaxşı bir sual.</h2><p>{busy?"Növbəti addımı hazırlayıram…":"Nəyi anlamaq istəyirsən? Addım-addım düşünək."}</p></div>
+            </div>
             <button
               className="module-button primary"
               disabled={busy}
@@ -316,7 +321,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
                       className={`teacher-message is-${m.role}`}
                     >
                       <span className="message-role">
-                        {m.role === "assistant" ? "Kairo müəllim" : "Sən"}
+                        {m.role === "assistant" ? <><span className="socrates-message-avatar"><SocratesPortrait/></span>Sokrat · AI müəllim</> : "Sən"}
                         {m.status !== "complete"
                           ? ` · ${m.status === "pending" ? "Hazırlanır" : m.status === "stopped" ? "Dayandırılıb" : "Təkrar cəhd tələb olunur"}`
                           : ""}
@@ -515,4 +520,3 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
     </div>
   );
 }
-

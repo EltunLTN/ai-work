@@ -1,0 +1,59 @@
+/* Socrates is a visual identity for the existing AI tutor, not a new provider. */
+.socrates-portrait{position:relative;display:block;isolation:isolate;aspect-ratio:1;width:100%;}
+.socrates-portrait:before{content:"";position:absolute;z-index:-1;inset:18% 7% 0;border-radius:50%;background:radial-gradient(ellipse,#f17a8324,transparent 72%);}
+.socrates-portrait img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 14px #0002);transition:transform .4s ease;}
+.socrates-guide:hover .socrates-portrait img{transform:rotate(-2deg) translateY(-3px);}
+.socrates-orbit{position:absolute;inset:8%;border:1px solid transparent;border-radius:50%;pointer-events:none;}
+.socrates-portrait.is-thinking .socrates-orbit{border-top-color:var(--red);border-right-color:var(--line);animation:socrates-orbit 3s linear infinite;}
+.socrates-guide{margin-bottom:26px;text-align:center;border:1px solid var(--line);border-radius:20px;background:linear-gradient(160deg,var(--surface),var(--paper));padding:12px 14px 20px;}
+.socrates-guide>.socrates-portrait{max-width:190px;margin:0 auto 12px;}
+.teacher-sidebar .socrates-guide h2{font:600 17px/1.5 var(--font-display);margin:10px 0;letter-spacing:-.04em;}
+.socrates-guide p{font-size:11px;line-height:1.7;margin:6px 0;color:var(--muted-text);}
+.socrates-guide p.eyebrow{font-size:9px;color:var(--red);letter-spacing:.08em;}
+.teacher-main{border:1px solid var(--line);border-radius:20px;background:var(--surface);padding:24px;}
+.teacher-main>.module-panel{border:0;background:transparent;padding:8px;}
+.teacher-main .teacher-message{background:var(--paper);border-radius:16px;}
+.teacher-main .teacher-message.is-user{background:color-mix(in srgb,var(--red) 7%,var(--paper));border-color:color-mix(in srgb,var(--red) 25%,var(--line));}
+.teacher-message.is-assistant .message-role{display:flex;align-items:center;gap:8px;min-height:30px;}
+.socrates-message-avatar{display:inline-block;width:32px;height:32px;flex:0 0 32px;}
+.teacher-composer textarea{background:var(--paper);border-radius:14px;border:1px solid var(--line);}
+.ai-tutor-launcher .teacher-launcher.socrates-launcher{position:relative;width:72px;height:82px;min-height:82px;border:0;background:transparent;padding:0;border-radius:20px;box-shadow:none;display:block;}
+.socrates-launcher>.socrates-portrait{width:72px;height:72px;display:block;}
+.socrates-launcher:hover .socrates-portrait img{transform:rotate(-4deg) translateY(-3px);}
+.ai-tutor-launcher .socrates-launcher>span.socrates-chat-badge{position:absolute;right:-1px;top:2px;display:grid;place-items:center;width:25px;height:25px;border:1px solid var(--line);border-radius:50%;color:var(--ink);background:var(--paper);box-shadow:0 2px 8px #0002;}
+.ai-tutor-launcher .socrates-launcher>span.socrates-launcher-name{display:block;position:absolute;bottom:0;left:8px;right:8px;font-size:10px;line-height:20px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;}
+.teacher-launcher.socrates-launcher:before{content:"Sokrat · AI müəllim";font-size:11px;}
+.teacher-popup{bottom:120px;height:min(800px,calc(100dvh - 145px));border-radius:22px;}
+.teacher-popup-header{padding:16px 22px;}
+.teacher-popup-header small{color:var(--muted-text);font-weight:400;}
+.teacher-popup .socrates-guide>.socrates-portrait{max-width:135px;}
+.teacher-popup .socrates-guide h2{font-size:14px;}
+.teacher-popup .teacher-main{padding:18px;}
+@keyframes socrates-orbit{to{transform:rotate(360deg);}}
+@media(max-width:900px){
+ .teacher-layout,.teacher-popup .teacher-layout{grid-template-columns:minmax(0,1fr);}
+ .teacher-sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible;border:0;padding:0;gap:8px;}
+ .socrates-guide{grid-column:1/-1;display:flex;align-items:center;gap:16px;text-align:left;padding:12px 18px;margin:0 0 8px;}
+ .socrates-guide>.socrates-portrait,.teacher-popup .socrates-guide>.socrates-portrait{max-width:100px;width:100px;flex:0 0 100px;margin:0;}
+ .teacher-sidebar>.module-button,.teacher-sidebar>h2,.teacher-sidebar>p{grid-column:1/-1;}
+ .teacher-sidebar .teacher-session{width:100%;min-width:0;}
+ .teacher-sidebar>.teacher-session:nth-of-type(n+6){display:none;}
+ .teacher-main{padding:18px;}
+}
+@media(max-width:600px){
+ .ai-tutor-launcher{right:12px;bottom:16px;}
+ .ai-tutor-launcher .teacher-launcher.socrates-launcher{width:62px;height:72px;min-height:72px;}
+ .socrates-launcher>.socrates-portrait{width:62px;height:62px;}
+ .teacher-popup{right:8px;bottom:100px;width:calc(100vw - 16px);height:calc(100dvh - 118px);border-radius:18px;}
+ .teacher-popup-header{padding:12px;font-size:12px;gap:8px;}
+ .teacher-popup-header>div{gap:12px;}
+ .teacher-popup-body{padding:12px;}
+ .teacher-main,.teacher-popup .teacher-main{padding:12px;}
+ .teacher-main .module-form-row{grid-template-columns:1fr;}
+ .teacher-toolbar{flex-wrap:wrap;gap:12px;}
+ .teacher-progress{flex-wrap:wrap;}
+ .socrates-guide>.socrates-portrait,.teacher-popup .socrates-guide>.socrates-portrait{width:76px;flex-basis:76px;}
+ .teacher-sidebar .socrates-guide h2{font-size:15px;}
+ .socrates-guide p{font-size:10px;}
+}
+@media(prefers-reduced-motion:reduce){.socrates-portrait img,.socrates-orbit{animation:none!important;transition:none!important;transform:none!important;}}
