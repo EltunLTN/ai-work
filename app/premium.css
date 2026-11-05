@@ -15,4 +15,5 @@
 @media(prefers-reduced-motion:reduce){.premium-rabbit-scroll,.premium-rabbit-parallax{transform:none!important}.premium-feature-card:is(:hover,:focus-visible){transform:none}.review-wrong{opacity:0}.review-correct{opacity:1}.visual-draw{stroke-dashoffset:0!important}.exam-cell-check{opacity:0!important}}
 .motion-reduced .premium-rabbit-scroll,.motion-reduced .premium-rabbit-parallax{transform:none!important}.motion-reduced .premium-feature-card:is(:hover,:focus-visible){transform:none}.motion-reduced .review-wrong{opacity:0}.motion-reduced .review-correct{opacity:1}
 [data-theme=dark]{--ink:#f5f4f0;--surface:#1b1f1b;--muted-text:#aab5a9;--red:#f17a83;--line:#353a35}.focus-halo,.arena-trophy{transform-origin:center;transform-box:fill-box}
+@media(max-width:600px){.premium-rabbit-stage .hero-ambient{inset:8% 0 0}.kairo-hub>.module-heading h1{font-size:clamp(36px,9vw,48px)}}
 
