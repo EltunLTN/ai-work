@@ -44,7 +44,7 @@
  .ai-tutor-launcher{right:12px;bottom:16px;}
  .ai-tutor-launcher .teacher-launcher.socrates-launcher{width:62px;height:72px;min-height:72px;}
  .socrates-launcher>.socrates-portrait{width:62px;height:62px;}
- .teacher-popup{right:8px;bottom:100px;width:calc(100vw - 16px);height:calc(100dvh - 118px);border-radius:18px;}
+ .teacher-popup{left:8px;right:8px;bottom:100px;width:auto;height:calc(100dvh - 118px);border-radius:18px;}
  .teacher-popup-header{padding:12px;font-size:12px;gap:8px;}
  .teacher-popup-header>div{gap:12px;}
  .teacher-popup-body{padding:12px;}
@@ -57,3 +57,4 @@
  .socrates-guide p{font-size:10px;}
 }
 @media(prefers-reduced-motion:reduce){.socrates-portrait img,.socrates-orbit{animation:none!important;transition:none!important;transform:none!important;}}
+
