@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useReplayRecorder } from "./replay-recorder";
-import { ExamStudyPlan } from "./exam-study-plan";
+import { ExamPlanAction } from "./exam-plan-action";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Flag, ChevronLeft, ChevronRight, Check, CloudOff } from "lucide-react";
@@ -444,7 +444,7 @@ export function ExamWorkspace({ id }: { id: string }) {
           ))}
         </section>
         {s.status === "finalized" && s.mode === "exam" && s.template.practice_mode !== "mixed" && s.result && (
-          <ExamStudyPlan
+          <ExamPlanAction
             id={s.id}
             grade={s.template.grade}
             subjects={s.result.subjects.map((t) => t.subject)}
@@ -619,4 +619,3 @@ export function ExamWorkspace({ id }: { id: string }) {
     </>
   );
 }
-
