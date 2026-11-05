@@ -14,6 +14,12 @@ do $$declare a uuid:=gen_random_uuid();b uuid:=gen_random_uuid();sid uuid:=gen_r
  result:=public.learning_api('plans.list','{}');if jsonb_array_length(result->'plans')<>2 then raise exception 'Plan library omitted selections';end if;
  perform set_config('request.jwt.claim.sub',b::text,true);
  if jsonb_array_length(public.learning_api('plans.list','{}')->'plans')<>0 then raise exception 'Plan library ownership leak';end if;
+perform set_config('request.jwt.claim.sub',a::text,true);
+ update private.kairo_exam_sessions set status='active',deadline=now()+interval '10 minutes' where id=sid;
+ perform public.learning_api('exam.abandon',jsonb_build_object('id',sid));
+ if not exists(select 1 from private.kairo_exam_sessions where id=sid and status='abandoned') or exists(select 1 from private.kairo_exam_results where session_id=sid) then raise exception 'Practice exit created a score';end if;
+ perform set_config('request.jwt.claim.sub',b::text,true);
+ begin perform public.learning_api('exam.abandon',jsonb_build_object('id',sid));raise exception 'Cross-user exit allowed';exception when insufficient_privilege then null;end;
 end $$;
 rollback;
 

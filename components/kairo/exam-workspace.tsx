@@ -160,6 +160,7 @@ export function ExamLobby() {
   );
 }
 export function ExamWorkspace({ id }: { id: string }) {
+  const router = useRouter();
   const q = useKairo<ExamState>("exam.get", { id }),
     now = useNow();
   const [answers, setAnswers] = useState<Record<number, SavedAnswer>>({}),
@@ -167,7 +168,8 @@ export function ExamWorkspace({ id }: { id: string }) {
     [saveStatus, setSaveStatus] = useState("Yadda saxlanılıb"),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
-    [confirm, setConfirm] = useState(false);
+    [confirm, setConfirm] = useState(false),
+    [exitConfirm, setExitConfirm] = useState(false);
   const pending = useRef<Record<number, SavedAnswer>>({}),
     initialized = useRef(""),
     revision = useRef(0),
@@ -307,6 +309,21 @@ export function ExamWorkspace({ id }: { id: string }) {
     const timer = setTimeout(() => void submit(), 1000);
     return () => clearTimeout(timer);
   }, [remaining, q.data?.status, submit]);
+  async function abandon() {
+    if (saving.current || busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      await flush();
+      if (Object.keys(pending.current).length) throw new Error("Cavablar saxlanılmayıb. Bağlantını yoxla və yenidən cəhd et.");
+      await flushReplay();
+      await kairo("learning.exam.abandon", { id });
+      pending.current = {};
+      try { sessionStorage.removeItem(storageKey); } catch {}
+      router.push("/results");
+    } catch (e) { setError((e as Error).message); setExitConfirm(false); }
+    finally { setBusy(false); }
+  }
   function edit(value: Answer, marked?: boolean) {
     const a: SavedAnswer = {
       ordinal: index,
@@ -333,6 +350,7 @@ export function ExamWorkspace({ id }: { id: string }) {
         answers[x.ordinal]?.value === null ||
         answers[x.ordinal]?.value === "",
     ).length;
+  if (s.status === "abandoned") return <><ModuleHeading eyebrow="Sınaq / tarixçə" title={s.template.name} description="Bu sınaq dayandırılıb. Bal və bilik səviyyəsi hesablanmayıb."/><Link className="module-button" href="/onboarding">Yeni sınaq qur ↗</Link></>;
   if (!active)
     return (
       <>
@@ -486,6 +504,7 @@ export function ExamWorkspace({ id }: { id: string }) {
         >
           Təhvil ver
         </button>
+        {s.mode === "exam" && <button className="module-button" disabled={busy} onClick={() => setExitConfirm(true)}>Sınaqdan çıx</button>}
       </header>
       <h1 className="exam-active-title">{s.template.name}</h1>
       {remaining <= 300 && (
@@ -569,6 +588,7 @@ export function ExamWorkspace({ id }: { id: string }) {
           </small>
         </aside>
       </div>
+      {exitConfirm && <Modal label="Sınaqdan çıx?" onClose={() => setExitConfirm(false)}><section className="module-modal"><h2>Sınaqdan çıx?</h2><p>Sınaq dayandırılacaq. Bal hesablanmayacaq və bu cəhd düzgün/səhv statistikana əlavə olunmayacaq.</p><div className="module-actions"><button autoFocus className="module-button" disabled={busy} onClick={() => setExitConfirm(false)}>Davam et</button><button className="module-button primary" disabled={busy} onClick={() => void abandon()}>{busy ? "Dayandırılır…" : "Sınağı dayandır"}</button></div></section></Modal>}
       {confirm && (
         <Modal label="İmtahanı təhvil ver?" onClose={() => setConfirm(false)}>
           <section className="module-modal">
