@@ -56,13 +56,13 @@ export function GoalsWorkspace() {
       {error && <Notice error>{error}</Notice>}
       {q.data && (
         <>
-          <aside className="module-panel catalog-provenance"><h2>2026/2027 kataloqu</h2><p>Göndərilən Excel-dən 54 universitet və 1 179 ixtisas variantı daxil edilib. 375 qəbul kodu üçün üçüncü tərəfin məlumatı var; ilkin siyahılar və bildirilmiş ballar rəsmi təsdiq kimi göstərilmir. Kod, dil, təhsil forması və balı DİM-in qəbul jurnalı ilə yoxla. Boş bal 0 demək deyil.</p><p>V qrupdakı “6/60” kimi göstəricilər mənbədəki formada saxlanır, 700 ballıq nəticəyə çevrilmir.</p><a href="https://www.abiturient.az/" target="_blank" rel="noreferrer">DİM-in Abituriyent jurnalı ↗</a></aside><section>
+          <section>
             <h2>
               Hədəflərim <span className="muted">{q.data.goals.length}/12</span>
             </h2>
             {!q.data.goals.length ? (
               <div className="module-empty">
-                Hədəf hələ seçilməyib. Aşağıdakı mənbəli kataloqdan ixtisas seç.
+                Hədəf hələ seçilməyib. Aşağıdakı kataloqdan ixtisas seç.
               </div>
             ) : (
               <div className="module-grid">
@@ -93,7 +93,7 @@ export function GoalsWorkspace() {
                         <span>şəxsi hədəf / 700</span>
                       </div>
                       <p>
-                        Mənbənin bildirdiyi keçid balı:{" "}
+                        Keçid balı:{" "}
                         {cutoff === null
                           ? "təsdiqlənmiş məlumat yoxdur"
                           : `${cutoff} (${g.program.year})${g.program.cutoff_status === "reported" ? " · rəsmi təsdiqlənməyib" : ""}`}
@@ -143,7 +143,7 @@ export function GoalsWorkspace() {
           <section className="module-panel">
             <h2>İxtisas kataloqu</h2>
             <Notice>
-              Hər sətrin mənbəsi və təsdiq statusu göstərilir. İlkin siyahı və
+              İlkin siyahı və
               üçüncü tərəfin balları DİM-in rəsmi təsdiqi deyil. Boş bal 0 demək deyil.
             </Notice>
             <div className="module-filters">
@@ -213,7 +213,6 @@ export function GoalsWorkspace() {
                     <th>Dil / format</th>
                     <th>Qrup / kod</th>
                     <th>Keçid balı</th>
-                    <th>Mənbə</th>
                     <th />
                   </tr>
                 </thead>
@@ -223,7 +222,7 @@ export function GoalsWorkspace() {
                       <td>
                         <strong>{p.university}</strong>
                         <br />
-                        {p.name}<br/><small className="catalog-status">{p.source_status==="preliminary"?"İlkin siyahı · rəsmi təsdiq tələb olunur":p.cutoff_status==="reported"?"Üçüncü tərəfin məlumatı · DİM ilə təsdiqlənməyib":"Mənbəli məlumat"}</small>
+                        {p.name}<br/><small className="catalog-status">{p.source_status==="preliminary"?"İlkin siyahı · rəsmi təsdiq tələb olunur":p.cutoff_status==="reported"?"Üçüncü tərəfin məlumatı · DİM ilə təsdiqlənməyib":"Məlumatın təsdiq statusunu yoxla"}</small>
                       </td>
                       <td>
                         {p.language}
@@ -239,26 +238,6 @@ export function GoalsWorkspace() {
                         {p.reported_cutoff ?? p.cutoff ?? "Məlumat yoxdur"}
                         <br />
                         <small>{p.year}</small>
-                      </td>
-                      <td>
-                        <a
-                          href={p.source_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Mənbəni aç ↗
-                        </a>
-                        <br />
-                        <small>
-                          {p.source_published
-                            ? `Nəşr: ${p.source_published}`
-                            : "Nəşr tarixi göstərilməyib"}
-                        </small>
-                        <br />
-                        <small>
-                          Kataloqa daxil edilmə:{" "}
-                          {new Date(p.verified_at).toLocaleDateString("az-AZ")}
-                        </small>
                       </td>
                       <td>
                         <button

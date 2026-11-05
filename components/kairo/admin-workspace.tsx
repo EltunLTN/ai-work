@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { TournamentForm } from "./tournament-form";
 import { useEffect, useState } from "react";
 import { kairo, useKairo, dateTime } from "@/lib/kairo/client";
 import { parseCatalogCSV } from "@/lib/kairo/catalog-import";
@@ -728,111 +729,6 @@ function WrittenReview({
         Qiymətləndir və yekunlaşdır
       </button>
     </form>
-  );
-}
-function TournamentForm({
-  templates,
-  save,
-}: {
-  templates: ExamTemplate[];
-  save: (p: object) => Promise<void>;
-}) {
-  const [error, setError] = useState(""),
-    [busy, setBusy] = useState(false);
-  return (
-    <details className="admin-entry">
-      <summary>Yeni turnir yarat</summary>
-      <form
-        className="module-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          const f = new FormData(e.currentTarget),
-            value = Object.fromEntries(f.entries());
-          setBusy(true);
-          setError("");
-          const tournament = {
-            ...value,
-            max_participants: Number(value.max_participants),
-            time_per_question: Number(value.time_per_question),
-            ...Object.fromEntries(
-              [
-                "registration_opens",
-                "registration_closes",
-                "starts_at",
-                "ends_at",
-              ].map((k) => [k, new Date(String(value[k])).toISOString()]),
-            ),
-          };
-          void save({ tournament })
-            .catch((e) => setError(e.message))
-            .finally(() => setBusy(false));
-        }}
-      >
-        <label>
-          Ad
-          <input name="name" minLength={3} maxLength={180} required />
-        </label>
-        <div className="module-form-row">
-          <label>
-            Rejim
-            <select name="mode">
-              <option value="async">Həftəlik sınaq</option>
-              <option value="knockout">Pley-off</option>
-            </select>
-          </label>
-          <label>
-            Şablon
-            <select name="template_id">
-              {templates
-                .filter(
-                  (t) => t.status === "published" && t.sections.length === 1,
-                )
-                .map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.name}
-                  </option>
-                ))}
-            </select>
-          </label>
-          {[
-            ["registration_opens", "Qeydiyyat açılır"],
-            ["registration_closes", "Qeydiyyat bağlanır"],
-            ["starts_at", "Başlayır"],
-            ["ends_at", "Bitir"],
-          ].map(([key, label]) => (
-            <label key={key}>
-              {label} (yerli vaxt)
-              <input name={key} type="datetime-local" required />
-            </label>
-          ))}
-          <label>
-            İştirakçı limiti
-            <input
-              name="max_participants"
-              type="number"
-              min={2}
-              max={64}
-              defaultValue={16}
-              required
-            />
-          </label>
-          <label>
-            Sual vaxtı
-            <select name="time_per_question">
-              {[15, 20, 30, 45, 60, 90].map((n) => (
-                <option key={n} value={n}>
-                  {n} san
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        {error && <Notice error>{error}</Notice>}
-        <button className="module-button primary" disabled={busy}>
-          Turniri yarat
-        </button>
-      </form>
-    </details>
   );
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Deterministic model tests without browser or provider. */
 const {test}=require('node:test'),assert=require('node:assert/strict'),{generator}=require('./helpers/load-ai.cjs');
 const model=()=>generator().load('lib/labs/models.ts');
-test('all 20 requested laboratories have unique IDs and six subject groups',()=>{const {LABS}=generator().load('lib/labs/catalog.ts');assert.equal(LABS.length,20);assert.equal(new Set(LABS.map(x=>x[0])).size,20);assert.equal(new Set(LABS.map(x=>x[1])).size,6);});
+test('17 laboratories remain across five subjects after removing biology',()=>{const {LABS}=generator().load('lib/labs/catalog.ts');assert.equal(LABS.length,17);assert.equal(new Set(LABS.map(x=>x[0])).size,17);assert.equal(new Set(LABS.map(x=>x[1])).size,5);});
 test('circuit models respect Ohm law, series, parallel and open switch',()=>{const m=model();assert.equal(m.circuit(12,[10,20],false).current,.4);assert.ok(Math.abs(m.circuit(12,[10,20],true).current-1.8)<1e-10);assert.equal(m.circuit(12,[10],false,false).current,0);assert.throws(()=>m.circuit(12,[0],true));});
 test('friction stops forward motion without reversing or making distance decrease',()=>{const {motionWithFriction:m}=model();assert.deepEqual(m(0,2,.5,0,10),{acceleration:0,velocity:0,distance:0});const a=m(0,2,.5,10,10),b=m(0,2,.5,10,20);assert.equal(a.velocity,0);assert.equal(a.distance,b.distance);assert.ok(a.distance>0);});
 test('lens focus singularity and small-angle pendulum units are explicit',()=>{const m=model();assert.equal(m.lensImage(20,20).distance,Infinity);assert.equal(m.lensImage(20,40).magnification,-1);assert.ok(m.lensImage(-20,40).distance<0);assert.ok(Math.abs(m.pendulumPeriod(1,9.81)-2.006)<.002);});
