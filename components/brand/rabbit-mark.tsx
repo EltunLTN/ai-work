@@ -9,20 +9,9 @@ export function RabbitMark({ className }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
     >
-      <path
-        d="M62 52C58 34 63 18 72 10C75 22 86 39 95 50M106 47C102 30 104 17 114 8C118 21 127 36 134 48"
-        stroke="currentColor"
-        strokeWidth="6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M34 104C34 72 58 53 89 53C123 53 146 76 146 106C146 136 122 154 91 154C58 154 34 135 34 104Z"
-        stroke="currentColor"
-        strokeWidth="6"
-      />
-      <circle cx="110" cy="98" r="6" fill="currentColor" />
-      <path d="M84 111C88 118 97 121 107 118" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-      <circle cx="152" cy="118" r="8" fill="#ef4444" />
+      <path d="M57 143A65 65 0 1 1 152 103" stroke="currentColor" strokeWidth="13"/>
+      <path d="M50 141C62 130 74 124 86 123C78 111 73 96 76 84C90 89 100 106 101 120C101 108 105 99 111 97C119 106 119 119 115 126C123 127 130 133 130 138C130 144 120 147 115 149C113 159 106 164 94 164C76 164 59 155 50 150C46 148 46 145 50 141Z" fill="currentColor"/>
+      <circle cx="147" cy="128" r="8" fill="#F17A83"/>
     </svg>
   );
 }

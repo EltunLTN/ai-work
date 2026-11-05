@@ -8,6 +8,7 @@ import "./platform-upgrade.css";
 import "./laboratories.css";
 import "./premium.css";
 import "./socrates.css";
+import "./entrance.css";
 import "katex/dist/katex.min.css";
 import { ActivityProvider } from "@/components/account/activity-provider";
 import { AITutor } from "@/components/ai/ai-tutor";

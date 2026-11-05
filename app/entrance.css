@@ -1,0 +1,87 @@
+/* Portal rabbit identity and one continuous, shared-centre entrance journey. */
+.wordmark .nav-rabbit{width:38px;height:38px;flex-shrink:0;}
+.footer-wordmark{display:inline-flex;align-items:center;gap:14px;}
+.footer-wordmark .footer-brand-mark{width:42px;height:42px;}
+.choice-brand{display:flex;align-items:center;gap:10px;}
+.choice-brand .choice-brand-mark{width:30px;height:30px;flex-shrink:0;}
+.choice-top>.choice-brand>i{margin:0 5px;}
+.choice-scene{background:#101210;}
+.choice-noise{opacity:.035;}
+.choice-scene>.choice-content{top:24%;left:7%;max-width:44%;}
+.choice-content h1{font-size:clamp(44px,5.1vw,78px);line-height:1.08;}
+.choice-portrait{width:min(67vw,1060px);right:-1%;bottom:20px;isolation:isolate;}
+.choice-portrait>img{object-fit:contain;mask-image:none;}
+.choice-portrait:before{content:"";position:absolute;inset:2% 16% 13%;z-index:-1;border-radius:50%;background:radial-gradient(ellipse,#819d8020,transparent 67%);border:1px solid #c4d3b816;transform:rotate(-12deg);}
+.choice-portrait .pill-red{left:18%;top:64%;}
+.choice-portrait .pill-blue{left:82%;top:64%;}
+.choice-pill{z-index:2;gap:15px;padding:20px;}
+.choice-pill .pill-text{background:#101210dc;border:1px solid #ffffff17;padding:10px 14px;border-radius:12px;backdrop-filter:blur(10px);}
+.choice-pill .pill-object{width:58px;height:23px;}
+.choice-scene:not(.scene-choice) .choice-portrait{opacity:0;transition:opacity .45s ease;pointer-events:none;}
+.rabbit-hole{--portal-x:66%;--portal-y:50%;--rabbit-x:180px;--rabbit-y:70px;background:radial-gradient(ellipse at var(--portal-x) var(--portal-y),#304739 0,#15251d 30%,#0a100d 75%);}
+.rabbit-hole .blackhole-core{left:var(--portal-x);top:var(--portal-y);width:min(35vw,400px);transform:translate(-50%,-50%);opacity:.35;transition:opacity .8s ease;box-shadow:0 0 110px #96b7a21f;}
+.blackhole-core:before{inset:12%;background:#030605;box-shadow:inset 0 0 40px #000,0 0 6px #e6dac5,0 0 28px #9fb79e66;}
+.blackhole-core:after{content:"";position:absolute;inset:-5%;border-radius:50%;background:conic-gradient(from 0deg,transparent 8%,#e3cebba3 24%,transparent 37%,#b8d5b9a6 62%,transparent 83%);mask-image:radial-gradient(circle,transparent 58%,#000 61%,#000 65%,transparent 70%);animation:portal-halo-spin 12s linear infinite;}
+.blackhole-core>i{inset:-22%;border-color:#d6ccb85c;box-shadow:0 0 18px #b6d3b833;}
+.portal-event-horizon{position:absolute;inset:10%;border:1px solid #e5dac9aa;border-radius:50%;box-shadow:0 0 16px #b9d2b24d;}
+.portal-floor{position:absolute;width:65%;height:24%;left:var(--portal-x);top:calc(var(--portal-y) + 22%);transform:translateX(-50%);background:radial-gradient(ellipse,#a1bfa61a,transparent 68%);filter:blur(18px);}
+.rabbit-hole .portal-depth{opacity:.25;}
+.rabbit-hole .portal-depth>i{left:calc(var(--portal-x) - 190px);top:calc(var(--portal-y) - 190px);border-color:#bbccaf44;animation-duration:5s;}
+.rabbit-hole .portal-stars>i{left:var(--portal-x);top:var(--portal-y);opacity:.35;}
+.rabbit-hole .tunnel-rings{left:var(--portal-x);top:var(--portal-y);opacity:.15;}
+.rabbit-hole .tunnel-rings i:nth-child(5){background:transparent;opacity:0;}
+.choice-scene .chase-rabbit{left:var(--portal-x);top:var(--portal-y);width:220px;height:294px;transform:translate(-50%,-50%) translate(var(--rabbit-x),var(--rabbit-y));transition:none;transform-origin:center;will-change:transform,opacity;}
+.choice-scene .invitation-copy{position:absolute;left:8%;top:38%;margin:0;max-width:43%;}
+.choice-scene .invitation-copy h2{font-size:clamp(40px,5.2vw,78px);}
+.scene-arrival .chase-rabbit{animation:portal-rabbit-arrive .7s cubic-bezier(.16,1,.3,1) both;}
+.scene-arrival .blackhole-core,.scene-invitation .blackhole-core{opacity:.6;}
+.scene-chase .blackhole-core{opacity:1;}
+.scene-chase .chase-rabbit{animation:portal-rabbit-approach 1.8s cubic-bezier(.35,0,.55,1) both;}
+.scene-portal .chase-rabbit{animation:portal-rabbit-dive 1s cubic-bezier(.4,0,.7,1) both;}
+.scene-portal .blackhole-core{animation:portal-camera-dive 1.6s cubic-bezier(.7,0,.8,1) both;opacity:1;}
+.scene-portal .portal-depth{animation:none;}
+.scene-portal .tunnel-rings,.scene-reveal .tunnel-rings{animation:none;}
+.scene-reveal .rabbit-hole{animation:none;opacity:0;transition:opacity .7s ease;}
+.scene-reveal .chase-rabbit{opacity:0;transform:translate(-50%,-50%) scale(.01);}
+.scene-reveal .blackhole-core{transform:translate(-50%,-50%) scale(10);opacity:1;}
+.scene-chase .chase-rabbit .rabbit-running{animation-duration:.38s;}
+.scene-portal .chase-rabbit .rabbit-running{animation:none;}
+.journey-chapters{bottom:7%;font-size:10px;}
+@keyframes portal-halo-spin{to{rotate:360deg;}}
+@keyframes portal-rabbit-arrive{from{opacity:0;transform:translate(-50%,-50%) translate(calc(var(--rabbit-x) + 70px),calc(var(--rabbit-y) + 35px)) scale(.92);}to{opacity:1;transform:translate(-50%,-50%) translate(var(--rabbit-x),var(--rabbit-y)) scale(1);}}
+@keyframes portal-rabbit-approach{0%{transform:translate(-50%,-50%) translate(var(--rabbit-x),var(--rabbit-y)) scale(1) rotate(0);}35%{transform:translate(-50%,-50%) translate(calc(var(--rabbit-x)*.65),-20px) scale(.86) rotate(-8deg);}70%{transform:translate(-50%,-50%) translate(calc(var(--rabbit-x)*.25),20px) scale(.6) rotate(5deg);}100%{transform:translate(-50%,-50%) translate(0,0) scale(.36) rotate(-12deg);}}
+@keyframes portal-rabbit-dive{0%{opacity:1;filter:blur(0);transform:translate(-50%,-50%) scale(.36) rotate(-12deg);}65%{opacity:1;filter:blur(.5px);transform:translate(-50%,-50%) scale(.13) rotate(-40deg);}100%{opacity:0;filter:blur(3px);transform:translate(-50%,-50%) scale(.01) rotate(-80deg);}}
+@keyframes portal-camera-dive{0%,58%{transform:translate(-50%,-50%) scale(1);}100%{transform:translate(-50%,-50%) scale(10);}}
+@media(max-width:700px){
+ .choice-top{padding:16px 5%;gap:8px;}
+ .choice-brand{font-size:10px;letter-spacing:.05em;gap:7px;}
+ .choice-brand .choice-brand-mark{width:26px;height:26px;}
+ .choice-top>.choice-brand>i{display:none;}
+ .choice-top>div{gap:4px;}
+ .choice-top button{font-size:11px;padding:8px;}
+ .choice-top button:first-child>span{display:none;}
+ .choice-scene>.choice-content{top:16%;left:7%;max-width:89%;}
+ .choice-content h1{font-size:clamp(34px,9.5vw,52px);margin:16px 0;line-height:1.05;}
+ .choice-content>.mono-label{font-size:9px;}
+ .choice-content>p:last-child{font-size:12px;line-height:1.7;}
+ .choice-portrait{width:min(132vw,680px);right:50%;bottom:28px;transform:translateX(50%);}
+ .choice-portrait .pill-red{left:22%;top:64%;}
+ .choice-portrait .pill-blue{left:78%;top:64%;}
+ .choice-pill{min-width:82px;padding:14px 8px;gap:10px;}
+ .choice-pill .pill-object{width:47px;height:19px;}
+ .choice-pill .pill-text{font-size:9px;padding:9px 10px;}
+ .choice-pill .pill-text small{font-size:9px;max-width:110px;white-space:normal;}
+ .choice-bottom{left:7%;right:7%;bottom:14px;font-size:8px;gap:12px;}
+ .choice-bottom>span:last-child{display:none;}
+ .rabbit-hole{--portal-x:50%;--portal-y:47%;--rabbit-x:85px;--rabbit-y:95px;}
+ .rabbit-hole .blackhole-core{width:64vw;max-width:300px;}
+ .choice-scene .chase-rabbit{width:150px;height:200px;}
+ .choice-scene .invitation-copy{top:19%;left:8%;max-width:84%;}
+ .choice-scene .invitation-copy h2{font-size:39px;margin:14px 0;}
+ .invitation-copy>p:last-child{font-size:12px;}
+ .journey-chapters{left:8%;right:8%;bottom:9%;gap:14px;font-size:8px;}
+ .journey-chapters>span:first-child{display:none;}
+}
+@media(max-width:700px) and (max-height:700px){.choice-scene>.choice-content{top:14%;}.choice-content>p:last-child{font-size:11px;}.choice-portrait{width:112vw;bottom:15px;}.choice-content h1{font-size:34px;}}
+@media(prefers-reduced-motion:reduce){.rabbit-hole *,.rabbit-hole *:before,.rabbit-hole *:after{animation:none!important;transition:none!important;}.choice-portrait,.choice-pill{transition:none!important;}}
+.motion-reduced .rabbit-hole *,.motion-reduced .rabbit-hole *:before,.motion-reduced .rabbit-hole *:after{animation:none!important;transition:none!important;}
