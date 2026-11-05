@@ -66,7 +66,7 @@
  .choice-content>p:last-child{font-size:12px;line-height:1.7;}
  .choice-portrait{width:min(132vw,680px);right:50%;bottom:28px;transform:translateX(50%);}
  .choice-portrait .pill-red{left:24%;top:64%;}
- .choice-portrait .pill-blue{left:76%;top:64%;}
+ .choice-portrait .pill-blue{left:72%;top:64%;}
  .choice-pill{min-width:82px;padding:14px 8px;gap:10px;}
  .choice-pill .pill-object{width:47px;height:19px;}
  .choice-pill .pill-text{font-size:9px;padding:9px 10px;}
@@ -83,6 +83,7 @@
  .journey-chapters>span:first-child{display:none;}
 }
 @media(max-width:700px) and (max-height:700px){.choice-scene>.choice-content{top:14%;}.choice-content>p:last-child{font-size:11px;}.choice-portrait{width:112vw;bottom:15px;}.choice-content h1{font-size:34px;}}
+@media(max-width:360px){.choice-portrait .pill-red{left:26%;}.choice-portrait .pill-blue{left:69%;}}
 @media(prefers-reduced-motion:reduce){.rabbit-hole *,.rabbit-hole *:before,.rabbit-hole *:after{animation:none!important;transition:none!important;}.choice-portrait,.choice-pill{transition:none!important;}}
 .motion-reduced .rabbit-hole *,.motion-reduced .rabbit-hole *:before,.motion-reduced .rabbit-hole *:after{animation:none!important;transition:none!important;}
 
