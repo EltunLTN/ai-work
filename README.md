@@ -1,241 +1,223 @@
 <p align="center">
-  <img src="./public/kairo-logo.svg" alt="Kairo Logo" width="520" />
+  <a href="https://eltun.dev">
+    <img src="public/kairo/rabbit-guide-v2.png" alt="Kairo's White Rabbit guide holding a pocket watch" width="210" />
+  </a>
 </p>
 
 <h1 align="center">Kairo</h1>
+<p align="center"><strong>Follow the questions. Understand the answers.</strong></p>
+<p align="center">A personalized learning platform built around real practice, guided explanations and steady progress.</p>
+
 <p align="center">
-  AI-powered Exam Coach for Mathematics, Physics, Biology, Geography and Chemistry, aligned with e-derslik topic structures.
+  <a href="https://eltun.dev">Live website</a> &nbsp;·&nbsp;
+  <a href="#learning-experience">Features</a> &nbsp;·&nbsp;
+  <a href="#local-development">Development</a> &nbsp;·&nbsp;
+  <a href="#architecture">Architecture</a> &nbsp;·&nbsp;
+  <a href="#project-documentation">Documentation</a>
 </p>
 
 <p align="center">
-  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" />
-  <img alt="Tailwind" src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?logo=tailwindcss&logoColor=white" />
-  <img alt="OpenAI" src="https://img.shields.io/badge/OpenAI-API-412991" />
+  <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-202020?logo=nextdotjs" />
+  <img alt="React 19" src="https://img.shields.io/badge/React-19-202020?logo=react" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" />
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-Supabase-3E8061?logo=postgresql&logoColor=white" />
 </p>
 
-## Overview
+## What is Kairo?
 
-Kairo is a modern AI learning platform for Mathematics, Physics, Biology, Geography and Chemistry.
-It provides:
+Kairo helps students discover what they understand, find the topics that need attention and decide what to study next. It connects assessments, an AI teacher, personal plans, interactive experiments and educational competitions in one account.
 
-- Diagnostic and adaptive quiz generation
-- Skill-level detection and weakness analysis
-- Mistake review with explanations
-- Personalized 7-day AI plan
-- Floating AI subject tutor with multi-turn conversation and student context
-- Dashboard insights and progress tracking
+The core learning catalogue covers **Mathematics, Physics, Biology, Geography and Chemistry**. Available grades and topics come from the project's curriculum catalogue; they are validated for each subject. The primary interface is Azerbaijani.
 
-The platform is designed for startup demo quality and practical daily use by students.
+The White Rabbit is the platform's visual guide: an optional entrance, restrained parallax, a pocket-watch shortcut to Focus Mode and accessible navigation. The current character is the high-resolution portrait embedded above, with a vector fallback. Small feature cards use original SVG visualizations instead of heavy video or WebGL scenes.
 
-## Core Product Direction
+## Learning experience
 
-- Subject scope: Mathematics, Physics, Biology, Geography and Chemistry
-- Grade coverage: Mathematics 1–11; Physics, Biology and Geography 6–11; Chemistry 7–11
-- Curriculum source: e-derslik references and topic structures
-- Output language: Azerbaijani and English UI support
-- Learning model: diagnostic first, adaptive next, plan-driven progression
+| Feature | What students can do |
+| --- | --- |
+| **Practice and examinations** | Build a class-based or mixed-grade trial, choose multiple subjects and a question count, resume saved answers and review dated results. |
+| **AI teacher** | Start a subject/grade-specific lesson, ask follow-up questions, receive staged hints and explicitly reveal a full solution. Lessons persist in the account. |
+| **Adaptive study plans** | Follow a daily timeline, open plans across subjects and grades, track tasks and move directly into a lesson, mini-test or focus session. |
+| **Progress dashboard** | Inspect recorded attempts, correct/incorrect answers, daily activity and weak topics. Missing evidence stays unknown. |
+| **Replay and mistake analysis** | Revisit completed exams, inspect recorded answer changes and timing, and classify mistakes. |
+| **University goals** | Search and filter program variants, compare up to three, save personal targets and choose a primary goal. Only compatible verified scores contribute to admission-scale progress. |
+| **Focus Mode** | Use configurable work/break sessions with pause/resume controls and server-confirmed study time. |
+| **Duels and Arena** | Challenge real participants, join scheduled trials or knockout events, and view stored outcomes, ratings and achievements. |
 
-## Key Features
+### Interactive laboratories
 
-### 1) AI Quiz Engine
+**17 browser-local activities across five subject groups**, with no AI token usage:
 
-- Generates topic-aware diagnostic question sets
-- Generates adaptive questions based on weak topics and level
-- Repairs malformed or inconsistent AI output
-- Performs extra correctness checks for math patterns (including derivative-style checks)
+- **Mathematics:** function graphs, geometry, probability and the unit circle.
+- **Physics:** circuits, motion, optics and pendulums.
+- **Chemistry:** molecules, reactions, the first 20 elements and pH.
+- **Geography:** geographic coordinates, synthetic climate graphs and tectonic plates.
+- **Informatics:** sorting/searching algorithms and logic-gate networks.
 
-### 2) Reliable Review Layer
+These are simplified teaching models with stated assumptions. Biology remains an assessment subject; its laboratories are no longer part of the lab catalogue.
 
-- Stores user answers and served questions
-- Shows where the student made mistakes
-- Displays user answer, correct answer, and AI explanation together
+### Administration
 
-### 3) Personalized Plan System
+Authorized administrators can inspect student learning evidence and competition results, manage supported account fields, review content, operate tournaments and inspect sanitized activity/audit records. Arena creation includes Baku-time calendar inputs, quick schedules and chronological validation on both client and server.
 
-- Builds a 7-day AI study plan
-- Interactive daily tasks with progress tracking
-- Topic resource cards: material, mini quiz, video
+Private profiles, public competition nicknames and administrator permissions are separate concerns. A student ID is an identifier, not a login credential or an authorization grant. Teacher-owned classrooms are a future extension.
 
-### 4) Dashboard Analytics
+## Architecture
 
-- Predicted score and level
-- Topic performance chart
-- Recommended next action
-- Learning stage snapshots
-
-### 5) UX and Theming
-
-- Dark and light theme modes
-- Responsive mobile-first layout
-- Framer Motion-powered interactive transitions
-
-## Tech Stack
-
-- Next.js App Router
-- TypeScript
-- Tailwind CSS
-- Framer Motion
-- Recharts
-- OpenAI API
-- Reusable UI primitives
-
-## Project Structure
-
-- app: routes and API endpoints
-- components: reusable UI and feature modules
-- lib: AI client, analytics, storage, i18n, constants
-- data: curriculum and topic references
-- public: static assets and branding
-
-## Main Routes
-
-- / : Landing page
-- /onboarding : Grade and textbook topic setup
-- /quiz : Diagnostic plus adaptive quiz flow
-- /results : Analysis plus detailed mistake review
-- /plan : Interactive 7-day AI study plan
-- /mini-quiz : Topic-focused quick quiz mode
-- /dashboard : Persistent summary and progression view
-- /account : Verified email login, password recovery, cloud save and restore
-- /admin : Administrator-only student snapshot overview and homepage announcement editor
-
-## AI Endpoints
-
-- POST /api/ai/diagnostic
-- POST /api/ai/adaptive
-- POST /api/ai/feedback-summary
-- POST /api/ai/study-plan
-- POST /api/ai/chat
-
-Compatibility endpoints:
-
-- POST /api/ai/questions
-- POST /api/ai/feedback
-- POST /api/ai/plan
-
-## Curriculum and Source Policy
-
-Kairo uses e-derslik as a curriculum reference source, not as a raw content mirror.
-
-- Source references are kept as metadata and topic guidance
-- Full textbook content is not copied into the app
-- Questions are generated as original outputs
-- Science references include both parts where available, with direct e-Dərslik links and topic selections reviewed on 2026-10-14
-- Grade choices follow the selected subject. Math answer-repair heuristics never modify science answers. Tutor history is separated by subject and grade.
-
-Example source reference:
-
-- https://www.e-derslik.edu.az/portal/book.php?id=817
-
-## Local Development
-
-### 1) Install dependencies
-
-```bash
-npm install
+```mermaid
+flowchart LR
+    Student[Student or administrator] --> UI[Next.js / React interface]
+    UI --> API[Server API routes]
+    UI --> RPC[Protected database RPCs]
+    API --> Guard[Authentication, quota and token guard]
+    Guard --> AI[OpenAI text generation]
+    API --> RPC
+    RPC --> DB[(Supabase PostgreSQL)]
+    UI --> Auth[Supabase Auth]
+    UI --> Storage[Private profile-image storage]
 ```
 
-### 2) Configure environment variables
+| Layer | Implementation |
+| --- | --- |
+| Frontend | TypeScript, React 19, Next.js 16 App Router, CSS and Tailwind CSS 4 |
+| Motion and visualization | Framer Motion, original SVGs, Recharts and KaTeX |
+| Server | TypeScript API routes running on Node.js |
+| Data and authorization | PostgreSQL, SQL/PLpgSQL functions, ownership checks and RLS |
+| Managed services | Supabase Auth/Storage, OpenAI API and Vercel |
 
-Create a .env.local file and set:
+Browser drafts support recovery, but they are not authoritative competitive results. Exam/duel scoring, deadlines and competition transitions use server-held records. Account changes clear or rebind private UI state.
+
+## Local development
+
+### 1. Install
+
+Use **Node.js 24** and npm. The lockfile is committed.
 
 ```bash
-OPENAI_API_KEY=your_openai_api_key
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
+git clone https://github.com/EltunLTN/kairo.git
+cd kairo
+npm ci
 ```
 
-### 3) Run the app
+### 2. Configure the environment
+
+Copy `.env.example` to `.env.local` and supply development credentials. Do not commit real values.
+
+| Variable | Visibility | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Browser | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Browser | Limited public project key |
+| `OPENAI_API_KEY` | Server only | OpenAI project credential |
+| `OPENAI_MODEL` | Server only | Configured snapshot: `gpt-5.4-mini-2026-03-17` |
+| `ACTIVITY_SERVER_SECRET` | Server only | Server attestation; must match the database configuration |
+| `CRON_SECRET` | Server only | Authentication for scheduled maintenance |
+| `ENABLE_RESOURCE_SEARCH` | Server only | Kept `false`; paid discovery is disabled |
+
+Changing `OPENAI_MODEL` alone does not bypass the model allowlist in `lib/ai/budget.ts`. The AI wrapper, database budget policy and deployment configuration must agree. Never expose an API key, service-role credential or server secret through a `NEXT_PUBLIC_` variable.
+
+### 3. Prepare the database and authentication
+
+The application requires the matching Supabase schema and Auth configuration. For an **existing environment**, apply only missing versions from `supabase/migrations/` in chronological order.
+
+For a **fresh environment**, establish the legacy account/profile, analytics and activity prerequisites in `database/` before applying the expansion migrations. This repository contains an incremental rollout history, not a single empty-database bootstrap command. Follow the [platform rollout notes](docs/platform-expansion-release.md#configuration-and-local-execution) and the [learning workspace rollout](docs/learning-workspace-release.md); do not reapply historical SQL blindly.
+
+Configure Auth site/redirect URLs for the intended origin, enable email confirmation and configure SMTP for public registration. The project owner must provision the private administrator allowlist through a trusted database administration path. Editing a browser profile cannot grant administrator access.
+
+### 4. Start
 
 ```bash
 npm run dev
 ```
 
-Open:
+Open [localhost:3000](http://localhost:3000). Use a confirmed development account for personal learning flows. Missing AI credentials, attestation or quota availability produce explicit errors; fabricated answers are not substituted.
 
-- http://localhost:3000
-
-### 4) Quality checks
+### 5. Check changes
 
 ```bash
-npm run lint
 npm test
+npm run lint
+npx next typegen
+npx tsc --noEmit
 npm run build
 ```
 
-## Production Notes
+The current automated suite contains 75 tests covering generation validation, access control, budgets, result integrity, laboratory formulas and tournament scheduling. Database checks live under `database/verify-*.sql`; inspect their prerequisites and run rollback-based fixtures in a suitable development environment. Live verification scripts are opt-in and require separate disposable QA credentials.
 
-- Local storage is used for profile, question set, answers, result, feedback, and plan state.
-- AI responses are validated and repaired before being served to the UI.
-- Invalid questions are regenerated within the same grade and topic. Failed AI requests show errors; demo data and template plans are not substituted for AI output.
-- Plans validate seven days, grade-specific topics, a checkpoint, and the selected daily time budget. Direct resource URLs come from a curated catalog, not model-generated links or search pages. External resources are labelled by provider and language.
-- AI uses the server-only `OPENAI_API_KEY` with the eligible `gpt-5.4-mini-2026-03-17` snapshot. Every request, including the admin connectivity test, requires a persistent server-attested token reservation. The application stops at 2 million reserved tokens per UTC day, with no automatic model fallback or paid tools. See [complimentary AI operations](docs/complimentary-ai.md) for organization eligibility, data-sharing and billing limitations. Model response storage is disabled; chat history remains bounded.
-- Score cards show observed practice accuracy on a 0–100 scale with a Wilson 95% uncertainty interval and sample size. These uncalibrated, topic-selected quizzes cannot support an official 700-point DİM prediction; no future score gains are invented.
-- Activity, mini-quiz attempts, plan completion and XP are based on recorded actions. XP is granted once per result. Result reviews are saved with the completed attempt so a new quiz cannot overwrite an earlier review.
-- Learning flows keep a browser-local working copy. Signed-in users automatically save their learning state and can also manually save or restore from `/account`. Learning changes automatically synchronize after a short debounce. On a new device, the account snapshot loads before learning pages render. Unsynced local work survives offline sessions and is retried on reconnection. Signing out clears the device's learning records.
-- Supabase PostgreSQL stores account-owned snapshots. RLS limits students to their own data; verified administrators can read snapshots and edit the homepage announcement. Admin authorization uses a private allowlist and checks the current verified Auth user, rather than user-editable metadata.
-- All AI endpoints verify the bearer token with Supabase Auth and consume an atomic database quota of 100 requests per account per UTC day. Quota failures deny the request before calling OpenAI.
-- Wumpus links on desktop, mobile and the footer open the external Wumpus application. The previous HTML route redirects there too.
+## Routes at a glance
 
-## Database and administrator setup
+| Route | Purpose |
+| --- | --- |
+| `/` | Home, White Rabbit and learning journey |
+| `/onboarding` | Grade, subjects, topics and trial configuration |
+| `/quiz` | Compatibility redirect to the current practice builder |
+| `/kairo` | Eight interactive learning-tool cards |
+| `/kairo/exam` | Published exams and session history |
+| `/kairo/exam/session/[id]` | Saved examination, answers and review |
+| `/kairo/tutor` | Persistent AI lessons |
+| `/plan` | Subject/grade plan library and daily timeline |
+| `/dashboard` and `/results` | Personal analytics and account-backed history |
+| `/kairo/university-goals` | University discovery, comparison and goals |
+| `/kairo/focus` and `/kairo/lab` | Focus sessions and local experiments |
+| `/kairo/duel` and `/kairo/arena` | Competitive practice and scheduled events |
+| `/kairo/mistakes` and `/kairo/replay/[id]` | Mistake analysis and recorded replay |
+| `/account` | Authentication, profile and cloud controls |
+| `/admin`, `/admin/overview`, `/admin/kairo` | Restricted administration |
 
-The deployed Kairo database is a separate Supabase project. For a new environment, apply `database/schema.sql` once using the Supabase SQL editor, then add the owner's lowercase email to `private.admin_emails`. No service-role key is needed in the application. Only the public project URL and publishable key go into `NEXT_PUBLIC_` variables.
+## AI, scoring and content boundaries
 
-The owner registers at `/account`, chooses a password and confirms their email before opening `/admin`. A browser cannot grant itself admin access. The label `KairoLTN1` is the panel name, not a shared password.
+- AI calls are authenticated, bounded and validated. Active protected exams/duels block AI assistance.
+- The shared application guard reserves tokens before inference and stops at **2,000,000 reserved tokens per UTC day**. It does not refund uncertain/aborted requests or automatically switch to a paid model/tool.
+- This counter is not an organization-wide billing cap and cannot verify continued complimentary-token eligibility or other applications' consumption. Read the [AI operations guide](docs/complimentary-ai.md) before changing provider settings.
+- Practice accuracy is not an official DIM score or an admission probability. Assisted learning, task completion and competition points do not inflate independent mastery.
+- Curriculum references guide subject/grade alignment; full textbook content is not mirrored. Supplementary links come from the reviewed resource catalogue; unavailable matches stay unavailable.
+- Admission variants may be preliminary or carry unconfirmed reported cutoffs. Missing values are not zero; special-ability scales retain their original meaning.
 
-Set Supabase Auth's Site URL to your production `/account` URL. Password-reset links return there. For public registration, configure a custom SMTP provider: Supabase's default mail service is rate-limited and restricts recipients to organization members. Keep email confirmation enabled. Configure backups and monitoring appropriate to your traffic before a wider launch.
+## Deployment and repository identity
 
-`database/verify-access.sql` tests student isolation, administrator access, unauthorized writes and the exact quota boundary in a rolled-back transaction. It leaves no test accounts or records behind.
+The canonical source repository is **[EltunLTN/kairo](https://github.com/EltunLTN/kairo)**. The production domain is **[eltun.dev](https://eltun.dev)**.
 
-## Security Recommendation
+The existing Vercel project may retain its original `ai-work` project name. A Vercel project name, a GitHub repository name and a custom domain are independent identifiers; renaming this repository does not require recreating the application, database or domain.
 
-Do not commit real API keys to version control.
+Pushes to `main` deploy production; other connected branches create previews. Verify the intended Git connection, environment variables and READY build before release. Scheduled maintenance is declared in `vercel.json` and uses `CRON_SECRET`.
 
-- Keep .env.local private
-- Rotate any exposed keys immediately
-- Use environment secrets in deployment platforms
+For an older local checkout:
 
-## Roadmap Ideas
+```bash
+git remote set-url origin https://github.com/EltunLTN/kairo.git
+git remote -v
+```
 
-- Teacher dashboard and classroom mode
-- Attempt history with trend lines
-- Topic mastery heatmap per grade
-- Parent view with weekly summary
-- Question bank calibration and quality scoring
+## Project map
 
-## License
+```text
+app/                  Routes, server endpoints and shared styles
+components/           Learning modules, account/admin UI and visual components
+lib/ai/               Provider access, validation and token-budget guard
+lib/kairo/            Domain contracts, RPC hooks and learning models
+lib/labs/             Deterministic browser-local experiments
+data/                 Curriculum, educational references and admission catalogues
+public/kairo/         White Rabbit portrait and visual assets
+database/             Legacy schema steps and transactional verification scripts
+supabase/migrations/  Versioned incremental database changes
+tests/                Automated regression suite
+docs/                 Architecture, rollout and operational notes
+```
 
-For hackathon and educational demo use. Add a formal license file if you plan public distribution.
+## Project documentation
 
+- [Premium home, Tools cards and goals design](docs/premium-design-release.md)
+- [Arena calendar validation](docs/arena-calendar-fix.md)
+- [Reliable learning flows and laboratory models](docs/nov5-reliability-and-labs.md)
+- [Platform modules, permissions and deployment](docs/platform-expansion-release.md)
+- [Dashboard, mixed exams and activity journal](docs/learning-workspace-release.md)
+- [Complimentary AI budget and operating limits](docs/complimentary-ai.md)
+- [White Rabbit asset and fallback](docs/rabbit-v2.md)
 
-## Learning platform v2
+Historical release notes describe their own release dates; use the current implementation and newer notes when behavior has changed.
 
-Apply database files in this order for an existing v1 installation: `learning-platform-v2.sql`, `learning-analytics.sql`, `learning-platform-permissions.sql`. The permissions migration explicitly revokes Supabase default grants and exposes admin-only invoker wrappers around guarded functions in the private schema. Run `verify-platform-v2.sql` afterward; its transaction rolls back all test data.
+## Maintainer and license
 
-- `practice_attempts` retains append-only quiz/mini-quiz results across devices, with an idempotent account/attempt key, per-topic correct/total counts and measured session duration when available. Historical duration stays unknown. These are self-reported practice records, not proctored assessments.
-- `/dashboard` aggregates daily activity in Asia/Baku, totals, subject and topic weaknesses from PostgreSQL. Empty histories stay empty; no demo percentages or invented exam scores are substituted.
-- Account profiles support first/last name, grade and private 256px WebP avatars. Uploads are decoded and re-encoded before storage. Only the owner and verified admins can read them.
-- Admins search accounts, inspect each student's analytics, edit profile names/grade, suspend new AI requests, add notes and review an audit trail. Credential and admin-role editing is intentionally absent.
-- AI uses explicit low/medium reasoning, bounded output budgets, no unsupported sampling parameters, no response storage and validated JSON contracts. Plans select topics only from the curated grade/subject curriculum; old plans regenerate with version 3.
-- Paid OpenAI web discovery is disabled regardless of `ENABLE_RESOURCE_SEARCH`. Topic links use the hand-reviewed resource catalog; missing matches stay missing. External supplements are labelled by language and do not claim alignment with the full local curriculum.
-- The landing page has no subscription pricing or sample statistics. The optional first-visit scene uses an original AI-generated mentor, a red-pill White Rabbit passage and an evasive decorative blue pill. Keyboard users and reduced-motion preferences are supported.
-- Public email registration still requires custom SMTP. The Supabase advisor also notes that leaked-password protection is disabled; enable it in Auth settings if supported by your plan before a broader launch.
+Maintained by **[Eltun Jalilli](https://github.com/EltunLTN)**. No `LICENSE` file is currently included in this repository.
 
-## White Rabbit redesign
+<p align="center"><sub>Sualların arxasınca get.</sub></p>
 
-See [the design audit and implementation guide](docs/redesign.md) for the editorial design system, SVG character rig, scene state machine, accessibility controls and running instructions. All original learning/auth/data flows remain in place. `/playground` adds a local timing experiment alongside the existing external Wumpus game. Ctrl/Cmd+K, the companion menu and footer expose real navigation and intro replay.
-
-## 3D guide and admin control center
-
-The current release removes the Wumpus game and its external links. The blue pill is decorative and evades the pointer; red and Skip remain accessible entry controls. A lazy-loaded original Three.js rabbit crosses from the homepage illustration into the fixed guide. The renderer caps device pixel ratio, pauses drawing when hidden/offscreen, disposes GPU resources and retains an SVG fallback. No external video/model assets are used.
-
-Apply `database/admin-control-center.sql` after the v2 migrations, then `database/admin-account-list-fix.sql` (explicit Auth email-to-text cast). It adds admin-only overview/detail/actions, bounded per-account AI limits (0–100), audited quota reset, profile-image moderation/restoration and learning-selection updates. Historical attempts remain unchanged. New avatar uploads are private, re-encoded WebP files; the admin upload policy requires the existing verified admin check. Run `database/verify-admin-control-center.sql` transactionally. The admin UI includes all application tools, per-user analytics, attempt/topic history, CSV export and audit details.
-
-## Learning workspace release
-See [dashboard, mixed exams and activity journal](docs/learning-workspace-release.md) for behavior, database rollout and verification. Apply `database/learning-workspace.sql` and `database/activity-journal.sql` after the existing admin migrations.
-
-
-## Kairo platform expansion
-
-See [platform expansion release notes](docs/platform-expansion-release.md) for the six modules, routes, migrations, configuration, verification and official-data gates.
