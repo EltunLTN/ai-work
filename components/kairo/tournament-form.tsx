@@ -12,8 +12,9 @@ export function TournamentForm({templates,save}:{templates:ExamTemplate[];save:(
   useEffect(()=>{queueMicrotask(()=>setSchedule(schedulePreset(new Date(),"soon","async")));},[]);
   const template=eligible.find(t=>t.id===(templateId||eligible[0]?.id));
   const validation=scheduleError(schedule,mode);
+  function updateSchedule(key:ScheduleKey,value:string){setSchedule(old=>({...old,[key]:value}));setSuccess(false);}
   function choosePreset(preset:"soon"|"tomorrow"|"weekend") {setSchedule(schedulePreset(new Date(),preset,mode));setSuccess(false);}
-  const pretty=(value:string)=>{const iso=bakuToISO(value);return iso?new Intl.DateTimeFormat("az-AZ",{timeZone:"Asia/Baku",dateStyle:"medium",timeStyle:"short"}).format(new Date(iso)):"Tarix seçilməyib";};
+  const pretty=(value:string)=>{const iso=bakuToISO(value);return iso?`${value.slice(8,10)}.${value.slice(5,7)}.${value.slice(0,4)} · ${value.slice(11,16)}`:"Tarix seçilməyib";};
   async function submit(e:React.FormEvent<HTMLFormElement>) {
     e.preventDefault();setError("");setSuccess(false);
     if(validation){setError(validation);return;}if(!template){setError("Əvvəl bir fənnli, 5, 10, 15 və ya 20 suallıq şablon yayımla.");return;}
@@ -30,7 +31,7 @@ export function TournamentForm({templates,save}:{templates:ExamTemplate[];save:(
       {template&&<p className="arena-template-info">{template.sections[0].subject} · {template.grade}-ci sinif · {template.sections[0].count} sual · {Math.round(template.duration_seconds/60)} dəqiqəlik sınaq</p>}
     </fieldset>
     <fieldset disabled={busy} className="arena-create-fields"><legend>02 / Təqvim və saatlar</legend><div className="module-actions"><button type="button" className="module-button" onClick={()=>choosePreset("soon")}>1 saat sonra</button><button type="button" className="module-button" onClick={()=>choosePreset("tomorrow")}>Sabah 18:00</button><button type="button" className="module-button" onClick={()=>choosePreset("weekend")}>Şənbə 18:00</button></div>
-      <div className="arena-date-grid">{scheduleKeys.map((key,i)=><label key={key}><span><small>{String(i+1).padStart(2,"0")}</small> {dateLabels[key]}</span><input type="datetime-local" step={60} required value={schedule[key]} min={key==="registration_closes"?schedule.registration_opens:key==="ends_at"?schedule.starts_at:undefined} onChange={e=>{setSchedule(old=>({...old,[key]:e.target.value}));setSuccess(false);}}/></label>)}</div>
+      <div className="arena-date-grid">{scheduleKeys.map((key,i)=><label key={key}><span><small>{String(i+1).padStart(2,"0")}</small> {dateLabels[key]}</span><input aria-label={dateLabels[key]} type="datetime-local" step={60} required value={schedule[key]} min={key==="registration_closes"?schedule.registration_opens:key==="ends_at"?schedule.starts_at:undefined} onInput={e=>updateSchedule(key,e.currentTarget.value)} onChange={e=>updateSchedule(key,e.target.value)}/></label>)}</div>
       <p className="data-note">Qeydiyyat açıldıqdan sonra bağlanmalı, yarış isə başladıqdan sonra bitməlidir. {mode==="knockout"?"Pley-off qeydiyyatı startdan gec bağlana bilməz.":"Sınaq rejimində yarış başladıqdan sonra da, bitənədək qeydiyyat açıq qala bilər."}</p>
       {validation&&schedule.registration_opens&&<p role="alert" className="danger-text">{validation}</p>}
     </fieldset>
