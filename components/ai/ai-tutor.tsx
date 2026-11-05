@@ -30,11 +30,12 @@ export function AITutor() {
       <button
         ref={launcher}
         className="teacher-launcher"
+        aria-label={open ? "AI müəllimi bağla" : "AI müəllimi aç"}
         aria-expanded={open}
         aria-controls="kairo-teacher-popup"
         onClick={() => (open ? close() : setOpen(true))}
       >
-        <MessageCircle size={19} /> AI müəllim
+        <MessageCircle size={18} /> <span>AI müəllim</span>
       </button>
       {open && (
         <section
@@ -69,3 +70,4 @@ export function AITutor() {
     </div>
   );
 }
+

@@ -1,38 +1,20 @@
 "use client";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import {GoalOverview,GoalsExplorer} from "./goals-explorer";
+import { useState } from "react";
 import { kairo, useKairo, dateTime } from "@/lib/kairo/client";
 import { admissionProgress } from "@/lib/kairo/goal-progress";
 import type { GoalState, Program } from "@/lib/kairo/types";
 import { ModuleHeading, ModuleStatus, Modal, Notice } from "./shared";
 export function GoalsWorkspace() {
   const q = useKairo<GoalState>("goals.get"),
-    [search, setSearch] = useState(""),
-    [university, setUniversity] = useState(""),
-    [language, setLanguage] = useState(""),
-    [group, setGroup] = useState(""),
     [selected, setSelected] = useState<Program | null>(null),
     [target, setTarget] = useState(600),
     [year, setYear] = useState(new Date().getFullYear() + 1),
     [funding, setFunding] = useState("either"),
     [error, setError] = useState(""),
-    [busy, setBusy] = useState(false),
-    [pagination,setPagination] = useState({key:"",limit:60});
-  const filterKey=JSON.stringify([search,university,language,group]);
-  const shown=pagination.key===filterKey?pagination.limit:60;
-  const programs = useMemo(
-    () =>
-      q.data?.programs.filter(
-        (p) =>
-          (!university || p.university_id === university) &&
-          (!language || p.language === language) &&
-          (!group || p.admission_group === group) &&
-          `${p.university} ${p.name} ${p.code ?? ""}`
-            .toLocaleLowerCase("az")
-            .includes(search.toLocaleLowerCase("az")),
-      ) ?? [],
-    [q.data, search, university, language, group],
-  );
+    [busy, setBusy] = useState(false);
+  function chooseProgram(p:Program) { const saved=q.data?.goals.find(g=>g.program.id===p.id); if(saved){setTarget(saved.target_score);setYear(saved.admission_year);setFunding(saved.funding);} setSelected(p); }
   async function act(op: string, p: object) {
     setBusy(true);
     setError("");
@@ -46,17 +28,18 @@ export function GoalsWorkspace() {
     }
   }
   return (
-    <>
+    <div className="goals-premium">
       <ModuleHeading
         eyebrow="03 / Universitet hədəfim"
-        title="İstiqamətin aydın olsun."
-        description="İxtisasları müqayisə et, bir neçə hədəf saxla və irəliləyişini uyğun imtahan nəticələri ilə izlə."
+        title="Hədəfini gör. Yolunu qur."
+        description="İxtisasları araşdır, yan-yana müqayisə et və öz gələcəyin üçün düşünülmüş seçim et."
       />
       <ModuleStatus {...q} retry={q.refresh} />
       {error && <Notice error>{error}</Notice>}
       {q.data && (
         <>
-          <section>
+          <GoalOverview data={q.data}/>
+          <section className="saved-goals-section">
             <h2>
               Hədəflərim <span className="muted">{q.data.goals.length}/12</span>
             </h2>
@@ -140,126 +123,7 @@ export function GoalsWorkspace() {
               </div>
             )}
           </section>
-          <section className="module-panel">
-            <h2>İxtisas kataloqu</h2>
-            <Notice>
-              İlkin siyahı və
-              üçüncü tərəfin balları DİM-in rəsmi təsdiqi deyil. Boş bal 0 demək deyil.
-            </Notice>
-            <div className="module-filters">
-              <label>
-                Axtar
-                <input
-                  type="search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Universitet, ixtisas, kod…"
-                />
-              </label>
-              <label>
-                Universitet
-                <select
-                  value={university}
-                  onChange={(e) => setUniversity(e.target.value)}
-                >
-                  <option value="">Hamısı</option>
-                  {q.data.universities.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Dil
-                <select
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
-                >
-                  <option value="">Hamısı</option>
-                  {[...new Set(q.data.programs.map((p) => p.language))].map(
-                    (l) => (
-                      <option key={l}>{l}</option>
-                    ),
-                  )}
-                </select>
-              </label>
-              <label>
-                Qrup
-                <select
-                  value={group}
-                  onChange={(e) => setGroup(e.target.value)}
-                >
-                  <option value="">Hamısı</option>
-                  {[
-                    ...new Set(
-                      q.data.programs
-                        .map((p) => p.admission_group)
-                        .filter(Boolean),
-                    ),
-                  ].map((g) => (
-                    <option key={g} value={g!}>
-                      {g}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            <div className="module-table-wrap">
-              <table className="module-table">
-                <thead>
-                  <tr>
-                    <th>Universitet / ixtisas</th>
-                    <th>Dil / format</th>
-                    <th>Qrup / kod</th>
-                    <th>Keçid balı</th>
-                    <th />
-                  </tr>
-                </thead>
-                <tbody>
-                  {programs.slice(0,shown).map((p) => (
-                    <tr key={p.id}>
-                      <td>
-                        <strong>{p.university}</strong>
-                        <br />
-                        {p.name}<br/><small className="catalog-status">{p.source_status==="preliminary"?"İlkin siyahı · rəsmi təsdiq tələb olunur":p.cutoff_status==="reported"?"Üçüncü tərəfin məlumatı · DİM ilə təsdiqlənməyib":"Məlumatın təsdiq statusunu yoxla"}</small>
-                      </td>
-                      <td>
-                        {p.language}
-                        <br />
-                        {p.study_format}
-                      </td>
-                      <td>
-                        {p.admission_group ?? "Təsdiqlənməyib"}
-                        <br />
-                        {p.code ?? "—"}
-                      </td>
-                      <td>
-                        {p.reported_cutoff ?? p.cutoff ?? "Məlumat yoxdur"}
-                        <br />
-                        <small>{p.year}</small>
-                      </td>
-                      <td>
-                        <button
-                          className="module-button"
-                          onClick={() => setSelected(p)}
-                        >
-                          Hədəf seç
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <p className="data-note">{Math.min(shown,programs.length)} / {programs.length} uyğun ixtisas variantı</p>
-              {programs.length>shown&&<button className="module-button" onClick={()=>setPagination({key:filterKey,limit:shown+60})}>Daha 60 ixtisas göstər</button>}
-              {!programs.length && (
-                <p>
-                  Axtarışa uyğun təsdiqlənmiş proqram yoxdur. Filtrləri dəyiş.
-                </p>
-              )}
-            </div>
-          </section>
+          <GoalsExplorer data={q.data} onSelect={chooseProgram} busy={busy}/>
           <section className="module-panel">
             <h2>Sınaqların dinamikası</h2>
             <p>
@@ -383,7 +247,7 @@ export function GoalsWorkspace() {
           </form>
         </Modal>
       )}
-    </>
+    </div>
   );
 }
 
