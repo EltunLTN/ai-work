@@ -5,6 +5,7 @@ import "./experience.css";
 import "./workspace.css";
 import "./kairo-modules.css";
 import "./platform-upgrade.css";
+import "./laboratories.css";
 import "katex/dist/katex.min.css";
 import { ActivityProvider } from "@/components/account/activity-provider";
 import { AITutor } from "@/components/ai/ai-tutor";
@@ -53,3 +54,4 @@ export default function RootLayout({
     </html>
   );
 }
+

@@ -73,13 +73,11 @@ export function saveStudentProfile(profile: StudentProfile) {
 export function getStudentProfile() {
   const profile = read<StudentProfile>(KEYS.profile);
   if (!profile) return null;
-  if (Array.isArray(profile.selectedTopics) && profile.selectedTopics.length) {
-    return profile;
-  }
   const topics = getTextbookById(profile.textbookId)?.topics ?? [];
+  const selected = Array.isArray(profile.selectedTopics) ? profile.selectedTopics.filter(topic=>topics.includes(topic)) : [];
   return {
     ...profile,
-    selectedTopics: topics.slice(0, 4),
+    selectedTopics: selected.length ? selected : topics.slice(0, 4),
   };
 }
 
@@ -236,3 +234,4 @@ export function appendQuestionHistory(questionTexts: string[]) {
     .slice(-250);
   write(KEYS.questionHistory, [...new Set(next)]);
 }
+

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect,useRef,useState } from "react";
 import Link from "next/link";
-import {useRouter} from "next/navigation";
+import {useSearchParams,useRouter} from "next/navigation";
 import {WorkspaceHeading} from "@/components/layout/workspace-heading";
 import {TextbookSelector} from "./selectors";
 import {getGrades,getSubjects,getProfileForSelection,getTextbooksBySelection,isSupportedSelection,isSubject} from "@/lib/textbook-reference";
@@ -10,9 +10,10 @@ import {useKairo} from "@/lib/kairo/client";
 import type {Grade,StudentProfile,Subject} from "@/lib/types";
 import type {PracticeSelection} from "@/lib/kairo/practice-selection";
 export function PracticeBuilder(){
+ const selectionQuery=useSearchParams().toString();
  const router=useRouter(),[mode,setMode]=useState<"class"|"mixed">("class"),[grade,setGrade]=useState<Grade>("11"),[profiles,setProfiles]=useState<StudentProfile[]>([getProfileForSelection("11","Riyaziyyat")]),[active,setActive]=useState<Subject>("Riyaziyyat"),[count,setCount]=useState(10),[busy,setBusy]=useState(false),[error,setError]=useState("");
  const request=useRef({key:"",id:""}),history=useKairo<{history:Array<{id:string;status:string;name:string}>}>("exam.catalog");
- useEffect(()=>{const p=new URLSearchParams(window.location.search),subject=p.get("subject"),g=p.get("grade") as Grade;if(isSubject(subject)){const next=getProfileForSelection(getGrades(subject).includes(g)?g:"11",subject),topic=p.get("topic");if(topic&&getTextbooksBySelection(next.grade,subject).some(b=>b.topics.includes(topic)))next.selectedTopics=[topic];queueMicrotask(()=>{setGrade(next.grade);setProfiles([next]);setActive(subject);});}},[]);
+ useEffect(()=>{const p=new URLSearchParams(selectionQuery),subject=p.get("subject"),g=p.get("grade") as Grade;if(isSubject(subject)){const next=getProfileForSelection(getGrades(subject).includes(g)?g:"11",subject),topic=p.get("topic");if(topic&&getTextbooksBySelection(next.grade,subject).some(b=>b.topics.includes(topic)))next.selectedTopics=[topic];queueMicrotask(()=>{setGrade(next.grade);setProfiles([next]);setActive(subject);});}},[selectionQuery]);
  const profile=profiles.find(p=>p.subject===active)??profiles[0];
  function changeGrade(g:Grade){const subjects=profiles.map(p=>p.subject).filter(s=>isSupportedSelection(g,s));const next=(subjects.length?subjects:["Riyaziyyat" as Subject]).map(s=>getProfileForSelection(g,s));setGrade(g);setProfiles(next);setActive(next[0].subject);}
  function chooseMode(next:"class"|"mixed"){setMode(next);if(next==="mixed")changeGrade("11");setCount(n=>Math.min(n,next==="class"?20:30));}

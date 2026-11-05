@@ -14,6 +14,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
     [grade, setGrade] = useState(11),
     [topic, setTopic] = useState(""),
     [statement, setStatement] = useState(""),
+    [sourceQuestion,setSourceQuestion]=useState<string|null>(null),
     [message, setMessage] = useState(""),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
@@ -39,6 +40,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
       );
       setTopic((p.get("topic") ?? "").slice(0, 200));
       setStatement((p.get("statement") ?? "").slice(0, 4000));
+      setSourceQuestion(p.get("question"));
       setGrade(Math.max(1, Math.min(11, Number(p.get("grade")) || 11)));
     });
     return () => controller.current?.abort();
@@ -67,10 +69,11 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
         topic,
         statement,
         mode: ["socratic","explain","practice"].includes(p.get("mode")??"") ? p.get("mode") : "socratic",
-        ...(p.get("question") ? { question_id: p.get("question") } : {}),
+        ...(sourceQuestion ? { question_id: sourceQuestion } : {}),
       });
       setLesson(next);
       list.refresh();
+      await send("message",false,next,statement.trim() || `${topic} mövzusunu ${grade}-ci sinif səviyyəsində izah et və bir nümunə göstər.`);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -87,10 +90,10 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
       setError((e as Error).message);
     }
   }
-  async function send(action = "message", again = false) {
-    if (!lesson || busy) return;
+  async function send(action = "message", again = false, target: TutorState|null = lesson, firstMessage?:string) {
+    if (!target || (busy && !firstMessage)) return;
     const text =
-      message.trim() ||
+      firstMessage || message.trim() ||
       (
         {
           hint1: "Birinci ipucunu ver.",
@@ -104,7 +107,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
     const turn = again
       ? retry
       : {
-          id: lesson.session.id,
+          id: target.session.id,
           request_id: crypto.randomUUID(),
           message: text,
           action,
@@ -140,7 +143,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
           ? "Cavab dayandırıldı. Sessiya saxlanılıb."
           : (e as Error).message,
       );
-      void kairo<TutorState>("tutor.get", { id: lesson.session.id })
+      void kairo<TutorState>("tutor.get", { id: target.session.id })
         .then(setLesson)
         .catch(() => {});
     } finally {
@@ -189,6 +192,8 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
               onClick={() => {
                 setLesson(null);
                 setRetry(null);
+                setSourceQuestion(null);
+                setError("");
               }}
             >
               Yeni dərs +
@@ -220,7 +225,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
                     Fənn
                     <select
                       value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
+                      onChange={(e) => {setSubject(e.target.value);setSourceQuestion(null);}}
                     >
                       {subjects.map((s) => (
                         <option key={s}>{s}</option>
@@ -231,7 +236,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
                     Sinif
                     <select
                       value={grade}
-                      onChange={(e) => setGrade(Number(e.target.value))}
+                      onChange={(e) => {setGrade(Number(e.target.value));setSourceQuestion(null);}}
                     >
                       {Array.from({ length: 11 }, (_, i) => (
                         <option key={i} value={i + 1}>
@@ -248,7 +253,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
                     maxLength={200}
                     placeholder="Məsələn, xətti tənliklər"
                     value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
+                    onChange={(e) => {setTopic(e.target.value);setSourceQuestion(null);}}
                   />
                 </label>
                 <label>
@@ -257,7 +262,7 @@ export function TeacherWorkspace({ compact = false }: { compact?: boolean }) {
                     rows={5}
                     maxLength={4000}
                     value={statement}
-                    onChange={(e) => setStatement(e.target.value)}
+                    onChange={(e) => {setStatement(e.target.value);setSourceQuestion(null);}}
                     placeholder="Sualı olduğu kimi yaz. Məsələn: 2x + 3 = 11"
                   />
                 </label>

@@ -1,0 +1,7 @@
+create or replace function private.kairo_plan_library(person uuid) returns jsonb language sql stable security definer set search_path='' as $$
+ with evidence as (select subject,grade,count(*) attempts,sum(total) total,sum(correct) correct,max(submitted_at) last_result from public.practice_attempts where user_id=person group by subject,grade),
+ selections as (select subject,grade from evidence union select subject,grade::text from private.kairo_adaptive_plans where user_id=person)
+ select jsonb_build_object('plans',(select coalesce(jsonb_agg(jsonb_build_object('subject',s.subject,'grade',s.grade,'attempts',coalesce(e.attempts,0),'total',coalesce(e.total,0),'correct',coalesce(e.correct,0),'last_result',e.last_result,'has_plan',p.plan is not null,'title',p.plan->>'title','updated_at',p.updated_at) order by s.subject,s.grade::int),'[]') from selections s left join evidence e on e.subject=s.subject and e.grade=s.grade left join private.kairo_adaptive_plans p on p.user_id=person and p.subject=s.subject and p.grade::text=s.grade),
+ 'exam_plans',(select coalesce(jsonb_agg(x order by x.created_at desc),'[]') from (select ep.session_id,ep.subject,(es.template_snapshot->>'grade')::int grade,ep.plan->>'title' title,ep.created_at from private.kairo_exam_plans ep join private.kairo_exam_sessions es on es.id=ep.session_id where es.user_id=person order by ep.created_at desc limit 200) x))
+$$;
+

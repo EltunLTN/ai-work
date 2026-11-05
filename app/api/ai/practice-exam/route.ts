@@ -20,9 +20,9 @@ export async function POST(request:Request){
   if(!claim.lease)return NextResponse.json({error:"Sınaq artıq hazırlanır. Bir az sonra yenidən cəhd et."},{status:409});
   lease=claim.lease;
   const batches=practiceBatches(body.selection,()=>randomInt(0,1000000)/1000000);
-  // Bound concurrency to two generations and settle failures before releasing the lease.
+  // Bound concurrency to three generations and settle failures before releasing the lease.
   const results=[];
-  for(let i=0;i<batches.length;i+=2){const settled=await Promise.allSettled(batches.slice(i,i+2).map(batch=>generateDiagnosticQuestions({...batch,excludedQuestionStems:claim.recent??[]})));const failure=settled.find(x=>x.status==="rejected");if(failure?.status==="rejected")throw failure.reason;results.push(...settled.flatMap(x=>x.status==="fulfilled"?x.value:[]));}
+  for(let i=0;i<batches.length;i+=3){const settled=await Promise.allSettled(batches.slice(i,i+3).map(batch=>generateDiagnosticQuestions({...batch,excludedQuestionStems:claim.recent??[]})));const failure=settled.find(x=>x.status==="rejected");if(failure?.status==="rejected")throw failure.reason;results.push(...settled.flatMap(x=>x.status==="fulfilled"?x.value:[]));}
   const questions=results.map(q=>({subject:q.subject,grade:Number(q.grade),topic:q.topic,difficulty:q.difficulty,type:"single",body:{statement:q.question,options:q.options},answer_key:{answer:q.correctIndex},explanation:q.explanation,points:1}));
   const result=await rpc("practice.save",{request_id:requestId,lease,questions});
   return NextResponse.json(result,{headers:{"Cache-Control":"no-store"}});
